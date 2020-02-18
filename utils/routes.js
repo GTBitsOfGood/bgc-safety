@@ -8,6 +8,10 @@ const routes = [
   {
     name: "SSR",
     link: urls.pages.ssr
+  },
+  {
+    name: "Roster",
+    link: urls.pages.roster
   }
 ];
 

@@ -10,7 +10,8 @@ export default {
   dbName: "nextjs",
   pages: {
     index: "/",
-    ssr: "/ssr"
+    ssr: "/ssr",
+    roster: "/roster"
   },
   api: {
     example: "/api/example"
