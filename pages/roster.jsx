@@ -4,19 +4,24 @@ import styles from "./roster.module.css";
 const schools = [
   {
     name: "Brown School",
-    students: ["Paul", "Amanda", "Jeff", "Steve"]
+    students: [{name: "Paul", checkedIn: true}, {name: "Amanda", checkedIn: false}, {name: "Jeff", checkedIn: true}, {name: "Steve", checkedIn: true}]
   },
   {
     name: "KIPP Collegiate School",
-    students: ["Johnson", "Zachary", "Sally"]
+    students: [{name: "Johnson", checkedIn: false}, {name: "Zachary", checkedIn: true}, {name: "Sally", checkedIn: false}]
   }
 ];
 
 
 export default function Roster() {
+  Roster.getInitialProps = async () => {
+    const res = await fetch('https://api.github.com/repos/zeit/next.js')
+    const json = await res.json()
+    return { stars: json.stargazers_count }
+  }
+
   return (
     <div id="main">
-
       <h1>Harland Boys and Girls Club</h1>
       <div className={styles.roster}>
         <table className={styles.bustable}>
@@ -32,7 +37,7 @@ export default function Roster() {
             </tr>
             {school.students.map(student => (
               <tr className={styles.tr}>
-                <td className={styles.td}>{student}</td>
+                <td className={student.checkedIn ? styles.td : styles.tdNotCheckedIn }>{student.name}</td>
               </tr>
             ))}
           </table>

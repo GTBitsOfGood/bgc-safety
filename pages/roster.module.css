@@ -21,6 +21,13 @@
     /* border-right: 10px solid white; */
 }
 
+
+.tdNotCheckedIn {
+    background-color:rgb(220,220,220);
+    width: fill;
+    /* border-right: 10px solid white; */
+}
+
 .bustable {
     border-spacing: 2px;
     margin-bottom: 0.5vh;
