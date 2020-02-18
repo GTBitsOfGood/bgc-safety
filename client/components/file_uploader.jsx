@@ -1,13 +1,13 @@
 import React from "react";
 
-const UploadContainer = (props) => (
+const FileUploader = () => (
   <div className="upload-container">
-    {props.children}
+    <label htmlFor="file-upload" className="file-upload">
+      <i className="fa fa-plus" />
+      Click to upload CSV
+      <input id="file-upload" type="file" accept="csv" />
+    </label>
   </div>
 );
 
-export const FileUploader = (props) => (
-  <UploadContainer>
-    <input type="file" accept="csv" />
-  </UploadContainer>
-);
+export default FileUploader;

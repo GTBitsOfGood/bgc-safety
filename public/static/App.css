@@ -34,9 +34,9 @@ html, body, #__next {
   border: none;
   text-align: center;
   display: inline-block;
-  font-size: 20px;
-  min-width: 250px;
+  font-size: 16px;
   text-transform: uppercase;
+  padding: 1% 10%;
 }
 
 .btn-success {
@@ -73,9 +73,34 @@ input.text-field {
   flex-direction: row;
   align-items: center;
   justify-content: center;
+}
 
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 50px;
 }
 
 .container {
   padding: 0px 70px;
+}
+
+.label {
+  font-size: 16px;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+.file-upload {
+  cursor: pointer;
+  color: #4f4f4f;
+}
+
+.fa-plus {
+  display: block;
+  text-align: center;
+  font-size: 64px;
+  padding-bottom: 15px;
 }

@@ -1,29 +1,30 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { Box, } from "@material-ui/core";
 
 import { helloWorld } from "../client/actions/api";
-import { UploadButton, CancelButton } from "../client/components/buttons";
-import { TextField } from "../client/components/text_field";
-import { FileUploader } from "../client/components/file_uploader";
-import Label from "../client/components/label";
+import FileUploader from "../client/components/file_uploader";
 
-const CSVUpload = ({message, errorMessage}) => {
+const CSVUpload = () => {
   return (
     <>
       <div className="container">
-        <Box>
-          <Label label="Title:" />
-          <TextField placeholder="Type here" />
-        </Box>
-        <Box>
-          <bold className="label">Upload:</bold>
-          <FileUploader />
-        </Box>
-        <span>
-          <UploadButton>Upload</UploadButton>
-          <CancelButton>Cancel</CancelButton>
-        </span>
+        <div>
+          <div>
+            <bold className="label">Title:</bold>
+            <input className="text-field" placeholder="Type here" />
+          </div>
+          <div>
+            <bold className="label">Upload:</bold>
+            <FileUploader />
+          </div>
+        </div>
+        <div className="button-container">
+          <button type="button" className="btn btn-danger">
+            Cancel
+          </button>
+          <button type="button" className="btn btn-success">
+            Upload
+          </button>
+        </div>
       </div>
     </>
   );
@@ -39,16 +40,6 @@ CSVUpload.getInitialProps = async () => {
     .catch(error => ({
       errorMessage: error.message
     }));
-};
-
-CSVUpload.propTypes = {
-  message: PropTypes.string,
-  errorMessage: PropTypes.string
-};
-
-CSVUpload.defaultProps = {
-  message: null,
-  errorMessage: null
 };
 
 export default CSVUpload;
