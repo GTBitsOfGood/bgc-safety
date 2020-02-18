@@ -12,6 +12,7 @@ class MyApp extends App {
       <>
         <Head>
           <title>Nextjs-Starter</title>
+          <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:bold" />
         </Head>
         <div className="App">
           <Header />

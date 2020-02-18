@@ -10,7 +10,8 @@ export default {
   dbName: "nextjs",
   pages: {
     index: "/",
-    ssr: "/ssr"
+    ssr: "/ssr",
+    csv_upload: "/csv_upload"
   },
   api: {
     example: "/api/example"
