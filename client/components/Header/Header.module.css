@@ -4,20 +4,7 @@
     flex-direction: row;
     justify-content: space-around;
     padding: 8px 4px;
-    background-color: #004b4b;
     align-items: center;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.5);
 }
 
-.route {
-    color: white;
-    padding: 12px 24px;
-    margin: 0 16px;
-    font-size: 20px;
-    cursor: pointer;
-    border-radius: 8px;
-    transition: 0.25s background-color;
-}
-
-.route:hover {
-    background-color: #002d2d;
-}

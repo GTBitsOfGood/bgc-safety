@@ -12,20 +12,17 @@
 .th {
     background-color: rgba(128, 128, 128, 0.39);
     width: 200px;
-    /* border-right: 10px solid white; */
 }
 
 .td {
     background-color: rgba(0, 128, 0, 0.562);
     width: fill;
-    /* border-right: 10px solid white; */
 }
 
 
 .tdNotCheckedIn {
     background-color:rgb(220,220,220);
     width: fill;
-    /* border-right: 10px solid white; */
 }
 
 .bustable {

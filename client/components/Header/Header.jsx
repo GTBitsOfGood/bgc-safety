@@ -27,7 +27,7 @@ const Header = () => {
       "Friday",
       "Saturday"
     ];
-    return `${days[today.getDay()]} ${
+    return `${days[today.getDay()]}, ${
       months[today.getMonth()]
     } ${today.getDate()}, ${today.getFullYear()}`;
   }
@@ -38,9 +38,9 @@ const Header = () => {
         <option value="roster">Bus Roster</option>
         <option value="checkIn">Club Check In</option>
       </select>
-      <h2 style={{ padding: "10px 20px", textAlign: "center", color: "white" }}>
+      <h3 style={{ padding: "10px 20px", textAlign: "center" }}>
         {getDate()}
-      </h2>
+      </h3>
       <button onClick="" type="submit">
         Print Report
       </button>
