@@ -12,41 +12,11 @@ const schools = [
   }
 ];
 
-function getDate() {
-  const today = new Date();
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December"
-  ];
-  const days = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday"
-  ];
-  return `${days[today.getDay()]} ${
-    months[today.getMonth()]} ${today.getDate()}, ${today.getFullYear()}`;
-}
 
 export default function Roster() {
   return (
     <div id="main">
-      <div className={styles.toolbar} id="toolbar">
-        <h2> {getDate()} </h2>
-      </div>
+
       <h1>Harland Boys and Girls Club</h1>
       <div className={styles.roster}>
         <table className={styles.bustable}>
