@@ -15,8 +15,7 @@ class CSVUpload extends React.Component {
   }
 
   handleUpload() {
-    this.uploadedFile = true;
-    //
+    this.setState({ uploadedFile: true });
   }
 
   render() {
@@ -30,12 +29,18 @@ class CSVUpload extends React.Component {
               <bold className="label">Title:</bold>
               <input className="text-field" placeholder="Type here" />
             </div>
-            {uploadedFile && (
-              <div>
-                <bold className="label">Upload:</bold>
-                <FileUploader onChange={this.handleUpload} />
-              </div>
-            )}
+            <div>
+              <bold className="label">Upload:</bold>
+              {!uploadedFile && <FileUploader onChange={this.handleUpload} />}
+              {uploadedFile && (
+                <div className="uploaded-container">
+                  <div className="file-upload">
+                    <i className="fa fa-check" />
+                    Uploaded File!
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
           <div className="button-container">
             <button type="button" className="btn btn-danger">
