@@ -13,6 +13,7 @@ export default {
     ssr: "/ssr"
   },
   api: {
-    example: "/api/example"
+    example: "/api/example",
+    student: "/api/student"
   }
 };
