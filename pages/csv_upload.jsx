@@ -1,5 +1,5 @@
 import React from "react";
-import csv from 'csv';
+import CsvParser from 'csv/csv-parse';
 
 // import { helloWorld } from "../client/actions/api";
 import FileUploader from "../client/components/file_uploader";
@@ -18,6 +18,7 @@ class CSVUpload extends React.Component {
 
   handleUpload() {
     this.setState({ uploadedFile: true });
+    
   }
 
   render() {
@@ -59,3 +60,5 @@ class CSVUpload extends React.Component {
 }
 
 export default CSVUpload;
+
+//eslint 
