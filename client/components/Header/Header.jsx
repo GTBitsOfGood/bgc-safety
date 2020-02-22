@@ -38,9 +38,7 @@ const Header = () => {
         <option value="roster">Bus Roster</option>
         <option value="checkIn">Club Check In</option>
       </select>
-      <h3 style={{ padding: "10px 20px", textAlign: "center" }}>
-        {getDate()}
-      </h3>
+      <h3 style={{ padding: "10px 20px", textAlign: "center" }}>{getDate()}</h3>
       <button onClick="" type="submit">
         Print Report
       </button>

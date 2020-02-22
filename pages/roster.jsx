@@ -1,25 +1,9 @@
 import React from "react";
+// import fetch from "isomorphic-unfetch";
+import PropTypes from "prop-types";
 import styles from "./roster.module.css";
 
-const schools = [
-  {
-    name: "Brown School",
-    students: [{name: "Paul", checkedIn: true}, {name: "Amanda", checkedIn: false}, {name: "Jeff", checkedIn: true}, {name: "Steve", checkedIn: true}]
-  },
-  {
-    name: "KIPP Collegiate School",
-    students: [{name: "Johnson", checkedIn: false}, {name: "Zachary", checkedIn: true}, {name: "Sally", checkedIn: false}]
-  }
-];
-
-
-export default function Roster() {
-  Roster.getInitialProps = async () => {
-    const res = await fetch('https://api.github.com/repos/zeit/next.js')
-    const json = await res.json()
-    return { stars: json.stargazers_count }
-  }
-
+function Roster({ schools }) {
   return (
     <div id="main">
       <h1>Harland Boys and Girls Club</h1>
@@ -37,7 +21,13 @@ export default function Roster() {
             </tr>
             {school.students.map(student => (
               <tr className={styles.tr}>
-                <td className={student.checkedIn ? styles.td : styles.tdNotCheckedIn }>{student.name}</td>
+                <td
+                  className={
+                    student.checkedIn ? styles.td : styles.tdNotCheckedIn
+                  }
+                >
+                  {student.name}
+                </td>
               </tr>
             ))}
           </table>
@@ -46,3 +36,38 @@ export default function Roster() {
     </div>
   );
 }
+
+Roster.propTypes = {
+  schools: PropTypes.arrayOf(PropTypes.object)
+};
+
+Roster.defaultProps = {
+  schools: null
+};
+
+Roster.getInitialProps = async () => {
+  // const res = await fetch("https://api.github.com/repos/zeit/next.js");
+  // const json = await res.json()
+  const data = [
+    {
+      name: "Brown School",
+      students: [
+        { name: "Paul", checkedIn: true },
+        { name: "Amanda", checkedIn: false },
+        { name: "Jeff", checkedIn: true },
+        { name: "Steve", checkedIn: true }
+      ]
+    },
+    {
+      name: "KIPP Collegiate School",
+      students: [
+        { name: "Johnson", checkedIn: false },
+        { name: "Zachary", checkedIn: true },
+        { name: "Sally", checkedIn: false }
+      ]
+    }
+  ];
+  return { schools: data };
+};
+
+export default Roster;
