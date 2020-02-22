@@ -37,14 +37,17 @@ function Roster({ schools }) {
   );
 }
 
+// Declaring type of schools prop
 Roster.propTypes = {
   schools: PropTypes.arrayOf(PropTypes.object)
 };
 
+// Setting default value for schools prop
 Roster.defaultProps = {
   schools: null
 };
 
+// dummy api call
 Roster.getInitialProps = async () => {
   // const res = await fetch("https://api.github.com/repos/zeit/next.js");
   // const json = await res.json()
