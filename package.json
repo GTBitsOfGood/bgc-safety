@@ -47,7 +47,7 @@
     "eslint-plugin-react": "^7.18.0",
     "eslint-plugin-react-hooks": "^1.7.0",
     "husky": "^4.0.10",
-    "prettier": "1.19.1",
+    "prettier": "^1.19.1",
     "prettier-eslint": "^9.0.1"
   }
 }

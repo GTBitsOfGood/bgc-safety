@@ -10,7 +10,8 @@ export default {
   dbName: "bgc-safety-dev",
   pages: {
     index: "/",
-    ssr: "/ssr"
+    ssr: "/ssr",
+    roster: "/roster"
   },
   api: {
     example: "/api/example",
