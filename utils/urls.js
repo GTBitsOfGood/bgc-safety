@@ -11,6 +11,7 @@ export default {
   pages: {
     index: "/",
     ssr: "/ssr",
+    csv_upload: "/csv_upload",
     roster: "/roster"
   },
   api: {
