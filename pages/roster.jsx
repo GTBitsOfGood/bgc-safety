@@ -3,6 +3,13 @@ import React from "react";
 import PropTypes from "prop-types";
 import styles from "./roster.module.css";
 
+function getNumberCheckedIn(school) {
+  let count = 0;
+  for (let i = 0; i < school.students.length; i += 1) {
+    count += school.students[i].checkedIn;
+  }
+  return ` ${count}/${school.students.length}`;
+}
 function Roster({ schools }) {
   return (
     <div id="main">
@@ -10,8 +17,12 @@ function Roster({ schools }) {
       <div className={styles.roster}>
         <table className={styles.bustable}>
           <tr className={styles.tr}>
-            <th className={styles.busth}>Bus A Cap 20/30</th>
-            <th className={styles.busth}>Bus A Cap 18/30</th>
+            {schools.map(school => (
+              <th className={styles.busth}>
+                Bus A Cap
+                {getNumberCheckedIn(school)}
+              </th>
+            ))}
           </tr>
         </table>
         {schools.map(school => (
