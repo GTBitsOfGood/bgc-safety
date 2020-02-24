@@ -7,13 +7,15 @@ export default {
   dbUrl: prod
     ? process.env.MONGO_DB
     : process.env.MONGO_DEV_DB || "mongodb://localhost:27017",
-  dbName: "nextjs",
+  dbName: "bgc-safety-dev",
   pages: {
     index: "/",
-    ssr: "/ssr"
+    ssr: "/ssr",
+    roster: "/roster"
   },
   api: {
     example: "/api/example",
-    student: "/api/student"
+    student: "/api/student",
+    club: "/api/club"
   }
 };
