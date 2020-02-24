@@ -12,6 +12,10 @@ const routes = [
   {
     name: "Upload CSV",
     link: urls.pages.csv_upload
+  },
+  {
+    name: "Roster",
+    link: urls.pages.roster
   }
 ];
 

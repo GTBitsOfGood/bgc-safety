@@ -1,19 +1,19 @@
 {
-  "name": "liv2bgirl",
+  "name": "bgc-safety",
   "version": "1.0.0",
   "description": "",
   "author": "Bits of Good <hello@bitsofgood.org>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/GTBitsOfGood/nextjs-starter.git"
+    "url": "git+https://github.com/GTBitsOfGood/bgc-safety"
   },
   "bugs": {
-    "url": "https://github.com/GTBitsOfGood/nextjs-starter/issues"
+    "url": "https://github.com/GTBitsOfGood/bgc-safety/issues"
   },
-  "homepage": "https://github.com/GTBitsOfGood/nextjs-starter#readme",
+  "homepage": "https://github.com/GTBitsOfGood/bgc-safetyr#readme",
   "scripts": {
-    "dev": "next",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint --fix --ext .jsx --ext .js ."
@@ -47,7 +47,7 @@
     "eslint-plugin-react": "^7.18.0",
     "eslint-plugin-react-hooks": "^1.7.0",
     "husky": "^4.0.10",
-    "prettier": "1.19.1",
+    "prettier": "^1.19.1",
     "prettier-eslint": "^9.0.1"
   }
 }
