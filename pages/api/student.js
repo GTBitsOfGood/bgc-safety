@@ -13,6 +13,8 @@ export default async (req, res) => {
     updateStudent(req, res);
   } else if (method === "DELETE") {
     deleteStudent(req, res);
+  } else if (method === "GET") {
+    getAllStudents(req, res);
   } else {
     res.setHeader("Allow", ["POST", "PATCH", "DELETE"]);
     res.status(405).end(`Method ${method} Not Allowed`);
@@ -111,4 +113,20 @@ function deleteStudent(req, res) {
         message: err
       })
     );
+}
+
+function getAllStudents(req, res) {
+  Student.find()
+    .then(students => {
+      res.status(200).json({
+        success: true,
+        payload: students
+      });
+    })
+    .catch(err => {
+      res.status(400).json({
+        success: false,
+        message: err
+      });
+    });
 }

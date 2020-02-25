@@ -1,6 +1,7 @@
 /* eslint-disable no-use-before-define */
 import mongoDB from "../../server/mongodb/index";
 import Student from "../../server/mongodb/models/StudentSchema";
+import Club from "../../server/mongodb/models/Club";
 
 export default async (req, res) => {
   await mongoDB();
@@ -11,6 +12,8 @@ export default async (req, res) => {
     getSchoolInfo(req, res);
   } else if (method === "GET" && req.query.schoolName !== undefined) {
     getStudentInfo(req, res);
+  } else if (method === "GET") {
+    getAllSchools(req, res);
   } else {
     res.setHeader("Allow", "GET");
     res.status(405).end(`Method ${method} Not Allowed`);
@@ -58,6 +61,22 @@ function getStudentInfo(req, res) {
       res.status(400).json({
         success: false,
         error: err
+      });
+    });
+}
+
+function getAllSchools(req, res) {
+  Club.find()
+    .then(clubs => {
+      res.status(200).json({
+        success: true,
+        payload: clubs.reduce((acc, club) => acc.concat(club.SchoolNames), [])
+      });
+    })
+    .catch(err => {
+      res.status(400).json({
+        success: false,
+        message: err
       });
     });
 }
