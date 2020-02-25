@@ -15,8 +15,10 @@ class CSVUpload extends React.Component {
     // do this if upload function is going to change the state
   }
 
-  handleUpload() {
+  handleUpload(files) {
     this.setState({ uploadedFile: true });
+
+    console.log(files);
   }
 
   render() {
@@ -32,7 +34,9 @@ class CSVUpload extends React.Component {
             </div>
             <div>
               <bold className="label">Upload:</bold>
-              {!uploadedFile && <FileUploader onChange={this.handleUpload} />}
+              {!uploadedFile && (
+                <FileUploader onChange={files => this.handleUpload(files)} />
+              )}
               {uploadedFile && (
                 <div className="uploaded-container">
                   <div className="file-upload">
