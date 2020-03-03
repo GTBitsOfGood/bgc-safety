@@ -12,10 +12,13 @@ export default {
     index: "/",
     ssr: "/ssr",
     csv_upload: "/csv_upload",
-    roster: "/roster"
+    roster: "/roster",
+    history: "/history"
   },
   api: {
     example: "/api/example",
-    club: "/api/club"
+    student: "/api/student",
+    club: "/api/club",
+    school: "/api/school"
   }
 };

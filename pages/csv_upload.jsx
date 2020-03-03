@@ -1,6 +1,6 @@
 import React from "react";
+import axios from "axios";
 
-// import { helloWorld } from "../client/actions/api";
 import FileUploader from "../client/components/file_uploader";
 
 class CSVUpload extends React.Component {
@@ -16,9 +16,16 @@ class CSVUpload extends React.Component {
   }
 
   handleUpload(files) {
-    this.setState({ uploadedFile: true });
-
-    console.log(files);
+    const data = new FormData();
+    data.append("file", files[0]);
+    axios
+      .post("http://localhost:8000/upload", data)
+      .then(function(response) {
+        this.setState({ uploadedFile: true });
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
   }
 
   render() {
