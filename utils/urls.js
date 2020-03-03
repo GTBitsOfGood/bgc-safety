@@ -17,6 +17,7 @@ export default {
   api: {
     example: "/api/example",
     student: "/api/student",
-    club: "/api/club"
+    club: "/api/club",
+    school: "/api/school"
   }
 };
