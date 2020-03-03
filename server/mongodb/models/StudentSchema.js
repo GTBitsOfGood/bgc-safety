@@ -30,16 +30,16 @@ const StudentSchema = new Schema({
   },
   picture: {
     type: String
+  },
+  checkInTimes: {
+    type: [
+      {
+        type: Date,
+        required: true
+      }
+    ]
   }
-  // checkInTimes: {
-  //   type: [
-  //     {
-  //       type: Date,
-  //       required: true
-  //     }
-  //   ]
-  // }
 });
 
-export default mongoose.models.StudentSchema ||
+export default mongoose.models.Student ||
   mongoose.model("Student", StudentSchema);
