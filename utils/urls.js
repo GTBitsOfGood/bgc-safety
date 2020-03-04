@@ -19,6 +19,7 @@ export default {
     example: "/api/example",
     student: "/api/student",
     club: "/api/club",
-    school: "/api/school"
+    school: "/api/school",
+    checkIn: "/api/checkIn"
   }
 };
