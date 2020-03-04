@@ -16,6 +16,10 @@ const routes = [
   {
     name: "Roster",
     link: urls.pages.roster
+  },
+  {
+    name: "History",
+    link: urls.pages.history
   }
 ];
 

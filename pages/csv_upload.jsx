@@ -1,6 +1,6 @@
 import React from "react";
+import axios from "axios";
 
-// import { helloWorld } from "../client/actions/api";
 import FileUploader from "../client/components/file_uploader";
 
 class CSVUpload extends React.Component {
@@ -15,8 +15,17 @@ class CSVUpload extends React.Component {
     // do this if upload function is going to change the state
   }
 
-  handleUpload() {
-    this.setState({ uploadedFile: true });
+  handleUpload(files) {
+    const data = new FormData();
+    data.append("file", files[0]);
+    axios
+      .post("http://localhost:8000/upload", data)
+      .then(function(response) {
+        this.setState({ uploadedFile: true });
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
   }
 
   render() {
@@ -32,7 +41,9 @@ class CSVUpload extends React.Component {
             </div>
             <div>
               <bold className="label">Upload:</bold>
-              {!uploadedFile && <FileUploader onChange={this.handleUpload} />}
+              {!uploadedFile && (
+                <FileUploader onChange={files => this.handleUpload(files)} />
+              )}
               {uploadedFile && (
                 <div className="uploaded-container">
                   <div className="file-upload">
