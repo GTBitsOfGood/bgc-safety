@@ -5,8 +5,8 @@ export default {
     ? "https://nextjs-starter-flax-sigma.now.sh"
     : "http://localhost:3000",
   dbUrl: prod
-    ? process.env.MONGO_DB
-    : process.env.MONGO_DEV_DB || "mongodb://localhost:27017",
+    ? "mongodb+srv://bgc-safety-dev:bgc-safety-123@cluster0-9lk2k.mongodb.net/bgc-safety-dev?retryWrites=true&w=majority"
+    : process.env.MONGO_DEV_DB || "mongodb+srv://bgc-safety-dev:bgc-safety-123@cluster0-9lk2k.mongodb.net/bgc-safety-dev?retryWrites=true&w=majority",
   dbName: "bgc-safety-dev",
   pages: {
     index: "/",
@@ -20,6 +20,7 @@ export default {
     student: "/api/student",
     club: "/api/club",
     school: "/api/school",
-    checkIn: "/api/checkIn"
+    checkIn: "/api/checkIn/",
+    uploadCsv: "/api/upload_csv"
   }
 };

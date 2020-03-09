@@ -8,20 +8,32 @@ class CSVUpload extends React.Component {
     super(props);
 
     this.state = {
-      uploadedFile: false
+      uploadedFile: false,
+      selectedFile: "", 
+      sentFile: false
     };
 
-    this.handleUpload = this.handleUpload.bind(this);
+    //this.handleUpload = this.handleUpload.bind(this);
     // do this if upload function is going to change the state
   }
 
-  handleUpload(files) {
+  handleUpload = (files) => {
+    this.setState({selectedFile: files[0]})
+    this.setState({ uploadedFile: true })
+  }
+
+  sendCsv = () => {
+    console.log("Uploading...")
     const data = new FormData();
-    data.append("file", files[0]);
+    data.append("file", this.state.selectedFile);
+    console.log(data)
+    var self = this;
     axios
-      .post("http://localhost:8000/upload", data)
+      .post("http://localhost:3000/api/upload_csv", data)
       .then(function(response) {
-        this.setState({ uploadedFile: true });
+        console.log("Uploaded file!! ... ")
+        self.setState({ uploadedFile: false })
+        self.setState({ sentFile: true })
       })
       .catch(function(error) {
         console.log(error);
@@ -30,6 +42,7 @@ class CSVUpload extends React.Component {
 
   render() {
     const { uploadedFile } = this.state;
+    const { sentFile } = this.state;
 
     return (
       <>
@@ -41,24 +54,32 @@ class CSVUpload extends React.Component {
             </div>
             <div>
               <bold className="label">Upload:</bold>
-              {!uploadedFile && (
+              {!(uploadedFile || sentFile) && (
                 <FileUploader onChange={files => this.handleUpload(files)} />
               )}
               {uploadedFile && (
                 <div className="uploaded-container">
                   <div className="file-upload">
                     <i className="fa fa-check" />
-                    Uploaded File!
+                    Received File! Click "Upload" to submit
+                  </div>
+                </div>
+              )}
+              {sentFile && (
+                <div className="uploaded-container">
+                  <div className="file-upload">
+                    <i className="fa fa-check" />
+                    File Uploaded!
                   </div>
                 </div>
               )}
             </div>
           </div>
           <div className="button-container">
-            <button type="button" className="btn btn-danger">
+            <button type="button" className="btn btn-danger" >
               Cancel
             </button>
-            <button type="button" className="btn btn-success">
+            <button type="button" className="btn btn-success" onClick={this.sendCsv}>
               Upload
             </button>
           </div>

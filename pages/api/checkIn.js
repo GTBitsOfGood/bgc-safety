@@ -6,7 +6,6 @@ export default async (req, res) => {
   await mongoDB();
 
   const { method } = req;
-
   if (method === "PATCH") {
     checkInStudent(req, res);
   } else {
