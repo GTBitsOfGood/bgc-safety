@@ -8,9 +8,9 @@ export default async (req, res) => {
 
   const { method } = req;
 
-  if (method === "GET" && req.query.ids !== undefined) {
+  if (method === "GET" && req.query.ids) {
     getSchoolInfo(req, res);
-  } else if (method === "GET" && req.query.schoolName !== undefined) {
+  } else if (method === "GET" && req.query.schoolName) {
     getStudentInfo(req, res);
   } else if (method === "GET") {
     getAllSchools(req, res);
@@ -25,7 +25,7 @@ function getSchoolInfo(req, res) {
 
   Student.find(
     {
-      _id: { $in: ids }
+      studentID: { $in: ids }
     },
     {
       schoolName: 1
