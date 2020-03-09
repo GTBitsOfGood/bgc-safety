@@ -22,7 +22,7 @@ class MyApp extends App {
           />
         </Head>
         <div className="App">
-          <Header />
+          <Header defaultSelected="Roster"/>
           <div className="Content">
             <Component {...pageProps} />
           </div>
