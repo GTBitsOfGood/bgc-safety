@@ -77,8 +77,8 @@ class Header extends React.Component {
           <Link href="/roster">
             <a>Bus Roster</a>
           </Link>
-          <Link href="/checkin">
-            <a>Club Check In</a>
+          <Link href="/history">
+            <a>Attendance History</a>
           </Link>
         </Dropdown>
         <h3 style={{ padding: "10px 20px", textAlign: "center" }}>
