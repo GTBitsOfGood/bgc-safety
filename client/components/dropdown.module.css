@@ -37,3 +37,10 @@
   padding-left:16px;
   color: black;
 }
+
+.printButton {
+  background-color: #c4c4c4;
+  border: none;
+  padding: 16px 32px;
+  text-align: center;
+}

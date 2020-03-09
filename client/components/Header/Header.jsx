@@ -84,7 +84,7 @@ class Header extends React.Component {
         <h3 style={{ padding: "10px 20px", textAlign: "center" }}>
           {getDate()}
         </h3>
-        <button onClick="" type="submit">
+        <button className={styles.printButton} onClick="" type="submit">
           Print Report
         </button>
       </div>

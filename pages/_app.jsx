@@ -14,6 +14,10 @@ class MyApp extends App {
           <title>Nextjs-Starter</title>
           <link
             rel="stylesheet"
+            href="https://fonts.googleapis.com/css?family=Raleway"
+          />
+          <link
+            rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Raleway:bold"
           />
           <link

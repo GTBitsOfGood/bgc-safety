@@ -11,3 +11,11 @@
 .dropdown-menu select {
   display: none;
 }
+
+.printButton {
+  background-color: #c4c4c4;
+  border: none;
+  padding: 16px 20px;
+  text-align: center;
+  font-size: 16px;
+}
