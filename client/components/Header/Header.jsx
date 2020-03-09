@@ -71,6 +71,9 @@ class Header extends React.Component {
           toggleDropdown={this.toggleDropdown}
           showContent={showContent}
         >
+          <Link href="/">
+            <a>Home</a>
+          </Link>
           <Link href="/roster">
             <a>Bus Roster</a>
           </Link>
