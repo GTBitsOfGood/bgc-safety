@@ -15,12 +15,12 @@ export default async (req, res) => {
 };
 
 function checkInStudent(req, res) {
-  const { studentId } = req.query;
+  const { id } = req.query;
   const { time } = req.body;
 
   Student.findOneAndUpdate(
     {
-      studentID: studentId
+      studentID: id
     },
     {
       $push: { checkInTimes: time }

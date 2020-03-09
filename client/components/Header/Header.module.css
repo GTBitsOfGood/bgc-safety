@@ -7,3 +7,15 @@
   align-items: center;
   border-bottom: 1px solid rgba(128, 128, 128, 0.5);
 }
+
+.dropdown-menu select {
+  display: none;
+}
+
+.printButton {
+  background-color: #c4c4c4;
+  border: none;
+  padding: 16px 20px;
+  text-align: center;
+  font-size: 16px;
+}

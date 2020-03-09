@@ -16,7 +16,7 @@ export default async (req, res) => {
   } else if (method === "GET") {
     getAllStudents(req, res);
   } else {
-    res.setHeader("Allow", ["POST", "PATCH", "DELETE"]);
+    res.setHeader("Allow", ["POST", "PATCH", "DELETE", "GET"]);
     res.status(405).end(`Method ${method} Not Allowed`);
   }
 };
@@ -60,6 +60,7 @@ function createStudent(req, res) {
 
 function updateStudent(req, res) {
   const { id } = req.query;
+
   const {
     FirstName,
     LastName,
@@ -70,8 +71,10 @@ function updateStudent(req, res) {
     Picture
   } = req.body;
 
-  Student.findByIdAndUpdate(
-    id,
+  Student.findOneAndUpdate(
+    {
+      studentID: id
+    },
     {
       firstName: FirstName,
       lastName: LastName,
@@ -81,7 +84,9 @@ function updateStudent(req, res) {
       clubName: ClubName,
       picture: Picture
     },
-    { new: true }
+    {
+      new: true
+    }
   )
     .then(student =>
       res.status(200).json({
@@ -100,7 +105,9 @@ function updateStudent(req, res) {
 function deleteStudent(req, res) {
   const { id } = req.query;
 
-  Student.findByIdAndDelete(id)
+  Student.findOneAndDelete({
+    studentID: id
+  })
     .then(student =>
       res.status(200).json({
         success: true,

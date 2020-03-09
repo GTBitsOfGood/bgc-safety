@@ -14,6 +14,10 @@ class MyApp extends App {
           <title>Nextjs-Starter</title>
           <link
             rel="stylesheet"
+            href="https://fonts.googleapis.com/css?family=Raleway"
+          />
+          <link
+            rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Raleway:bold"
           />
           <link
@@ -22,7 +26,7 @@ class MyApp extends App {
           />
         </Head>
         <div className="App">
-          <Header />
+          <Header defaultSelected="Home" />
           <div className="Content">
             <Component {...pageProps} />
           </div>
