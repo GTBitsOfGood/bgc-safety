@@ -40,6 +40,12 @@ class CSVUpload extends React.Component {
       });
   }
 
+  clearFile = () => {
+    console.log("Clearing file");
+    this.setState({selectedFile: undefined})
+    this.setState({ uploadedFile: false })
+  }
+
   render() {
     const { uploadedFile } = this.state;
     const { sentFile } = this.state;
@@ -76,7 +82,7 @@ class CSVUpload extends React.Component {
             </div>
           </div>
           <div className="button-container">
-            <button type="button" className="btn btn-danger" >
+            <button type="button" className="btn btn-danger" onClick={this.clearFile}>
               Cancel
             </button>
             <button type="button" className="btn btn-success" onClick={this.sendCsv}>
