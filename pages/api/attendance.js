@@ -17,18 +17,7 @@ export default async (req, res) => {
     req.query.endDate !== undefined
   ) {
     getStudentAttendanceTimeRange(req, res);
-  } else {
-    res.setHeader("Allow", ["GET"]);
-    res.status(405).end("Method ${method} Not Allowed");
-  }
-};
-
-function getBusAttendanceInfo(req, res) {
-  const { schoolName } = req.query;
-
-  Student.find({ schoolName }, { checkInTimes: 1 })
-
-  if (method === "GET" && req.query.studentID !== undefined) {
+  } else if (method === "GET" && req.query.studentID !== undefined) {
     getAttendanceOfStudent(req, res);
   } else if (
     method === "GET" &&
@@ -39,8 +28,27 @@ function getBusAttendanceInfo(req, res) {
     getSchoolAttendanceTimeRange(req, res);
   } else {
     res.setHeader("Allow", ["GET"]);
-    res.status(405).end(`Method ${method} Not Allowed`);
+    res.status(405).end("Method ${method} Not Allowed");
   }
+};
+
+function getBusAttendanceInfo(req, res) {
+  const { schoolName } = req.query;
+
+  Student.find({ schoolName }, { checkInTimes: 1 })
+  .then(checkInTimes =>
+    res.status(200).json({
+        success: true,
+      payload: checkInTimes
+    })
+  )
+  .catch(err =>
+    res.status(400).json({
+      success: false,
+      message: err
+    })
+  );
+
 };
 
 function getAttendanceOfStudent(req, res) {
