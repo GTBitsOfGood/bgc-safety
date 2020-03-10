@@ -22,7 +22,6 @@ html, body, #__next {
 }
 
 .App > .Content {
-    height: 100%;
     padding: 16px;
     overflow-x: hidden;
     overflow-y: auto;
@@ -108,22 +107,14 @@ input[type="file"] {
   color: #4f4f4f;
 }
 
-.icon-lg {
+.big-icon {
   display: block;
   text-align: center;
   font-size: 64px;
   padding-bottom: 15px;
 }
 
-.container {
-  width: 100%;
-  padding: 8px;
-}
-
-.row {
-  margin: 0px;
-}
-
-.col {
-  padding: 0px;
+h1 {
+  font-weight: bold;
+  font-size: 30;
 }

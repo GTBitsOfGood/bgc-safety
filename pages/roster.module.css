@@ -1,6 +1,8 @@
 .table {
   padding: 0.5px;
   border: 0.5px solid #bdbdbd;
+  flex: 1;
+  margin: 0px 8px;
 }
 
 .th {
@@ -35,10 +37,18 @@
   /* background-color: #bdbdbd; */
   color: black;
   font-weight: normal;
+  flex: 1;
+}
+
+.schoolsTable {
+  display: flex;
+  padding-top: 8px;
+  align-items: flex-start;
 }
 
 .busTable {
   padding-bottom: 3px;
+  display: flex;
 }
 
 .oddRow {

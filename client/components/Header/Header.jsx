@@ -71,15 +71,11 @@ class Header extends React.Component {
           toggleDropdown={this.toggleDropdown}
           showContent={showContent}
         >
-          <Link href="/">
-            <a>Home</a>
-          </Link>
-          <Link href="/roster">
-            <a>Bus Roster</a>
-          </Link>
-          <Link href="/history">
-            <a>Attendance History</a>
-          </Link>
+          {routes.map(route => (
+            <Link href={route.link}>
+              <a>{route.name}</a>
+            </Link>
+          ))}
         </Dropdown>
         <h3 style={{ padding: "10px 20px", textAlign: "center" }}>
           {getDate()}
