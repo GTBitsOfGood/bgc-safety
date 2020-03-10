@@ -2,6 +2,7 @@ import React from "react";
 // import fetch from "isomorphic-unfetch";
 import PropTypes from "prop-types";
 import styles from "./roster.module.css";
+import Modal from "../client/components/Modal";
 
 function getNumberCheckedIn(school) {
   let count = 0;
@@ -10,9 +11,13 @@ function getNumberCheckedIn(school) {
   }
   return ` ${count}/${school.students.length}`;
 }
+
 function Roster({ schools }) {
+  const [show, setShow] = React.useState(false);
+
   return (
     <div id="main">
+      {show && <Modal setShow={setShow} />}
       <h1>Harland Boys and Girls Club</h1>
       <div className={styles.roster}>
         <table className={styles.bustable}>
@@ -41,6 +46,9 @@ function Roster({ schools }) {
                 </td>
               </tr>
             ))}
+            <tr>
+              <button onClick={() => setShow(true)}>MANUALLY ADD ENTRY</button>
+            </tr>
           </table>
         ))}
       </div>
