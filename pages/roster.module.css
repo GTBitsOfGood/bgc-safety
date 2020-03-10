@@ -1,34 +1,50 @@
 .table {
-  display: inline;
-  border-spacing: 2px;
-}
-
-.roster {
-  width: fit-content;
+  padding: 0.5px;
+  border: 0.5px solid #bdbdbd;
 }
 
 .th {
-  background-color: rgba(128, 128, 128, 0.39);
-  width: 200px;
+  background-color: #bdbdbd;
+  font-weight: normal;
+  padding: 3px;
 }
 
 .td {
-  background-color: rgba(0, 128, 0, 0.562);
+  background-color: #6fcf97;
   width: fill;
+  padding: 3px;
+  display: flex;
+  justify-content: space-between;
 }
 
-.tdNotCheckedIn {
-  background-color: rgb(220, 220, 220);
-  width: fill;
+.checkedIn {
+  color: #27ae60;
+  margin-top: 3px;
+  margin-right: 3px;
 }
 
-.bustable {
-  border-spacing: 2px;
-  margin-bottom: 0.5vh;
+.busAtCap {
+  background-color: #2d9cdb;
+  color: white;
 }
 
 .busth {
-  width: 202px;
-  background-color: rgba(0, 0, 255, 0.349);
-  color: white;
+  margin: 0px 8px;
+  background-color: #2d9cdb;
+  padding: 3px 5px;
+  /* background-color: #bdbdbd; */
+  color: black;
+  font-weight: normal;
+}
+
+.busTable {
+  padding-bottom: 3px;
+}
+
+.oddRow {
+  background-color: #efefef;
+}
+
+.evenRow {
+  background-color: #f8f8f8;
 }

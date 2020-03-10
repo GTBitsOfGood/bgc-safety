@@ -10,39 +10,55 @@ function getNumberCheckedIn(school) {
   }
   return ` ${count}/${school.students.length}`;
 }
+
 function Roster({ schools }) {
   return (
     <div id="main">
       <h1>Harland Boys and Girls Club</h1>
-      <div className={styles.roster}>
-        <table className={styles.bustable}>
-          <tr className={styles.tr}>
-            {schools.map(school => (
-              <th className={styles.busth}>
+      <div className="container">
+        <div className={`row ${styles.busTable}`}>
+          {schools.map(school => (
+            <div className={`col ${styles.busth}`}>
+              <span className={styles.busAtCap}>
                 Bus A Cap
                 {getNumberCheckedIn(school)}
-              </th>
-            ))}
-          </tr>
-        </table>
-        {schools.map(school => (
-          <table className={styles.table}>
-            <tr className={styles.tr}>
-              <th className={styles.th}>{school.name}</th>
-            </tr>
-            {school.students.map(student => (
-              <tr className={styles.tr}>
-                <td
-                  className={
-                    student.checkedIn ? styles.td : styles.tdNotCheckedIn
-                  }
-                >
-                  {student.name}
-                </td>
-              </tr>
-            ))}
-          </table>
-        ))}
+              </span>
+            </div>
+          ))}
+        </div>
+        <div className="row">
+          {schools.map(school => (
+            <div className="col">
+              <div className="container">
+                <div className={styles.table}>
+                  <div className={`row ${styles.th}`}>
+                    <div className="col">{school.name}</div>
+                  </div>
+                  {school.students.map((student, ind) => (
+                    <div className="row">
+                      {student.checkedIn ? (
+                        <div className={`col ${styles.td}`}>
+                          {student.name}
+                          <i
+                            className={`fa fa-check-circle ${styles.checkedIn}`}
+                          />
+                        </div>
+                      ) : (
+                        <div
+                          className={`col table-color-alt ${styles.td} ${
+                            styles.tdNotCheckedIn
+                          } ${ind % 2 === 0 ? styles.evenRow : styles.oddRow}`}
+                        >
+                          {student.name}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -76,7 +92,7 @@ Roster.getInitialProps = async () => {
       name: "KIPP Collegiate School",
       students: [
         { name: "Johnson", checkedIn: false },
-        { name: "Zachary", checkedIn: true },
+        { name: "Zachary", checkedIn: false },
         { name: "Sally", checkedIn: false }
       ]
     }
