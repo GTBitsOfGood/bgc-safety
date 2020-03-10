@@ -9,7 +9,7 @@ class CSVUpload extends React.Component {
 
     this.state = {
       uploadedFile: false,
-      selectedFile: "", 
+      selectedFile: "",
       sentFile: false
     };
 
@@ -66,7 +66,7 @@ class CSVUpload extends React.Component {
               {uploadedFile && (
                 <div className="uploaded-container">
                   <div className="file-upload">
-                    <i className="fa fa-check" />
+                    <i className="fa fa-check big-icon" />
                     Received File! Click "Upload" to submit
                   </div>
                 </div>
@@ -74,7 +74,7 @@ class CSVUpload extends React.Component {
               {sentFile && (
                 <div className="uploaded-container">
                   <div className="file-upload">
-                    <i className="fa fa-check" />
+                    <i className="fa fa-check big-icon" />
                     File Uploaded!
                   </div>
                 </div>

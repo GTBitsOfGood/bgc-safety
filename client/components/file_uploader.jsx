@@ -7,7 +7,7 @@ const FileUploader = props => {
   return (
     <div className="upload-container">
       <label htmlFor="file-upload" className="file-upload">
-        <i className="fa fa-plus" />
+        <i className="fa fa-plus big-icon" />
         Click to upload CSV
         <input
           id="file-upload"
