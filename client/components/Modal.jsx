@@ -17,11 +17,12 @@ const Modal = props => {
           <input className="text-field" placeholder="First Name" />
           <input className="text-field" placeholder="Last Name" />
           <input className="text-field" placeholder="School/Pickup Location" />
-          {console.log(props.setShow)}
           <button
             type="button"
             className="btn btn-success"
-            onClick={console.log("hi")}
+            onClick={() => {
+              setShow(false);
+            }}
           >
             Add Student
           </button>
