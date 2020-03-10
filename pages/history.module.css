@@ -1,0 +1,40 @@
+.table {
+  display: inline;
+  border-spacing: 2px;
+}
+
+.roster {
+  width: fit-content;
+}
+
+.th {
+  background-color: rgba(128, 128, 128, 0.39);
+  width: 200px;
+}
+
+.tdRegular {
+  background-color: rgba(128, 128, 128, 0.39);
+  text-align: center;
+  width: fill;
+}
+
+.td {
+  background-color: rgba(0, 128, 0, 0.562);
+  width: 10%;
+}
+
+.tdNotCheckedIn {
+  background-color: rgb(220, 220, 220);
+  width: 10%;
+}
+
+.bustable {
+  border-spacing: 2px;
+  margin-bottom: 0.5vh;
+}
+
+.busth {
+  width: 202px;
+  background-color: rgba(0, 0, 255, 0.349);
+  color: white;
+}

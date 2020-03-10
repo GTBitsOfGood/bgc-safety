@@ -9,7 +9,12 @@ const FileUploader = props => {
       <label htmlFor="file-upload" className="file-upload">
         <i className="fa fa-plus" />
         Click to upload CSV
-        <input id="file-upload" type="file" accept="csv" onChange={onChange} />
+        <input
+          id="file-upload"
+          type="file"
+          accept="csv"
+          onChange={event => onChange(event.target.files)}
+        />
       </label>
     </div>
   );

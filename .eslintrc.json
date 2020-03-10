@@ -27,6 +27,7 @@
         "prettier/prettier": ["error"],
         "linebreak-style": 0,
         "no-underscore-dangle": "off",
-        "react/jsx-props-no-spreading": "off"
+        "react/jsx-props-no-spreading": "off",
+        "jsx-a11y/anchor-is-valid": 0
     }
 }
