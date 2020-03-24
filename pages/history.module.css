@@ -1,6 +1,28 @@
+.filters {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+}
+
+.filters h2 {
+  margin-right: 20px;
+}
+
+.sort {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+}
+
+.sort h2 {
+  margin-right: 20px;
+}
+
 .table {
-  display: inline;
+  width: 90%;
+  margin-top: 20px;
   border-spacing: 2px;
+  text-align: center;
 }
 
 .roster {
@@ -12,22 +34,17 @@
   width: 200px;
 }
 
-.tdRegular {
+.td {
   background-color: rgba(128, 128, 128, 0.39);
   text-align: center;
   width: fill;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
-.td {
-  background-color: rgba(0, 128, 0, 0.562);
-  width: 10%;
+.tr:nth-child(even) {
+  background-color: #efefef;
 }
-
-.tdNotCheckedIn {
-  background-color: rgb(220, 220, 220);
-  width: 10%;
-}
-
 .bustable {
   border-spacing: 2px;
   margin-bottom: 0.5vh;

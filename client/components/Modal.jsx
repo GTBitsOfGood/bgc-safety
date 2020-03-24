@@ -4,9 +4,6 @@ import styles from "./Modal.module.css";
 
 const Modal = props => {
   const { setShow } = props;
-  // React.useEffect(() => {
-  //   setShow(show);
-  // }, [show]);
 
   return (
     <div id="myModal" className={styles.modal}>
