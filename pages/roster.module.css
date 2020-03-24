@@ -8,7 +8,7 @@
 .th {
   background-color: #bdbdbd;
   font-weight: normal;
-  padding: 3px;
+  padding: 8px 3px;
 }
 
 .td {
@@ -33,7 +33,7 @@
 .busth {
   margin: 0px 8px;
   background-color: #2d9cdb;
-  padding: 3px 5px;
+  padding: 8px 5px;
   /* background-color: #bdbdbd; */
   color: black;
   font-weight: normal;
