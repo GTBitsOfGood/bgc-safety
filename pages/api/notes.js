@@ -7,23 +7,25 @@ export default async (req, res) => {
 
   const { method } = req;
   if (method === "POST") {
-    checkInStudent(req, res);
+    addNote(req, res);
+  } else if (method === "DELETE") {
+    deleteNote(req, res);
   } else {
-    res.setHeader("Allow", "POST");
+    res.setHeader("Allow", ["POST", "DELETE"]);
     res.status(405).end(`Method ${method} Not Allowed`);
   }
 };
 
-function checkInStudent(req, res) {
+function addNote(req, res) {
   const { id } = req.query;
-  const { time } = req.body;
+  const { note } = req.body;
 
   Student.findOneAndUpdate(
     {
       studentID: id
     },
     {
-      $push: { checkInTimes: time }
+      $set: { notes: note }
     },
     {
       new: true
@@ -32,7 +34,31 @@ function checkInStudent(req, res) {
     .then(student => {
       res.status(200).json({
         success: true,
-        payload: student.checkInTimes
+        payload: student.notes
+      });
+    })
+    .catch(err => {
+      res.status(400).json({
+        success: false,
+        error: err
+      });
+    });
+}
+
+function deleteNote(req, res) {
+  const { id } = req.query;
+
+  Student.findOneAndUpdate(
+    {
+      studentID: id
+    },
+    {
+      notes: undefined
+    }
+  )
+    .then(() => {
+      res.status(200).json({
+        success: true
       });
     })
     .catch(err => {
