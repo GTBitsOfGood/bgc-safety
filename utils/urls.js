@@ -21,6 +21,7 @@ export default {
     notes: "/api/student/notes",
     club: "/api/club",
     school: "/api/school",
+    attendance: "api/attendance",
     checkIn: "/api/checkIn/",
     uploadCsv: "/api/upload_csv"
   }
