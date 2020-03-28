@@ -1,7 +1,7 @@
 /* eslint-disable no-use-before-define */
 import mongoDB from "../../server/mongodb/index";
 import Student from "../../server/mongodb/models/StudentSchema";
-import Club from "../../server/mongodb/models/Club"
+import Club from "../../server/mongodb/models/Club";
 
 export default async (req, res) => {
   await mongoDB();
@@ -17,6 +17,12 @@ export default async (req, res) => {
     req.query.endDate !== undefined
   ) {
     getStudentAttendanceTimeRange(req, res);
+  } else if (
+    method === "GET" &&
+    req.query.studentID !== undefined &&
+    req.query.currDate !== undefined
+  ) {
+    getNumberOfStudentAttendanceDays(req, res);
   } else if (method === "GET" && req.query.studentID !== undefined) {
     getAttendanceOfStudent(req, res);
   } else if (
@@ -36,20 +42,19 @@ function getBusAttendanceInfo(req, res) {
   const { schoolName } = req.query;
 
   Student.find({ schoolName }, { checkInTimes: 1 })
-  .then(checkInTimes =>
-    res.status(200).json({
+    .then(checkInTimes =>
+      res.status(200).json({
         success: true,
-      payload: checkInTimes
-    })
-  )
-  .catch(err =>
-    res.status(400).json({
-      success: false,
-      message: err
-    })
-  );
-
-};
+        payload: checkInTimes
+      })
+    )
+    .catch(err =>
+      res.status(400).json({
+        success: false,
+        message: err
+      })
+    );
+}
 
 function getAttendanceOfStudent(req, res) {
   const { studentID } = req.query;
@@ -61,10 +66,41 @@ function getAttendanceOfStudent(req, res) {
     {
       checkInTimes: 1
     }
-  ).then(checkInTimes =>
+  )
+    .then(checkInTimes =>
       res.status(200).json({
         success: true,
         payload: checkInTimes
+      })
+    )
+    .catch(err =>
+      res.status(400).json({
+        success: false,
+        message: err
+      })
+    );
+}
+
+function getNumberOfStudentAttendanceDays(req, res) {
+  const { studentID, currDate } = req.query;
+  const currDateParsed = new Date(Date.parse(currDate));
+  const y = currDateParsed.getFullYear();
+  const m = currDateParsed.getMonth();
+  const firstDay = new Date(y, m, 1);
+  const lastDay = new Date(y, m + 1, 0);
+
+  Student.find(
+    {
+      studentID
+    },
+    {
+      checkInTimes: 1
+    }
+  )
+    .then(checkInTimes =>
+      res.status(200).json({
+        success: true,
+        payload: getNumberDays(firstDay, lastDay, checkInTimes)
       })
     )
     .catch(err =>
@@ -97,6 +133,30 @@ function getStudentAttendanceTimeRange(req, res) {
     );
 }
 
+function getSchoolAttendanceTimeRange(req, res) {
+  const { schoolName, startDate, endDate } = req.query;
+
+  Student.find({
+    schoolName
+  })
+    .then(students => {
+      res.status(200).json({
+        success: true,
+        payload: convertToDict(
+          Date.parse(startDate),
+          Date.parse(endDate),
+          students
+        )
+      });
+    })
+    .catch(err => {
+      res.status(400).json({
+        success: false,
+        error: err
+      });
+    });
+}
+
 function filterTimes(startDate, endDate, checkInTimes) {
   try {
     var filteredDates = [];
@@ -111,32 +171,12 @@ function filterTimes(startDate, endDate, checkInTimes) {
   }
   return filteredDates;
 }
-function getSchoolAttendanceTimeRange(req, res) {
-  const { schoolName, startDate, endDate } = req.query;
-
-  Student.find({
-    schoolName
-  })
-    .then(students => {
-      res.status(200).json({
-        success: true,
-        payload: convertToDict(Date.parse(startDate), Date.parse(endDate), students)
-      });
-    })
-    .catch(err => {
-      res.status(400).json({
-        success: false,
-        error: err
-      });
-    });
-}
 
 function convertToDict(startDate, endDate, students) {
-
-  var dict = {};
+  const dict = {};
 
   try {
-    var student;
+    let student;
     for (student of students) {
       var date;
       for (date of student.checkInTimes) {
@@ -148,10 +188,24 @@ function convertToDict(startDate, endDate, students) {
         }
       }
     }
-  } catch(err) {
+  } catch (err) {
     console.log(err);
   }
 
   return dict;
 }
 
+function getNumberDays(startDate, endDate, checkInTimes) {
+  try {
+    var count = 0;
+    let date;
+    for (date of checkInTimes[0].checkInTimes) {
+      if (Date.parse(date) >= startDate && Date.parse(date) <= endDate) {
+        count++;
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
+  return count;
+}
