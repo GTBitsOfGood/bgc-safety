@@ -34,6 +34,9 @@ const StudentSchema = new Schema({
   picture: {
     type: String
   },
+  BusRoute: {
+    type: String
+  },
   checkInTimes: {
     type: [
       {
