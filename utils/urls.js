@@ -22,7 +22,9 @@ export default {
     club: "/api/club",
     school: "/api/school",
     attendance: "api/attendance",
-    checkIn: "/api/checkIn/",
-    uploadCsv: "/api/upload_csv"
+    checkIn: "/api/checkIn",
+    uploadCsv: "/api/upload_csv",
+    users: "/api/users",
+    login: "/api/login"
   }
 };
