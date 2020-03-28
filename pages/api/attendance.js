@@ -1,7 +1,6 @@
 /* eslint-disable no-use-before-define */
 import mongoDB from "../../server/mongodb/index";
 import Student from "../../server/mongodb/models/StudentSchema";
-import Club from "../../server/mongodb/models/Club";
 
 export default async (req, res) => {
   await mongoDB();
