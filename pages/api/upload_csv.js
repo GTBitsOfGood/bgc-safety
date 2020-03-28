@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import mongoDB from "../../server/mongodb/index";
-import Student from "../../server/mongodb/models/StudentSchema";
+import Student from "../../server/mongodb/models/Student";
 import Club from "../../server/mongodb/models/Club";
 
 const neatCsv = require("neat-csv");
@@ -59,7 +59,7 @@ function parseCsv(req, res, dat) {
             } else {
                 clubs[currClub] = new Set([currSchool])
             }
-            }
+        }
 
             for (var club in clubs) {
                 const newClub = new Club({
@@ -73,11 +73,9 @@ function parseCsv(req, res, dat) {
                     console.log(newStudent)
                     console.log("Error")
                     console.log(err)
-                }
+                })
             }
-            
     }).then(() => {
         res.status(200).send({"success": true})
-
     })
 }
