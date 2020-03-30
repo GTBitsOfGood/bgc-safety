@@ -79,6 +79,7 @@ const History = props => {
           .map(filter => {
             return (
               <Chip
+                style={{ backgroundColor: "#6FCF97" }}
                 label={filter}
                 onDelete={() => handleDeleteFilters(filter)}
                 style={{ margin: "10px" }}
