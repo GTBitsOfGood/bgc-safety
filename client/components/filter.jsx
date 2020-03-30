@@ -35,7 +35,9 @@ const Filter = props => {
       <button
         type="button"
         className={styles.dropbtn}
-        onClick={() => setShow(!show)}
+        onClick={() => {
+          setShow(!show)
+        }}
       >
         {props.children}
         {props.options != undefined && (
