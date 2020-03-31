@@ -61,6 +61,34 @@ function History() {
         schoolName: "Holland Elementary",
         grade: "Grade 4",
         attendance: 0.6
+      },
+      {
+        firstName: "Marshall",
+        lastName: "JerMiya",
+        schoolName: "Holland Elementary",
+        grade: "Grade 4",
+        attendance: 0.6
+      },
+      {
+        firstName: "Marshall",
+        lastName: "JerMiya",
+        schoolName: "Holland Elementary",
+        grade: "Grade 4",
+        attendance: 0.6
+      },
+      {
+        firstName: "Marshall",
+        lastName: "JerMiya",
+        schoolName: "Holland Elementary",
+        grade: "Grade 4",
+        attendance: 0.6
+      },
+      {
+        firstName: "Marshall",
+        lastName: "JerMiya",
+        schoolName: "Holland Elementary",
+        grade: "Grade 4",
+        attendance: 0.6
       }
     ];
     setVisibleStudents(students);
@@ -110,7 +138,8 @@ function History() {
 
   return (
     <div className={styles.container}>
-      <h2>Filter By</h2>
+      <h3>Bus Attendance Matrix</h3>
+      <h1>Harland Boys and Girls Club 2019-2020 Afterschool Registration</h1>
       <div className={styles.chips}>
         {filters
           .filter(filter => filter != "")
@@ -125,7 +154,8 @@ function History() {
           })}
       </div>
       <div className={styles.filters}>
-        <FormControl variant="outlined" className={styles.formControl}>
+        <h2>Filter By</h2>
+        <FormControl variant="outlined" className={classes.formControl}>
           <InputLabel id="demo-simple-select-outlined-label">School</InputLabel>
           <Select
             labelId="demo-simple-select-outlined-label"
@@ -137,9 +167,10 @@ function History() {
             <MenuItem value="Manatee Elementary">Manatee Elementary</MenuItem>
             <MenuItem value="Suntree Elementary">Suntree Elementary</MenuItem>
             <MenuItem value="Holy Trinity">Holy Trinity</MenuItem>
+            <MenuItem value="Holland Elementary">Holland Elementary</MenuItem>
           </Select>
         </FormControl>
-        <FormControl variant="outlined" className={styles.formControl}>
+        <FormControl variant="outlined" className={classes.formControl}>
           <InputLabel id="demo-simple-select-outlined-label">Grade</InputLabel>
           <Select
             labelId="demo-simple-select-outlined-label"
@@ -168,18 +199,14 @@ function History() {
 
       <div className={styles.sort}>
         <h2>Sort By</h2>
-        {sortingNames.map((name, index) => {
+        {sortingNames.map(name => {
           return (
             <Button
               style={{
                 backgroundColor: name == sort ? "#6FCF97" : "white"
               }}
               onClick={() => {
-                if (sort != name) {
-                  setSort(name);
-                } else {
-                  setSort("");
-                }
+                sort != name ? setSort(name) : setSort("");
               }}
             >
               {name}
@@ -196,10 +223,16 @@ function History() {
         {visibleStudents.map(student => (
           <tr className={styles.tr}>
             <td>
-              <p>
+              <div
+                style={{
+                  backgroundColor: student.attendance < 0.6 ? "#F2C94C" : "",
+                  width: "100%",
+                  height: "100%"
+                }}
+              >
                 {student.lastName},
-{student.firstName}
-              </p>
+{` ${student.firstName}`}
+              </div>
             </td>
             <td>
               <div
@@ -212,11 +245,23 @@ function History() {
               />
             </td>
             <td>
-              <div>
+              <div className={styles.status}>
+                <span
+                  className={styles.dot}
+                  style={{
+                    backgroundColor:
+                      student.attendance < 0.6 ? "#F2C94C" : "#6FCF97"
+                  }}
+                />
+
                 {student.attendance < 0.6 ? (
-                  <p>Low Attendance</p>
+                  <>
+                    <p style={{ margin: "5px" }}>Low Attendance</p>
+                  </>
                 ) : (
-                  <p>Active</p>
+                  <>
+                    <p style={{ margin: "5px" }}>Active</p>
+                  </>
                 )}
               </div>
             </td>
