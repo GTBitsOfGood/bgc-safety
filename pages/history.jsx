@@ -10,20 +10,81 @@ import styles from "./history.module.css";
 
 const sortingNames = ["Alphabetical", "Grade", "Low Attendance"];
 
-const History = props => {
-  const useStyles = makeStyles(theme => ({
-    formControl: {
-      margin: theme.spacing(1),
-      minWidth: 120
-    },
-    selectEmpty: {
-      marginTop: theme.spacing(2)
-    }
-  }));
+const useStyles = makeStyles(theme => ({
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2)
+  }
+}));
 
+let students = [];
+
+function History() {
   const classes = useStyles();
+  const [visibleStudents, setVisibleStudents] = React.useState([]);
   const [filters, setFilters] = React.useState(["", "", ""]);
-  const [sorts, setSort] = React.useState(["", "", ""]);
+  const filterLabels = ["schoolName", "grade", "attendance"];
+  const [sort, setSort] = React.useState("");
+
+  React.useEffect(() => {
+    // fetch("api").then(res => res.json).then(response => {
+    //   setStudents(response.students)
+    // })
+    students = [
+      {
+        firstName: "Jabreal",
+        lastName: "Diah",
+        schoolName: "Manatee Elementary",
+        grade: "Grade 1",
+        attendance: 0.5
+      },
+      {
+        firstName: "David",
+        lastName: "Rogers",
+        schoolName: "Holy Trinity",
+        grade: "Grade 2",
+        attendance: 0.5
+      },
+      {
+        firstName: "Saurav",
+        lastName: "Ghosal",
+        schoolName: "Suntree Elementary",
+        grade: "Grade 3",
+        attendance: 0.5
+      },
+      {
+        firstName: "Marshall",
+        lastName: "JerMiya",
+        schoolName: "Holland Elementary",
+        grade: "Grade 4",
+        attendance: 0.6
+      }
+    ];
+    setVisibleStudents(students);
+  }, []);
+
+  React.useEffect(() => {
+    console.log(filters);
+    let filtered = false;
+    setVisibleStudents(students);
+    filters.forEach((filter, i) => {
+      if (filter != "" && !filtered) {
+        filtered = true;
+        setVisibleStudents(
+          students.filter(student => student[filterLabels[i]] == filter)
+        );
+      }
+      if (filter != "" && filtered) {
+        console.log(visibleStudents);
+        setVisibleStudents(
+          visibleStudents.filter(student => student[filterLabels[i]] == filter)
+        );
+      }
+    });
+  }, [filters]);
 
   const handleUpdateFilters = (newFilter, index) => {
     setFilters(
@@ -47,31 +108,8 @@ const History = props => {
     );
   };
 
-  const handleUpdateSorts = (newSort, index) => {
-    setSort(
-      sorts.map((sort, i) => {
-        if (i == index) {
-          return newSort;
-        }
-        return sort;
-      })
-    );
-  };
-
-  const handleDeleteSorts = deleteSort => {
-    setSort(
-      sorts.map(sort => {
-        if (sort == deleteSort) {
-          return "";
-        }
-        return sort;
-      })
-    );
-  };
-
   return (
     <div className={styles.container}>
-      {console.log(filters)}
       <h2>Filter By</h2>
       <div className={styles.chips}>
         {filters
@@ -79,7 +117,6 @@ const History = props => {
           .map(filter => {
             return (
               <Chip
-                style={{ backgroundColor: "#6FCF97" }}
                 label={filter}
                 onDelete={() => handleDeleteFilters(filter)}
                 style={{ margin: "10px" }}
@@ -88,7 +125,7 @@ const History = props => {
           })}
       </div>
       <div className={styles.filters}>
-        <FormControl variant="outlined" className={classes.formControl}>
+        <FormControl variant="outlined" className={styles.formControl}>
           <InputLabel id="demo-simple-select-outlined-label">School</InputLabel>
           <Select
             labelId="demo-simple-select-outlined-label"
@@ -97,12 +134,12 @@ const History = props => {
             onChange={e => handleUpdateFilters(e.target.value, 0)}
             label="School"
           >
-            <MenuItem value="School 1">School 1</MenuItem>
-            <MenuItem value="School 2">School 2</MenuItem>
-            <MenuItem value="School 3">School 3</MenuItem>
+            <MenuItem value="Manatee Elementary">Manatee Elementary</MenuItem>
+            <MenuItem value="Suntree Elementary">Suntree Elementary</MenuItem>
+            <MenuItem value="Holy Trinity">Holy Trinity</MenuItem>
           </Select>
         </FormControl>
-        <FormControl variant="outlined" className={classes.formControl}>
+        <FormControl variant="outlined" className={styles.formControl}>
           <InputLabel id="demo-simple-select-outlined-label">Grade</InputLabel>
           <Select
             labelId="demo-simple-select-outlined-label"
@@ -135,13 +172,13 @@ const History = props => {
           return (
             <Button
               style={{
-                backgroundColor: sorts[index] == "" ? "white" : "#6FCF97"
+                backgroundColor: name == sort ? "#6FCF97" : "white"
               }}
               onClick={() => {
-                if (sorts[index] == "") {
-                  handleUpdateSorts(name, index);
+                if (sort != name) {
+                  setSort(name);
                 } else {
-                  handleDeleteSorts(name);
+                  setSort("");
                 }
               }}
             >
@@ -156,17 +193,31 @@ const History = props => {
           <td className={styles.td}>Overall Attendance </td>
           <td className={styles.td}>Status </td>
         </tr>
-        {props.students.map(student => (
+        {visibleStudents.map(student => (
           <tr className={styles.tr}>
-            <td>{student.name}</td>
+            <td>
+              <p>
+                {student.lastName},
+{student.firstName}
+              </p>
+            </td>
             <td>
               <div
                 style={{
                   width: `${100 * student.attendance}%`,
-                  backgroundColor: "#6FCF97"
+                  height: "20px",
+                  backgroundColor:
+                    student.attendance < 0.6 ? "#F2C94C" : "#6FCF97"
                 }}
-              >
-                {student.attendance}
+              />
+            </td>
+            <td>
+              <div>
+                {student.attendance < 0.6 ? (
+                  <p>Low Attendance</p>
+                ) : (
+                  <p>Active</p>
+                )}
               </div>
             </td>
           </tr>
@@ -174,42 +225,6 @@ const History = props => {
       </table>
     </div>
   );
-};
-
-History.getInitialProps = async () => {
-  // const res = await fetch("https://api.github.com/repos/zeit/next.js");
-  // const json = await res.json()
-  const data = [
-    {
-      name: "Paul",
-      attendance: 0.5
-    },
-    {
-      name: "Amanda",
-      attendance: 0.8
-    },
-    {
-      name: "Jeff",
-      attendance: 1
-    },
-    {
-      name: "Steve",
-      attendance: 0.5
-    },
-    {
-      name: "Johnson",
-      attendance: 0.15
-    },
-    {
-      name: "Zachary",
-      attendance: 0.4
-    },
-    {
-      name: "Sally",
-      attendance: 0.55
-    }
-  ];
-  return { students: data };
-};
+}
 
 export default History;

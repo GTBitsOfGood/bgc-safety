@@ -2,6 +2,12 @@
   margin-right: 20px;
 }
 
+.filter {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
 .sort {
   display: flex;
   flex-direction: row;
@@ -32,8 +38,8 @@
   background-color: rgba(128, 128, 128, 0.39);
   text-align: center;
   width: fill;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  padding-top: 2px;
+  padding-bottom: 2px;
 }
 
 .tr:nth-child(even) {
