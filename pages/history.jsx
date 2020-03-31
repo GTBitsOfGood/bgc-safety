@@ -10,6 +10,9 @@ import styles from "./history.module.css";
 
 const sortingNames = ["Alphabetical", "Grade", "Low Attendance"];
 
+const lowAttendance = "#F2C94C";
+const highAttendance = "#6FCF97";
+
 const useStyles = makeStyles(theme => ({
   formControl: {
     margin: theme.spacing(1),
@@ -156,10 +159,8 @@ function History() {
       <div className={styles.filters}>
         <h2>Filter By</h2>
         <FormControl variant="outlined" className={classes.formControl}>
-          <InputLabel id="demo-simple-select-outlined-label">School</InputLabel>
+          <InputLabel>School</InputLabel>
           <Select
-            labelId="demo-simple-select-outlined-label"
-            id="demo-simple-select-outlined"
             value={filters[0]}
             onChange={e => handleUpdateFilters(e.target.value, 0)}
             label="School"
@@ -171,10 +172,8 @@ function History() {
           </Select>
         </FormControl>
         <FormControl variant="outlined" className={classes.formControl}>
-          <InputLabel id="demo-simple-select-outlined-label">Grade</InputLabel>
+          <InputLabel>Grade</InputLabel>
           <Select
-            labelId="demo-simple-select-outlined-label"
-            id="demo-simple-select-outlined"
             value={filters[1]}
             onChange={e => handleUpdateFilters(e.target.value, 1)}
             label="Grade"
@@ -203,7 +202,7 @@ function History() {
           return (
             <Button
               style={{
-                backgroundColor: name == sort ? "#6FCF97" : "white"
+                backgroundColor: name == sort ? highAttendance : "white"
               }}
               onClick={() => {
                 sort != name ? setSort(name) : setSort("");
@@ -222,14 +221,12 @@ function History() {
         </tr>
         {visibleStudents.map(student => (
           <tr className={styles.tr}>
-            <td>
-              <div
-                style={{
-                  backgroundColor: student.attendance < 0.6 ? "#F2C94C" : "",
-                  width: "100%",
-                  height: "100%"
-                }}
-              >
+            <td
+              style={{
+                backgroundColor: student.attendance < 0.6 ? lowAttendance : ""
+              }}
+            >
+              <div>
                 {student.lastName},
 {` ${student.firstName}`}
               </div>
@@ -240,7 +237,7 @@ function History() {
                   width: `${100 * student.attendance}%`,
                   height: "20px",
                   backgroundColor:
-                    student.attendance < 0.6 ? "#F2C94C" : "#6FCF97"
+                    student.attendance < 0.6 ? lowAttendance : highAttendance
                 }}
               />
             </td>
@@ -250,18 +247,14 @@ function History() {
                   className={styles.dot}
                   style={{
                     backgroundColor:
-                      student.attendance < 0.6 ? "#F2C94C" : "#6FCF97"
+                      student.attendance < 0.6 ? lowAttendance : highAttendance
                   }}
                 />
 
                 {student.attendance < 0.6 ? (
-                  <>
-                    <p style={{ margin: "5px" }}>Low Attendance</p>
-                  </>
+                  <p style={{ margin: "5px" }}>Low Attendance</p>
                 ) : (
-                  <>
-                    <p style={{ margin: "5px" }}>Active</p>
-                  </>
+                  <p style={{ margin: "5px" }}>Active</p>
                 )}
               </div>
             </td>

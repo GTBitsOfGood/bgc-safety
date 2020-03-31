@@ -1,7 +1,8 @@
 import React from "react";
 import Router from "next/router";
-import Link from "next/link";
 import PropTypes from "prop-types";
+import Link from "react-router-dom";
+import HamburgerMenu from "./HamburgerMenu";
 
 import styles from "./Header.module.css";
 import Dropdown from "../dropdown";
@@ -66,6 +67,7 @@ class Header extends React.Component {
     const { showContent, selected } = this.state;
     return (
       <div className={styles.root}>
+        <HamburgerMenu />
         <Dropdown
           selected={selected}
           toggleDropdown={this.toggleDropdown}
