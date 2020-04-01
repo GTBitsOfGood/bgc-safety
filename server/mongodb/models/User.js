@@ -22,6 +22,11 @@ const UserSchema = new Schema({
     type: String,
     enum: ["Admin", "ClubDirector", "BusDriver"],
     required: true
+  },
+  club: {
+    type: String,
+    required: true,
+    default: "All"
   }
 });
 

@@ -27,7 +27,8 @@ export async function login(email, password) {
         return jwt.sign(
           {
             email: user.BGCMA_email,
-            type: user.type
+            type: user.type,
+            club: user.club
           },
           process.env.JWT_SECRET,
           {

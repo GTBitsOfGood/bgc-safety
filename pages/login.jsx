@@ -4,25 +4,48 @@ import axios from "axios";
 import { Component } from 'react'
 
 class Login extends Component {
-  constructor(props) {
-    super(props);
-  
-    this.state = {
-      showContent: false,
-      selected: props.defaultSelected
-    };
-  
-    this.toggleDropdown = this.toggleDropdown.bind(this);
-  
-    Router.events.on("routeChangeComplete", url => {
-      const route = routes.find(rt => rt.link === url);
-      if (route) {
-        this.setState({ selected: route.name });
-      }
-      this.setState({ showContent: false });
-    });
+
+
+  static getInitialProps ({ req }) {
+    const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http'
+
+    const apiUrl = process.browser
+      ? `${protocol}://${window.location.host}/api/login.js`
+      : `${protocol}://${req.headers.host}/api/login.js`
+
+    return { apiUrl }
   }
+
+  constructor (props) {
+    super(props)
+
+    this.state = { username: '', error: '' }
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+  }
+
+  // constructor(props) {
+  //   super(props);
   
+  //   this.state = {
+  //     showContent: false,
+  //     selected: props.defaultSelected
+  //   };
+  
+  //   this.toggleDropdown = this.toggleDropdown.bind(this);
+  
+  //   Router.events.on("routeChangeComplete", url => {
+  //     const route = routes.find(rt => rt.link === url);
+  //     if (route) {
+  //       this.setState({ selected: route.name });
+  //     }
+  //     this.setState({ showContent: false });
+  //   });
+  // }
+  
+  handleChange (event) {
+    this.setState({ username: event.target.value })
+  }
 
   async handleSubmit (event) {
     event.preventDefault()
