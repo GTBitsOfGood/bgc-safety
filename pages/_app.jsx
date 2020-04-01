@@ -1,10 +1,18 @@
 import App from "next/app";
 import React from "react";
 import Head from "next/head";
-import Header from "../client/components/Header";
+import Header from "../client/components/header";
 import "../public/static/App.css";
 
 class MyApp extends App {
+  componentDidMount() {
+    // Remove the server-side injected CSS.
+    const jssStyles = document.querySelector("#jss-server-side");
+    if (jssStyles) {
+      jssStyles.parentElement.removeChild(jssStyles);
+    }
+  }
+
   render() {
     const { Component, pageProps } = this.props;
 

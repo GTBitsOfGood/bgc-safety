@@ -1,7 +1,5 @@
 .container {
   margin: 20px;
-  overflow-x: hidden;
-  overflow-y: hidden;
 }
 
 .filters h2 {
@@ -24,14 +22,6 @@
   margin-right: 20px;
 }
 
-.table {
-  width: 90%;
-  margin-top: 20px;
-  border-spacing: 2px;
-  text-align: center;
-  overflow: scroll;
-}
-
 .roster {
   width: fit-content;
 }
@@ -39,26 +29,6 @@
 .th {
   background-color: rgba(128, 128, 128, 0.39);
   width: 200px;
-}
-
-.td {
-  background-color: rgba(128, 128, 128, 0.39);
-  text-align: center;
-  width: fill;
-  padding-top: 2px;
-  padding-bottom: 2px;
-}
-
-.tr:nth-child(even) {
-  background-color: #efefef;
-}
-
-.dot {
-  height: 20px;
-  width: 20px;
-  margin: 5px;
-  border-radius: 50%;
-  display: inline-block;
 }
 
 .status {

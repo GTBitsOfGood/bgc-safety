@@ -28,6 +28,9 @@ const StudentSchema = new Schema({
     type: String,
     required: true
   },
+  notes: {
+    type: String
+  },
   picture: {
     type: String
   },

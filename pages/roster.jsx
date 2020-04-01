@@ -1,8 +1,54 @@
 import React from "react";
 // import fetch from "isomorphic-unfetch";
 import PropTypes from "prop-types";
+import { makeStyles } from "@material-ui/core/styles";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import styles from "./roster.module.css";
-import Modal from "../client/components/Modal";
+import SimpleModal from "../client/components/SimpleModal";
+
+const useStyles = makeStyles(theme => ({
+  content: {
+    position: "absolute",
+    width: "500px",
+    height: " 300px",
+    boxShadow: theme.shadows[5],
+    backgroundColor: "white",
+    left: "50%",
+    marginLeft: "-250px",
+    top: "50%",
+    marginTop: "-150px",
+    padding: theme.spacing(2, 4, 3),
+    display: "flex",
+    flexFlow: "column wrap",
+    textAlign: "center",
+    justifyContent: "space-around"
+  },
+  button: {
+    width: "100%",
+    backgroundColor: "#F2C94C",
+    border: "none",
+    boxShadow: "none",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    "&:hover": {
+      cursor: "pointer"
+    }
+  },
+  icon: {
+    marginLeft: "5px",
+    width: "20px",
+    height: "20px",
+    color: "#F2994A"
+  },
+  tr: {
+    "&:nth-child(even)": {
+      backgroundColor: "#efefef"
+    }
+  },
+}));
 
 function getNumberCheckedIn(school) {
   let count = 0;
@@ -13,11 +59,19 @@ function getNumberCheckedIn(school) {
 }
 
 function Roster({ schools }) {
-  const [show, setShow] = React.useState(false);
+  const classes = useStyles();
+  const [student, setStudent] = React.useState({});
+  const [firstName, setFirstName] = React.useState("");
+  const [lastName, setLastName] = React.useState("");
+  const [studentSchool, setStudentSchool] = React.useState("");
+
+  const handleSubmit = () => {
+    setStudent({ firstName, lastName, school });
+    // add to database
+  };
 
   return (
     <div id="main">
-      {show && <Modal setShow={setShow} />}
       <h1>Harland Boys and Girls Club</h1>
       <div className={styles.roster}>
         <table className={styles.bustable}>
@@ -36,18 +90,71 @@ function Roster({ schools }) {
               <th className={styles.th}>{school.name}</th>
             </tr>
             {school.students.map(student => (
-              <tr className={styles.tr}>
+              <tr className={classes.tr}>
                 <td
-                  className={
-                    student.checkedIn ? styles.td : styles.tdNotCheckedIn
-                  }
+                  className={styles.td}
+                  style={{
+                    backgroundColor: student.checkedIn
+                      ? "rgba(0, 128, 0, 0.562)"
+                      : " "
+                  }}
                 >
                   {student.name}
+                  {student.checkedIn && (
+                    <CheckCircleIcon
+                      style={{
+                        alignSelf: "flex-end",
+                        marginLeft: "auto",
+                        fill: "white"
+                      }}
+                    />
+                  )}
                 </td>
               </tr>
             ))}
             <tr>
-              <button onClick={() => setShow(true)}>MANUALLY ADD ENTRY</button>
+              <SimpleModal
+                setStudent={setStudent}
+                button={
+                  <>
+                    Manually Add Entry
+                    <AddCircleIcon className={classes.icon} />
+                  </>
+                }
+                buttonStyle={classes.button}
+              >
+                <form className={classes.content} onSubmit={handleSubmit}>
+                  <h1>Manual Data Entry</h1>
+                  <input
+                    id="firstName"
+                    name="firstName"
+                    type="text"
+                    placeholder="First Name"
+                    value={firstName}
+                    onChange={e => setFirstName(e.target.value)}
+                  />
+                  <input
+                    id="lastName"
+                    type="text"
+                    placeholder="Last Name"
+                    value={lastName}
+                    onChange={e => setLastName(e.target.value)}
+                  />
+                  <input
+                    id="school"
+                    type="text"
+                    placeholder="School/Pickup Location"
+                    value={studentSchool}
+                    onChange={e => setStudentSchool(e.target.value)}
+                  />
+                  <button
+                    type="submit"
+                    className="btn btn-success"
+                  >
+                    Add Student
+                  </button>
+                </form>
+              </SimpleModal>
             </tr>
           </table>
         ))}
@@ -74,19 +181,53 @@ Roster.getInitialProps = async () => {
     {
       name: "Brown School",
       students: [
-        { name: "Paul", checkedIn: true },
-        { name: "Amanda", checkedIn: false },
-        { name: "Jeff", checkedIn: true },
-        { name: "Steve", checkedIn: true }
-      ]
+        "Chante Lancaster",
+        "Collette Hurst",
+        "Nadine Pemberton",
+        "Eryk Barr",
+        "Marina Mill",
+        "Peggy Wainwright",
+        "Carley Reader",
+        "Cohan Carver",
+        "Keeva Rossi",
+        "Patsy Mann"
+      ].map(student => {
+        return { name: student, checkedIn: Math.random() >= 0.7 };
+      })
     },
     {
       name: "KIPP Collegiate School",
       students: [
-        { name: "Johnson", checkedIn: false },
-        { name: "Zachary", checkedIn: true },
-        { name: "Sally", checkedIn: false }
-      ]
+        "Fiona Healy",
+        "Hiba Burris",
+        " Mehak Dawe",
+        "Kasim Mackenzie",
+        "Thalia Whittle",
+        "Danni Allan",
+        "Dimitri Macleod",
+        "Armani Mccoy",
+        "Keeva Rossi",
+        "Shamas Dillon"
+      ].map(student => {
+        return { name: student, checkedIn: Math.random() >= 0.7 };
+      })
+    },
+    {
+      name: "Suntree Elementary",
+      students: [
+        "Fiona Healy",
+        "Hiba Burris",
+        " Mehak Dawe",
+        "Kasim Mackenzie",
+        "Thalia Whittle",
+        "Danni Allan",
+        "Dimitri Macleod",
+        "Armani Mccoy",
+        "Keeva Rossi",
+        "Shamas Dillon"
+      ].map(student => {
+        return { name: student, checkedIn: Math.random() >= 0.7 };
+      })
     }
   ];
   return { schools: data };

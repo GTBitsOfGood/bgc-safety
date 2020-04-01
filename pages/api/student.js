@@ -29,6 +29,7 @@ function createStudent(req, res) {
     SchoolName,
     Grade,
     ClubName,
+    Notes,
     Picture
   } = req.body;
 
@@ -39,6 +40,7 @@ function createStudent(req, res) {
     schoolName: SchoolName,
     grade: Grade,
     clubName: ClubName,
+    notes: Notes,
     picture: Picture
   });
 
@@ -68,6 +70,7 @@ function updateStudent(req, res) {
     SchoolName,
     Grade,
     ClubName,
+    Notes,
     Picture
   } = req.body;
 
@@ -82,6 +85,7 @@ function updateStudent(req, res) {
       schoolName: SchoolName,
       grade: Grade,
       clubName: ClubName,
+      notes: Notes,
       picture: Picture
     },
     {

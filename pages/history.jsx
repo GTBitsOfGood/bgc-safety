@@ -4,22 +4,65 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
 import Select from "@material-ui/core/Select";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, createMuiTheme } from "@material-ui/core/styles";
 import Chip from "@material-ui/core/Chip";
+import purple from "@material-ui/core/colors/purple";
 import styles from "./history.module.css";
 
 const sortingNames = ["Alphabetical", "Grade", "Low Attendance"];
 
-const lowAttendance = "#F2C94C";
-const highAttendance = "#6FCF97";
+const lowAttendance = "#FFCF50";
+const highAttendance = "#40B24B";
 
 const useStyles = makeStyles(theme => ({
   formControl: {
+    borderRadius: "20px",
     margin: theme.spacing(1),
     minWidth: 120
   },
   selectEmpty: {
     marginTop: theme.spacing(2)
+  },
+  selectButton: {
+    borderRadius: "20px"
+  },
+  button: {
+    borderRadius: "20px",
+
+    margin: "10px"
+  },
+  table: {
+    width: "100%",
+    marginTop: "20px",
+    borderSpacing: "2px",
+    textAlign: "center",
+    overflow: "scroll"
+  },
+  td: {
+    textAlign: "center",
+    width: "fill",
+    paddingTop: "2px",
+    paddingBottom: "2px"
+  },
+  tr: {
+    "&:nth-child(even)": {
+      backgroundColor: "#efefef"
+    }
+  },
+  firstTr: {
+    backgroundColor: "#E0E0E0",
+    td: {
+      "&:nth-child(-n+3)": {
+        padding: "20px"
+      }
+    }
+  },
+  dot: {
+    height: "20px",
+    width: "20px",
+    margin: "5px",
+    borderRadius: "50%",
+    display: "inline-block"
   }
 }));
 
@@ -141,7 +184,7 @@ function History() {
 
   return (
     <div className={styles.container}>
-      <h3>Bus Attendance Matrix</h3>
+      <p style={{ fontSize: "200" }}>Bus Attendance Matrix</p>
       <h1>Harland Boys and Girls Club 2019-2020 Afterschool Registration</h1>
       <div className={styles.chips}>
         {filters
@@ -152,6 +195,7 @@ function History() {
                 label={filter}
                 onDelete={() => handleDeleteFilters(filter)}
                 style={{ margin: "10px" }}
+                color="primary"
               />
             );
           })}
@@ -163,6 +207,7 @@ function History() {
           <Select
             value={filters[0]}
             onChange={e => handleUpdateFilters(e.target.value, 0)}
+            className={classes.selectButton}
             label="School"
           >
             <MenuItem value="Manatee Elementary">Manatee Elementary</MenuItem>
@@ -176,6 +221,7 @@ function History() {
           <Select
             value={filters[1]}
             onChange={e => handleUpdateFilters(e.target.value, 1)}
+            className={classes.selectButton}
             label="Grade"
           >
             <MenuItem value="Grade 1">Grade 1</MenuItem>
@@ -184,6 +230,8 @@ function History() {
           </Select>
         </FormControl>
         <Button
+          className={classes.button}
+          variant="contained"
           onClick={() => {
             if (filters[2] == "") {
               handleUpdateFilters("Low Attendance", 2);
@@ -201,9 +249,9 @@ function History() {
         {sortingNames.map(name => {
           return (
             <Button
-              style={{
-                backgroundColor: name == sort ? highAttendance : "white"
-              }}
+              className={classes.button}
+              variant="contained"
+              color={name == sort ? "primary" : ""}
               onClick={() => {
                 sort != name ? setSort(name) : setSort("");
               }}
@@ -213,17 +261,19 @@ function History() {
           );
         })}
       </div>
-      <table className={styles.table}>
-        <tr>
-          <td className={styles.td}>Student Name</td>
-          <td className={styles.td}>Overall Attendance </td>
-          <td className={styles.td}>Status </td>
+      <table className={classes.table}>
+        <tr className={classes.firstTr}>
+          <td className={classes.td}>Student Name</td>
+          <td className={classes.td}>Overall Attendance </td>
+          <td className={classes.td}>Status </td>
         </tr>
         {visibleStudents.map(student => (
-          <tr className={styles.tr}>
+          <tr className={classes.tr}>
             <td
+              className={classes.td}
               style={{
-                backgroundColor: student.attendance < 0.6 ? lowAttendance : ""
+                backgroundColor: student.attendance < 0.6 ? lowAttendance : "",
+                width: "20%"
               }}
             >
               <div>
@@ -231,7 +281,7 @@ function History() {
 {` ${student.firstName}`}
               </div>
             </td>
-            <td>
+            <td className={classes.td} style={{ width: "60%" }}>
               <div
                 style={{
                   width: `${100 * student.attendance}%`,
@@ -241,10 +291,10 @@ function History() {
                 }}
               />
             </td>
-            <td>
+            <td className={classes.td} style={{ width: "20%" }}>
               <div className={styles.status}>
                 <span
-                  className={styles.dot}
+                  className={classes.dot}
                   style={{
                     backgroundColor:
                       student.attendance < 0.6 ? lowAttendance : highAttendance
