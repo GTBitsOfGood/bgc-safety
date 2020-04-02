@@ -4,6 +4,8 @@ import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
 import styles from "./roster.module.css";
 import SimpleModal from "../client/components/SimpleModal";
 
@@ -39,15 +41,15 @@ const useStyles = makeStyles(theme => ({
   },
   icon: {
     marginLeft: "5px",
-    width: "20px",
-    height: "20px",
+    width: "15px",
+    height: "15px",
     color: "#F2994A"
   },
   tr: {
     "&:nth-child(even)": {
       backgroundColor: "#efefef"
     }
-  },
+  }
 }));
 
 function getNumberCheckedIn(school) {
@@ -64,16 +66,24 @@ function Roster({ schools }) {
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
   const [studentSchool, setStudentSchool] = React.useState("");
+  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
 
   const handleSubmit = () => {
     setStudent({ firstName, lastName, school });
     // add to database
   };
 
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setSnackbarOpen(true);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [student]);
+
   return (
     <div id="main">
       <h1>Harland Boys and Girls Club</h1>
-      <div className={styles.roster}>
+      <table className={styles.roster}>
         <table className={styles.bustable}>
           <tr className={styles.tr}>
             {schools.map(school => (
@@ -147,10 +157,7 @@ function Roster({ schools }) {
                     value={studentSchool}
                     onChange={e => setStudentSchool(e.target.value)}
                   />
-                  <button
-                    type="submit"
-                    className="btn btn-success"
-                  >
+                  <button type="submit" className="btn btn-success">
                     Add Student
                   </button>
                 </form>
@@ -158,7 +165,17 @@ function Roster({ schools }) {
             </tr>
           </table>
         ))}
-      </div>
+      </table>
+      <Snackbar open={snackbarOpen} onClose={() => setSnackbarOpen(false)}>
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          onClose={() => setSnackbarOpen(false)}
+          severity="success"
+        >
+          Successfully Added Student!
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 }

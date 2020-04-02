@@ -4,15 +4,36 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
 import Select from "@material-ui/core/Select";
-import { makeStyles, createMuiTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Chip from "@material-ui/core/Chip";
-import purple from "@material-ui/core/colors/purple";
+import IconButton from "@material-ui/core/IconButton";
+import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
+import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import styles from "./history.module.css";
 
 const sortingNames = ["Alphabetical", "Grade", "Low Attendance"];
 
 const lowAttendance = "#FFCF50";
 const highAttendance = "#40B24B";
+
+const getMonth = date => {
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+  ];
+
+  return `${months[date.getMonth()]} ${date.getFullYear()}`;
+};
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -63,6 +84,11 @@ const useStyles = makeStyles(theme => ({
     margin: "5px",
     borderRadius: "50%",
     display: "inline-block"
+  },
+  dateSelect: {
+    alignSelf: "center",
+    display: "flex",
+    flexDirection: "row"
   }
 }));
 
@@ -74,6 +100,11 @@ function History() {
   const [filters, setFilters] = React.useState(["", "", ""]);
   const filterLabels = ["schoolName", "grade", "attendance"];
   const [sort, setSort] = React.useState("");
+  const [date, setDate] = React.useState(new Date("1/1/2020"));
+
+  React.useEffect(() => {
+    // fetch date data from the api
+  }, [date]);
 
   React.useEffect(() => {
     // fetch("api").then(res => res.json).then(response => {
@@ -185,7 +216,27 @@ function History() {
   return (
     <div className={styles.container}>
       <p style={{ fontSize: "200" }}>Bus Attendance Matrix</p>
-      <h1>Harland Boys and Girls Club 2019-2020 Afterschool Registration</h1>
+      <h1 style={{ margin: 0 }}>
+        Harland Boys and Girls Club 2019-2020 Afterschool Registration
+      </h1>
+      <div className={classes.dateSelect}>
+        <IconButton
+          aria-label="change-month"
+          onClick={() => setDate(new Date(date.setMonth(date.getMonth() - 1)))}
+        >
+          <ArrowBackIosIcon />
+        </IconButton>
+        <p style={{ marginLeft: "40px", marginRight: "40px" }}>
+          {getMonth(date)}
+        </p>
+        <IconButton
+          aria-label="change-month"
+          onClick={() => setDate(new Date(date.setMonth(date.getMonth() + 1)))}
+        >
+          <ArrowForwardIosIcon />
+        </IconButton>
+      </div>
+
       <div className={styles.chips}>
         {filters
           .filter(filter => filter != "")
@@ -261,6 +312,7 @@ function History() {
           );
         })}
       </div>
+
       <table className={classes.table}>
         <tr className={classes.firstTr}>
           <td className={classes.td}>Student Name</td>

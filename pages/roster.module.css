@@ -13,18 +13,20 @@
 }
 
 .td {
-  padding: 5px;
+  padding: 10px;
   width: fill;
   display: flex;
   align-items: center;
 }
 
 .bustable {
+  display: inline;
   border-spacing: 20px 10px;
 }
 
 .busth {
   width: 302px;
+  margin-left: 20px;
   background-color: rgba(0, 0, 255, 0.349);
   color: white;
 }
