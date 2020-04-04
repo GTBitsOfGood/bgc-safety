@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
@@ -10,9 +11,12 @@ import IconButton from "@material-ui/core/IconButton";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import styles from "./history.module.css";
+const fetch = require("node-fetch");
 
 const lowAttendance = "#FFCF50";
 const highAttendance = "#40B24B";
+const ClubName = "Club" //TODO: Allow user to select a club
+const startDate = "1/01/2020"
 
 const getMonth = date => {
   const months = [
@@ -86,116 +90,70 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-let students = [];
 
-const getDaysInMonth = date => {
-  return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
-};
+let daysInMonth = -1
 
-function History() {
+async function updateStudents(date, students) {
+  var data = []
+
+  let day_list = []
+  var curr = new Date(date);
+  var today = new Date
+  while (curr.getMonth() === date.getMonth() && (curr.getMonth() !== today.getMonth() || curr.getFullYear() !== today.getFullYear() || curr.getDate() <= today.getDate())) { 
+    
+    if (curr.getDay() >= 1 && curr.getDay() <= 5) {
+      day_list.push(((curr.getMonth() + 1) + '/' + String(curr.getDate()).padStart(2, '0') + '/' + curr.getFullYear()));
+    }
+    
+    curr.setDate(curr.getDate() + 1);
+  }
+
+  daysInMonth = day_list.length
+
+  for (var student of students) {
+    const res1 = await fetch('http://localhost:3000/api/attendance?studentID=' + student.studentID + '&startDate=' + day_list[0] + '&endDate=' + day_list[day_list.length - 1])
+    const d = await res1.json()
+
+    if (d.success) {
+
+      var count = 0
+      for (var day of day_list) {
+        count += 1 ? d.payload.includes(day) : 0
+      }
+
+      data.push({
+        firstName: student.firstName,
+        lastName: student.lastName,
+        schoolName: student.schoolName,
+        grade: student.grade,
+        attendance: count/day_list.length,
+        studentID: student.studentID
+      })
+
+    }
+  }
+  
+
+  return data;
+}
+
+
+function History({ students }) {
   const classes = useStyles();
   const [visibleStudents, setVisibleStudents] = React.useState([]);
   const [filters, setFilters] = React.useState(["", "", ""]);
   const filterLabels = ["schoolName", "grade", "attendance"];
   const [sort, setSort] = React.useState("");
   const sortingNames = ["Alphabetical", "Grade", "Low Attendance"];
-  const [date, setDate] = React.useState(new Date("1/1/2020"));
+  const [date, setDate] = React.useState(new Date(startDate));
 
   // fetching date data from api
-  React.useEffect(() => {
-    setVisibleStudents(
-      visibleStudents.map(student => {
-        return { ...student, attendance: Math.round(Math.random() * 10) / 10 };
-      })
-    );
-  }, [date]);
+  React.useEffect(() => async () => {
+  
+    students = await updateStudents(date, students)
+    setVisibleStudents(students)
 
-  // fetching initial student data
-  React.useEffect(() => {
-    // fetch("api").then(res => res.json).then(response => {
-    //   setStudents(response.students)
-    // })
-    students = [
-      {
-        firstName: "Jabreal",
-        lastName: "Diah",
-        schoolName: "Manatee Elementary",
-        grade: "Grade 1",
-        attendance: 0.8
-      },
-      {
-        firstName: "David",
-        lastName: "Rogers",
-        schoolName: "Holy Trinity",
-        grade: "Grade 2",
-        attendance: 0.2
-      },
-      {
-        firstName: "Saurav",
-        lastName: "Ghosal",
-        schoolName: "Suntree Elementary",
-        grade: "Grade 3",
-        attendance: 0.9
-      },
-      {
-        firstName: "Marshall",
-        lastName: "JerMiya",
-        schoolName: "Holland Elementary",
-        grade: "Grade 4",
-        attendance: 0.6
-      },
-      {
-        firstName: "Dave",
-        lastName: "Smyth",
-        schoolName: "Holland Elementary",
-        grade: "Grade 4",
-        attendance: 0.7
-      },
-      {
-        firstName: "Ismaeel",
-        lastName: "Bauer",
-        schoolName: "Holland Elementary",
-        grade: "Grade 4",
-        attendance: 0.6
-      },
-      {
-        firstName: "Carter",
-        lastName: "Kendall",
-        schoolName: "Holland Elementary",
-        grade: "Grade 4",
-        attendance: 1
-      },
-      {
-        firstName: "Ariel",
-        lastName: "Sheehan",
-        schoolName: "Holland Elementary",
-        grade: "Grade 4",
-        attendance: 0.1
-      },
-      {
-        firstName: "Ariel",
-        lastName: "Sheehan",
-        schoolName: "Holland Elementary",
-        grade: "Grade 4",
-        attendance: 0.1
-      },
-      {
-        firstName: "Ariel",
-        lastName: "Sheehan",
-        schoolName: "Holland Elementary",
-        grade: "Grade 4",
-        attendance: 0.1
-      },
-      {
-        firstName: "Ariel",
-        lastName: "Sheehan",
-        schoolName: "Holland Elementary",
-        grade: "Grade 4",
-        attendance: 0.1
-      }
-    ];
-    setVisibleStudents(students);
-  }, []);
+  }, [date]);
 
   // sorting
   React.useEffect(() => {
@@ -260,7 +218,7 @@ function History() {
   return (
     <div className={styles.container}>
       <p style={{ fontSize: "200" }}>Bus Attendance Matrix</p>
-      <h1>Harland Boys and Girls Club 2019-2020 Afterschool Registration</h1>
+      <h1>{ClubName} 2019-2020 Afterschool Registration</h1>
       <div className={styles.filters}>
         <h2>Filter By</h2>
         <FormControl variant="outlined" className={classes.formControl}>
@@ -371,7 +329,7 @@ function History() {
                 >
                   <div>
                     {student.lastName},
-{` ${student.firstName}`}
+                    {` ${student.firstName}`}
                   </div>
                 </td>
                 <td className={classes.td}>
@@ -387,7 +345,7 @@ function History() {
                       }}
                     />
                     <p style={{ margin: "0px 0px 0px 3px" }}>
-                      {Math.round(student.attendance * getDaysInMonth(date))}
+                      {Math.round(student.attendance * daysInMonth)}
                     </p>
                   </div>
                 </td>
@@ -418,5 +376,42 @@ function History() {
     </div>
   );
 }
+
+
+
+// Declaring type of schools prop
+History.propTypes = {
+  students: PropTypes.arrayOf(PropTypes.object)
+};
+
+// Setting default value for schools prop
+History.defaultProps = {
+  students: null
+};
+
+History.getInitialProps = async () => {
+  
+  const res = await fetch('http://localhost:3000/api/club?ClubName=' + ClubName)
+  const schools_data = await res.json()
+
+  var schools = []
+  if (schools_data.success && schools_data.payload.length > 0) {
+    schools = schools_data.payload[0].SchoolNames
+  }
+
+  var students = []
+
+  let school;
+  for (school of schools) {
+    const res2 = await fetch('http://localhost:3000/api/school?schoolName=' + school)
+    const students_data = await res2.json()
+    if (students_data.success) {
+      students = students.concat(students_data.payload)
+    }
+  }
+
+  return {students: await updateStudents(new Date(startDate), students)};
+
+};
 
 export default History;
