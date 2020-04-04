@@ -1,7 +1,10 @@
 import React from "react";
 import axios from "axios";
+import Cookie from "js-cookie";
 
 import FileUploader from "../client/components/file_uploader";
+import { getAuth } from "../server/mongodb/actions/User";
+import Unauthorized from "./unauthorized";
 
 class CSVUpload extends React.Component {
   constructor(props) {
@@ -47,51 +50,58 @@ class CSVUpload extends React.Component {
   }
 
   render() {
-    const { uploadedFile } = this.state;
-    const { sentFile } = this.state;
+    const token = Cookie.get("token");
 
-    return (
-      <>
-        <div className="container">
-          <div>
+    getAuth("CSV_Upload", token)
+    .then(() => {
+      const { uploadedFile } = this.state;
+      const { sentFile } = this.state;
+
+      return (
+        <>
+          <div className="container">
             <div>
-              <bold className="label">Title:</bold>
-              <input className="text-field" placeholder="Type here" />
+              <div>
+                <bold className="label">Title:</bold>
+                <input className="text-field" placeholder="Type here" />
+              </div>
+              <div>
+                <bold className="label">Upload:</bold>
+                {!(uploadedFile || sentFile) && (
+                  <FileUploader onChange={files => this.handleUpload(files)} />
+                )}
+                {uploadedFile && (
+                  <div className="uploaded-container">
+                    <div className="file-upload">
+                      <i className="fa fa-check" />
+                      Received File! Click "Upload" to submit
+                    </div>
+                  </div>
+                )}
+                {sentFile && (
+                  <div className="uploaded-container">
+                    <div className="file-upload">
+                      <i className="fa fa-check" />
+                      File Uploaded!
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
-            <div>
-              <bold className="label">Upload:</bold>
-              {!(uploadedFile || sentFile) && (
-                <FileUploader onChange={files => this.handleUpload(files)} />
-              )}
-              {uploadedFile && (
-                <div className="uploaded-container">
-                  <div className="file-upload">
-                    <i className="fa fa-check" />
-                    Received File! Click "Upload" to submit
-                  </div>
-                </div>
-              )}
-              {sentFile && (
-                <div className="uploaded-container">
-                  <div className="file-upload">
-                    <i className="fa fa-check" />
-                    File Uploaded!
-                  </div>
-                </div>
-              )}
+            <div className="button-container">
+              <button type="button" className="btn btn-danger" onClick={this.clearFile}>
+                Cancel
+              </button>
+              <button type="button" className="btn btn-success" onClick={this.sendCsv}>
+                Upload
+              </button>
             </div>
           </div>
-          <div className="button-container">
-            <button type="button" className="btn btn-danger" onClick={this.clearFile}>
-              Cancel
-            </button>
-            <button type="button" className="btn btn-success" onClick={this.sendCsv}>
-              Upload
-            </button>
-          </div>
-        </div>
-      </>
-    );
+        </>
+      );
+    }).catch(error => {
+      return Unauthorized;
+    })
   }
 }
 

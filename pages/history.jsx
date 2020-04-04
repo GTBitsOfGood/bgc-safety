@@ -1,31 +1,46 @@
 import React from "react";
+import Cookie from "js-cookie";
 import styles from "./history.module.css";
+import { getAuth } from "../server/mongodb/actions/User";
+import Unauthorized from "./unauthorized";
 
 const History = props => {
-  return (
-    <table>
-      <tr>
-        <td className={styles.tdRegular}>Student Name</td>
-        <td className={styles.tdRegular} colSpan="5">
-          Week 1
-        </td>
-        <td className={styles.tdRegular} colSpan="5">
-          Week 2
-        </td>
-      </tr>
-      {props.students.map(student => (
-        <tr className={styles.tr}>
-          <td className={styles.tdRegular}>{student.name}</td>
-          {student.week1.map(date => {
-            return <td className={date ? styles.td : styles.tdNotCheckedIn} />;
-          })}
-          {student.week2.map(date => {
-            return <td className={date ? styles.td : styles.tdNotCheckedIn} />;
-          })}
-        </tr>
-      ))}
-    </table>
-  );
+  const token = Cookie.get("token");
+
+  getAuth("History", token)
+    .then(() => {
+      return (
+        <table>
+          <tr>
+            <td className={styles.tdRegular}>Student Name</td>
+            <td className={styles.tdRegular} colSpan="5">
+              Week 1
+            </td>
+            <td className={styles.tdRegular} colSpan="5">
+              Week 2
+            </td>
+          </tr>
+          {props.students.map(student => (
+            <tr className={styles.tr}>
+              <td className={styles.tdRegular}>{student.name}</td>
+              {student.week1.map(date => {
+                return (
+                  <td className={date ? styles.td : styles.tdNotCheckedIn} />
+                );
+              })}
+              {student.week2.map(date => {
+                return (
+                  <td className={date ? styles.td : styles.tdNotCheckedIn} />
+                );
+              })}
+            </tr>
+          ))}
+        </table>
+      );
+    })
+    .catch(error => {
+      return Unauthorized;
+    });
 };
 
 History.getInitialProps = async () => {

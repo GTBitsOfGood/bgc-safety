@@ -48,11 +48,47 @@ export async function login(email, password) {
   });
 }
 
-export async function verifyToken(token) {
+function verifyToken(token) {
   return jwt.verify(token, process.env.JWT_SECRET, (error, decoded) => {
     if (decoded) {
-      return Promise.resolve(decoded);
+      return true;
     }
-    return Promise.reject(new Error("Invalid token."));
+    return false;
   });
+}
+
+export function getAuth(pageName, token) {
+  if (!verifyToken(token)) {
+    return Promise.reject(
+      new Error("You must be logged in to view this page.")
+    );
+  }
+
+  if (pageName === "CSV_Upload") {
+    if (token.type === "ClubDirector" || token.type === "BusDriver") {
+      return Promise.reject(
+        new Error("You are not authorized to view this page.")
+      );
+    }
+  } else if (pageName === "Bus Routes") {
+    if (token.type === "BusDriver") {
+      return Promise.reject(
+        new Error("You are not authorized to view this page.")
+      );
+    }
+  } else if (pageName === "Roster") {
+    if (token.type === "BusDriver") {
+      return Promise.reject(
+        new Error("You are not authorized to view this page.")
+      );
+    }
+  } else if (pageName === "History") {
+    if (token.type === "BusDriver") {
+      return Promise.reject(
+        new Error("You are not authorized to view this page.")
+      );
+    }
+  }
+
+  return Promise.resolve();
 }

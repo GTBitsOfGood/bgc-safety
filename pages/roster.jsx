@@ -1,7 +1,10 @@
 import React from "react";
 // import fetch from "isomorphic-unfetch";
 import PropTypes from "prop-types";
+import Cookie from "js-cookie";
 import styles from "./roster.module.css";
+import { getAuth } from "../server/mongodb/actions/User";
+import Unauthorized from "./unauthorized";
 
 function getNumberCheckedIn(school) {
   let count = 0;
@@ -11,41 +14,49 @@ function getNumberCheckedIn(school) {
   return ` ${count}/${school.students.length}`;
 }
 function Roster({ schools }) {
-  return (
-    <div id="main">
-      <h1>Harland Boys and Girls Club</h1>
-      <div className={styles.roster}>
-        <table className={styles.bustable}>
-          <tr className={styles.tr}>
-            {schools.map(school => (
-              <th className={styles.busth}>
-                Bus A Cap
-                {getNumberCheckedIn(school)}
-              </th>
-            ))}
-          </tr>
-        </table>
-        {schools.map(school => (
-          <table className={styles.table}>
-            <tr className={styles.tr}>
-              <th className={styles.th}>{school.name}</th>
-            </tr>
-            {school.students.map(student => (
+  const token = Cookie.get("token");
+
+  getAuth("Roster", token)
+    .then(() => {
+      return (
+        <div id="main">
+          <h1>Harland Boys and Girls Club</h1>
+          <div className={styles.roster}>
+            <table className={styles.bustable}>
               <tr className={styles.tr}>
-                <td
-                  className={
-                    student.checkedIn ? styles.td : styles.tdNotCheckedIn
-                  }
-                >
-                  {student.name}
-                </td>
+                {schools.map(school => (
+                  <th className={styles.busth}>
+                    Bus A Cap
+                    {getNumberCheckedIn(school)}
+                  </th>
+                ))}
               </tr>
+            </table>
+            {schools.map(school => (
+              <table className={styles.table}>
+                <tr className={styles.tr}>
+                  <th className={styles.th}>{school.name}</th>
+                </tr>
+                {school.students.map(student => (
+                  <tr className={styles.tr}>
+                    <td
+                      className={
+                        student.checkedIn ? styles.td : styles.tdNotCheckedIn
+                      }
+                    >
+                      {student.name}
+                    </td>
+                  </tr>
+                ))}
+              </table>
             ))}
-          </table>
-        ))}
-      </div>
-    </div>
-  );
+          </div>
+        </div>
+      );
+    })
+    .catch(error => {
+      return Unauthorized;
+    });
 }
 
 // Declaring type of schools prop
