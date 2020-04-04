@@ -7,7 +7,11 @@ export default async (req, res) => {
 
   const { method } = req;
 
-  if (method === "GET" && req.query.schoolName) {
+  if (method === "GET" && req.query.club) {
+    getStudentAttendanceTodayByClub(req, res);
+  } else if (method === "GET" && req.query.school) {
+    getStudentAttendanceTodayBySchool(req, res);
+  } else if (method === "GET" && req.query.schoolName) {
     getBusAttendanceInfo(req, res);
   } else if (
     method === "GET" &&
@@ -71,6 +75,48 @@ function getAttendanceOfStudent(req, res) {
       res.status(200).send({
         success: true,
         payload: checkInTimes
+      })
+    )
+    .catch(err =>
+      res.status(400).send({
+        success: false,
+        message: err
+      })
+    );
+}
+
+function getStudentAttendanceTodayBySchool(req, res) {
+  const { school } = req.query;
+
+  Student.find({
+    schoolName: school,
+    onBus: true
+  })
+    .then(students =>
+      res.status(200).send({
+        success: true,
+        payload: students
+      })
+    )
+    .catch(err =>
+      res.status(400).send({
+        success: false,
+        message: err
+      })
+    );
+}
+
+function getStudentAttendanceTodayByClub(req, res) {
+  const { club } = req.query;
+
+  Student.find({
+    clubName: club,
+    onBus: true
+  })
+    .then(students =>
+      res.status(200).send({
+        success: true,
+        payload: students
       })
     )
     .catch(err =>
