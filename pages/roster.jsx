@@ -49,6 +49,10 @@ const useStyles = makeStyles(theme => ({
     "&:nth-child(even)": {
       backgroundColor: "#efefef"
     }
+  },
+  students: {
+    height: "45px",
+    overflow: "hidden"
   }
 }));
 
@@ -73,17 +77,17 @@ function Roster({ schools }) {
     // add to database
   };
 
-  React.useEffect(() => {
-    const timer = setTimeout(() => {
-      setSnackbarOpen(true);
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, [student]);
+  // React.useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     setSnackbarOpen(true);
+  //   }, 1000);
+  //   return () => clearTimeout(timer);
+  // }, [student]);
 
   return (
     <div id="main">
       <h1>Harland Boys and Girls Club</h1>
-      <table className={styles.roster}>
+      <div className={styles.roster}>
         <table className={styles.bustable}>
           <tr className={styles.tr}>
             {schools.map(school => (
@@ -94,78 +98,82 @@ function Roster({ schools }) {
             ))}
           </tr>
         </table>
-        {schools.map(school => (
-          <table className={styles.table}>
-            <tr className={styles.tr}>
-              <th className={styles.th}>{school.name}</th>
-            </tr>
-            {school.students.map(student => (
-              <tr className={classes.tr}>
-                <td
-                  className={styles.td}
-                  style={{
-                    backgroundColor: student.checkedIn
-                      ? "rgba(0, 128, 0, 0.562)"
-                      : " "
-                  }}
-                >
-                  {student.name}
-                  {student.checkedIn && (
-                    <CheckCircleIcon
-                      style={{
-                        alignSelf: "flex-end",
-                        marginLeft: "auto",
-                        fill: "white"
-                      }}
-                    />
-                  )}
-                </td>
+        <div>
+          {schools.map(school => (
+            <table className={styles.table}>
+              <tr className={styles.tr}>
+                <th className={styles.th}>{school.name}</th>
               </tr>
-            ))}
-            <tr>
-              <SimpleModal
-                setStudent={setStudent}
-                button={
-                  <>
-                    Manually Add Entry
-                    <AddCircleIcon className={classes.icon} />
-                  </>
-                }
-                buttonStyle={classes.button}
-              >
-                <form className={classes.content} onSubmit={handleSubmit}>
-                  <h1>Manual Data Entry</h1>
-                  <input
-                    id="firstName"
-                    name="firstName"
-                    type="text"
-                    placeholder="First Name"
-                    value={firstName}
-                    onChange={e => setFirstName(e.target.value)}
-                  />
-                  <input
-                    id="lastName"
-                    type="text"
-                    placeholder="Last Name"
-                    value={lastName}
-                    onChange={e => setLastName(e.target.value)}
-                  />
-                  <input
-                    id="school"
-                    type="text"
-                    placeholder="School/Pickup Location"
-                    value={studentSchool}
-                    onChange={e => setStudentSchool(e.target.value)}
-                  />
-                  <button type="submit" className="btn btn-success">
-                    Add Student
-                  </button>
-                </form>
-              </SimpleModal>
-            </tr>
-          </table>
-        ))}
-      </table>
+              {school.students.map(student => (
+                <tr className={classes.tr}>
+                  <div className={classes.students}>
+                    <td
+                      className={styles.td}
+                      style={{
+                        backgroundColor: student.checkedIn
+                          ? "rgba(0, 128, 0, 0.562)"
+                          : " "
+                      }}
+                    >
+                      {student.name}
+                      {student.checkedIn && (
+                        <CheckCircleIcon
+                          style={{
+                            alignSelf: "flex-end",
+                            marginLeft: "auto",
+                            fill: "white"
+                          }}
+                        />
+                      )}
+                    </td>
+                  </div>
+                </tr>
+              ))}
+              <tr>
+                <SimpleModal
+                  setStudent={setStudent}
+                  button={
+                    <>
+                      Manually Add Entry
+                      <AddCircleIcon className={classes.icon} />
+                    </>
+                  }
+                  buttonStyle={classes.button}
+                >
+                  <form className={classes.content} onSubmit={handleSubmit}>
+                    <h1>Manual Data Entry</h1>
+                    <input
+                      id="firstName"
+                      name="firstName"
+                      type="text"
+                      placeholder="First Name"
+                      value={firstName}
+                      onChange={e => setFirstName(e.target.value)}
+                    />
+                    <input
+                      id="lastName"
+                      type="text"
+                      placeholder="Last Name"
+                      value={lastName}
+                      onChange={e => setLastName(e.target.value)}
+                    />
+                    <input
+                      id="school"
+                      type="text"
+                      placeholder="School/Pickup Location"
+                      value={studentSchool}
+                      onChange={e => setStudentSchool(e.target.value)}
+                    />
+                    <button type="submit" className="btn btn-success">
+                      Add Student
+                    </button>
+                  </form>
+                </SimpleModal>
+              </tr>
+            </table>
+          ))}
+        </div>
+      </div>
       <Snackbar open={snackbarOpen} onClose={() => setSnackbarOpen(false)}>
         <MuiAlert
           elevation={6}

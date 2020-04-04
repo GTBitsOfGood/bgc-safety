@@ -11,8 +11,6 @@ import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import styles from "./history.module.css";
 
-const sortingNames = ["Alphabetical", "Grade", "Low Attendance"];
-
 const lowAttendance = "#FFCF50";
 const highAttendance = "#40B24B";
 
@@ -49,12 +47,10 @@ const useStyles = makeStyles(theme => ({
   },
   button: {
     borderRadius: "20px",
-
     margin: "10px"
   },
   table: {
     width: "100%",
-    marginTop: "20px",
     borderSpacing: "2px",
     textAlign: "center",
     overflow: "scroll"
@@ -72,10 +68,8 @@ const useStyles = makeStyles(theme => ({
   },
   firstTr: {
     backgroundColor: "#E0E0E0",
-    td: {
-      "&:nth-child(-n+3)": {
-        padding: "20px"
-      }
+    "& td": {
+      padding: "10px"
     }
   },
   dot: {
@@ -94,18 +88,29 @@ const useStyles = makeStyles(theme => ({
 
 let students = [];
 
+const getDaysInMonth = date => {
+  return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+};
+
 function History() {
   const classes = useStyles();
   const [visibleStudents, setVisibleStudents] = React.useState([]);
   const [filters, setFilters] = React.useState(["", "", ""]);
   const filterLabels = ["schoolName", "grade", "attendance"];
   const [sort, setSort] = React.useState("");
+  const sortingNames = ["Alphabetical", "Grade", "Low Attendance"];
   const [date, setDate] = React.useState(new Date("1/1/2020"));
 
+  // fetching date data from api
   React.useEffect(() => {
-    // fetch date data from the api
+    setVisibleStudents(
+      visibleStudents.map(student => {
+        return { ...student, attendance: Math.round(Math.random() * 10) / 10 };
+      })
+    );
   }, [date]);
 
+  // fetching initial student data
   React.useEffect(() => {
     // fetch("api").then(res => res.json).then(response => {
     //   setStudents(response.students)
@@ -116,21 +121,21 @@ function History() {
         lastName: "Diah",
         schoolName: "Manatee Elementary",
         grade: "Grade 1",
-        attendance: 0.5
+        attendance: 0.8
       },
       {
         firstName: "David",
         lastName: "Rogers",
         schoolName: "Holy Trinity",
         grade: "Grade 2",
-        attendance: 0.5
+        attendance: 0.2
       },
       {
         firstName: "Saurav",
         lastName: "Ghosal",
         schoolName: "Suntree Elementary",
         grade: "Grade 3",
-        attendance: 0.5
+        attendance: 0.9
       },
       {
         firstName: "Marshall",
@@ -140,39 +145,79 @@ function History() {
         attendance: 0.6
       },
       {
-        firstName: "Marshall",
-        lastName: "JerMiya",
+        firstName: "Dave",
+        lastName: "Smyth",
+        schoolName: "Holland Elementary",
+        grade: "Grade 4",
+        attendance: 0.7
+      },
+      {
+        firstName: "Ismaeel",
+        lastName: "Bauer",
         schoolName: "Holland Elementary",
         grade: "Grade 4",
         attendance: 0.6
       },
       {
-        firstName: "Marshall",
-        lastName: "JerMiya",
+        firstName: "Carter",
+        lastName: "Kendall",
         schoolName: "Holland Elementary",
         grade: "Grade 4",
-        attendance: 0.6
+        attendance: 1
       },
       {
-        firstName: "Marshall",
-        lastName: "JerMiya",
+        firstName: "Ariel",
+        lastName: "Sheehan",
         schoolName: "Holland Elementary",
         grade: "Grade 4",
-        attendance: 0.6
+        attendance: 0.1
       },
       {
-        firstName: "Marshall",
-        lastName: "JerMiya",
+        firstName: "Ariel",
+        lastName: "Sheehan",
         schoolName: "Holland Elementary",
         grade: "Grade 4",
-        attendance: 0.6
+        attendance: 0.1
+      },
+      {
+        firstName: "Ariel",
+        lastName: "Sheehan",
+        schoolName: "Holland Elementary",
+        grade: "Grade 4",
+        attendance: 0.1
+      },
+      {
+        firstName: "Ariel",
+        lastName: "Sheehan",
+        schoolName: "Holland Elementary",
+        grade: "Grade 4",
+        attendance: 0.1
       }
     ];
     setVisibleStudents(students);
   }, []);
 
+  // sorting
   React.useEffect(() => {
-    console.log(filters);
+    if (sort == "Alphabetical") {
+      setVisibleStudents(
+        visibleStudents.sort((a, b) => a.lastName.localeCompare(b.lastName))
+      );
+    }
+    if (sort == "Grade") {
+      setVisibleStudents(
+        visibleStudents.sort((a, b) => a.grade.localeCompare(b.grade))
+      );
+    }
+    if (sort == "Low Attendance") {
+      setVisibleStudents(
+        visibleStudents.sort((a, b) => a.attendance - b.attendance)
+      );
+    }
+  }, [sort]);
+
+  // filtering
+  React.useEffect(() => {
     let filtered = false;
     setVisibleStudents(students);
     filters.forEach((filter, i) => {
@@ -183,7 +228,6 @@ function History() {
         );
       }
       if (filter != "" && filtered) {
-        console.log(visibleStudents);
         setVisibleStudents(
           visibleStudents.filter(student => student[filterLabels[i]] == filter)
         );
@@ -216,9 +260,77 @@ function History() {
   return (
     <div className={styles.container}>
       <p style={{ fontSize: "200" }}>Bus Attendance Matrix</p>
-      <h1 style={{ margin: 0 }}>
-        Harland Boys and Girls Club 2019-2020 Afterschool Registration
-      </h1>
+      <h1>Harland Boys and Girls Club 2019-2020 Afterschool Registration</h1>
+      <div className={styles.filters}>
+        <h2>Filter By</h2>
+        <FormControl variant="outlined" className={classes.formControl}>
+          <InputLabel>School</InputLabel>
+          <Select
+            value={filters[0]}
+            onChange={e => handleUpdateFilters(e.target.value, 0)}
+            className={classes.selectButton}
+            label="School"
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            {[...new Set(students.map(students => students.schoolName))].map(
+              schoolName => {
+                return <MenuItem value={schoolName}>{schoolName}</MenuItem>;
+              }
+            )}
+          </Select>
+        </FormControl>
+        <FormControl variant="outlined" className={classes.formControl}>
+          <InputLabel>Grade</InputLabel>
+          <Select
+            value={filters[1]}
+            onChange={e => handleUpdateFilters(e.target.value, 1)}
+            className={classes.selectButton}
+            label="Grade"
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            {[...new Set(students.map(students => students.grade))].map(
+              grade => {
+                return <MenuItem value={grade}>{grade}</MenuItem>;
+              }
+            )}
+          </Select>
+        </FormControl>
+        <Button
+          className={classes.button}
+          color={filters[2] == "" ? "default" : "primary"}
+          variant="contained"
+          onClick={() => {
+            filters[2] == ""
+              ? handleUpdateFilters("Low Attendance", 2)
+              : handleDeleteFilters("Low Attendance");
+          }}
+        >
+          Low Attendance
+        </Button>
+      </div>
+
+      <div className={styles.sort}>
+        <h2>Sort By</h2>
+        {sortingNames.map(name => {
+          return (
+            <Button
+              className={classes.button}
+              variant="contained"
+              color={name == sort ? "primary" : "default"}
+              onClick={() => {
+                sort != name ? setSort(name) : setSort("");
+              }}
+            >
+              {name}
+            </Button>
+          );
+        })}
+      </div>
+
       <div className={classes.dateSelect}>
         <IconButton
           aria-label="change-month"
@@ -237,132 +349,72 @@ function History() {
         </IconButton>
       </div>
 
-      <div className={styles.chips}>
-        {filters
-          .filter(filter => filter != "")
-          .map(filter => {
-            return (
-              <Chip
-                label={filter}
-                onDelete={() => handleDeleteFilters(filter)}
-                style={{ margin: "10px" }}
-                color="primary"
-              />
-            );
-          })}
-      </div>
-      <div className={styles.filters}>
-        <h2>Filter By</h2>
-        <FormControl variant="outlined" className={classes.formControl}>
-          <InputLabel>School</InputLabel>
-          <Select
-            value={filters[0]}
-            onChange={e => handleUpdateFilters(e.target.value, 0)}
-            className={classes.selectButton}
-            label="School"
-          >
-            <MenuItem value="Manatee Elementary">Manatee Elementary</MenuItem>
-            <MenuItem value="Suntree Elementary">Suntree Elementary</MenuItem>
-            <MenuItem value="Holy Trinity">Holy Trinity</MenuItem>
-            <MenuItem value="Holland Elementary">Holland Elementary</MenuItem>
-          </Select>
-        </FormControl>
-        <FormControl variant="outlined" className={classes.formControl}>
-          <InputLabel>Grade</InputLabel>
-          <Select
-            value={filters[1]}
-            onChange={e => handleUpdateFilters(e.target.value, 1)}
-            className={classes.selectButton}
-            label="Grade"
-          >
-            <MenuItem value="Grade 1">Grade 1</MenuItem>
-            <MenuItem value="Grade 2">Grade 2</MenuItem>
-            <MenuItem value="Grade 3">Grade 3</MenuItem>
-          </Select>
-        </FormControl>
-        <Button
-          className={classes.button}
-          variant="contained"
-          onClick={() => {
-            if (filters[2] == "") {
-              handleUpdateFilters("Low Attendance", 2);
-            } else {
-              handleDeleteFilters("Low Attendance");
-            }
-          }}
-        >
-          Low Attendance
-        </Button>
-      </div>
-
-      <div className={styles.sort}>
-        <h2>Sort By</h2>
-        {sortingNames.map(name => {
-          return (
-            <Button
-              className={classes.button}
-              variant="contained"
-              color={name == sort ? "primary" : ""}
-              onClick={() => {
-                sort != name ? setSort(name) : setSort("");
-              }}
-            >
-              {name}
-            </Button>
-          );
-        })}
-      </div>
-
-      <table className={classes.table}>
-        <tr className={classes.firstTr}>
-          <td className={classes.td}>Student Name</td>
-          <td className={classes.td}>Overall Attendance </td>
-          <td className={classes.td}>Status </td>
-        </tr>
-        {visibleStudents.map(student => (
-          <tr className={classes.tr}>
-            <td
-              className={classes.td}
-              style={{
-                backgroundColor: student.attendance < 0.6 ? lowAttendance : "",
-                width: "20%"
-              }}
-            >
-              <div>
-                {student.lastName},
-{` ${student.firstName}`}
-              </div>
-            </td>
-            <td className={classes.td} style={{ width: "60%" }}>
-              <div
-                style={{
-                  width: `${100 * student.attendance}%`,
-                  height: "20px",
-                  backgroundColor:
-                    student.attendance < 0.6 ? lowAttendance : highAttendance
-                }}
-              />
-            </td>
-            <td className={classes.td} style={{ width: "20%" }}>
-              <div className={styles.status}>
-                <span
-                  className={classes.dot}
+      <div className={classes.tableWrapper}>
+        <table className={classes.table}>
+          <thead>
+            <tr className={classes.firstTr}>
+              <td>Student Name</td>
+              <td>Overall Attendance </td>
+              <td>Status </td>
+            </tr>
+          </thead>
+          <tbody className={classes.tbody}>
+            {visibleStudents.map(student => (
+              <tr className={classes.tr}>
+                <td
+                  className={classes.td}
                   style={{
                     backgroundColor:
-                      student.attendance < 0.6 ? lowAttendance : highAttendance
+                      student.attendance < 0.6 ? lowAttendance : "",
+                    width: "300px"
                   }}
-                />
+                >
+                  <div>
+                    {student.lastName},
+{` ${student.firstName}`}
+                  </div>
+                </td>
+                <td className={classes.td}>
+                  <div style={{ display: "flex", flexDirection: "row" }}>
+                    <div
+                      style={{
+                        width: `${100 * student.attendance}%`,
+                        height: "20px",
+                        backgroundColor:
+                          student.attendance < 0.6
+                            ? lowAttendance
+                            : highAttendance
+                      }}
+                    />
+                    <p style={{ margin: "0px 0px 0px 3px" }}>
+                      {Math.round(student.attendance * getDaysInMonth(date))}
+                    </p>
+                  </div>
+                </td>
+                <td className={classes.td} style={{ width: "300px" }}>
+                  <div className={styles.status}>
+                    <span
+                      className={classes.dot}
+                      style={{
+                        backgroundColor:
+                          student.attendance < 0.6
+                            ? lowAttendance
+                            : highAttendance
+                      }}
+                    />
 
-                {student.attendance < 0.6 ? (
-                  <p style={{ margin: "5px" }}>Low Attendance</p>
-                ) : (
-                  <p style={{ margin: "5px" }}>Active</p>
-                )}
-              </div>
-            </td>
-          </tr>
-        ))}
-      </table>
+                    {student.attendance < 0.6 ? (
+                      <p style={{ margin: "5px" }}>Low Attendance</p>
+                    ) : (
+                      <p style={{ margin: "5px" }}>Active</p>
+                    )}
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
