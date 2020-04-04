@@ -35,9 +35,18 @@ export default async (req, res) => {
 function getBusAttendanceInfo(req, res) {
   const { schoolName } = req.query;
 
-  Student.find({ schoolName }, { checkInTimes: 1 })
-  .then(checkInTimes =>
-    res.status(200).json({
+  Student.find(
+    {
+      schoolName
+    },
+    {
+      firstName: 1,
+      lastName: 1,
+      checkInTimes: 1
+    }
+  )
+    .then(checkInTimes =>
+      res.status(200).send({
         success: true,
       payload: checkInTimes
     })

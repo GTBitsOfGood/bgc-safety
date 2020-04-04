@@ -9,6 +9,8 @@ import MuiAlert from "@material-ui/lab/Alert";
 import styles from "./roster.module.css";
 import SimpleModal from "../client/components/SimpleModal";
 
+const fetch = require('node-fetch');
+
 const useStyles = makeStyles(theme => ({
   content: {
     position: "absolute",
@@ -56,6 +58,8 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const ClubName = "Harland" //TODO: Allow user to select a club
+
 function getNumberCheckedIn(school) {
   let count = 0;
   for (let i = 0; i < school.students.length; i += 1) {
@@ -86,7 +90,7 @@ function Roster({ schools }) {
 
   return (
     <div id="main">
-      <h1>Harland Boys and Girls Club</h1>
+      <h1>{ClubName}</h1>
       <div className={styles.roster}>
         <table className={styles.bustable}>
           <tr className={styles.tr}>
@@ -198,63 +202,42 @@ Roster.defaultProps = {
   schools: null
 };
 
-// dummy api call
 Roster.getInitialProps = async () => {
-  // const res = await fetch("https://api.github.com/repos/zeit/next.js");
-  // const json = await res.json()
-  const data = [
-    {
-      name: "Brown School",
-      students: [
-        "Chante Lancaster",
-        "Collette Hurst",
-        "Nadine Pemberton",
-        "Eryk Barr",
-        "Marina Mill",
-        "Peggy Wainwright",
-        "Carley Reader",
-        "Cohan Carver",
-        "Keeva Rossi",
-        "Patsy Mann"
-      ].map(student => {
-        return { name: student, checkedIn: Math.random() >= 0.7 };
-      })
-    },
-    {
-      name: "KIPP Collegiate School",
-      students: [
-        "Fiona Healy",
-        "Hiba Burris",
-        " Mehak Dawe",
-        "Kasim Mackenzie",
-        "Thalia Whittle",
-        "Danni Allan",
-        "Dimitri Macleod",
-        "Armani Mccoy",
-        "Keeva Rossi",
-        "Shamas Dillon"
-      ].map(student => {
-        return { name: student, checkedIn: Math.random() >= 0.7 };
-      })
-    },
-    {
-      name: "Suntree Elementary",
-      students: [
-        "Fiona Healy",
-        "Hiba Burris",
-        " Mehak Dawe",
-        "Kasim Mackenzie",
-        "Thalia Whittle",
-        "Danni Allan",
-        "Dimitri Macleod",
-        "Armani Mccoy",
-        "Keeva Rossi",
-        "Shamas Dillon"
-      ].map(student => {
-        return { name: student, checkedIn: Math.random() >= 0.7 };
+
+  const res = await fetch('http://localhost:3000/api/club?ClubName=' + ClubName)
+  const schools_data = await res.json()
+  var schools_list = []
+  if (schools_data.success && schools_data.payload.length > 0) {
+    schools_list = schools_data.payload[0].SchoolNames
+  }
+
+  let dateObj = new Date();
+  let day = String(dateObj.getDate()).padStart(2, '0');
+  let today = (dateObj.getMonth() + 1)  + '/' + day  + '/' + dateObj.getFullYear();
+
+  var data = []
+
+  for (var s of schools_list) {
+    const res1 = await fetch('http://localhost:3000/api/attendance?schoolName=' + s)
+    const d = await res1.json()
+
+    if (d.success) {
+      var students = []
+
+      for (var student of d.payload) {
+        students.push({
+          name: student.firstName + " " + student.lastName,
+          checkedIn: student.checkInTimes.includes(today)
+        })
+      }
+
+      data.push({
+        name: s,
+        students
       })
     }
-  ];
+  }
+
   return { schools: data };
 };
 
