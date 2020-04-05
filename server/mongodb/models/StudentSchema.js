@@ -34,8 +34,8 @@ const StudentSchema = new Schema({
   picture: {
     type: String
   },
-  BusRoute: {
-    type: String
+  onBus: {
+    type: Boolean
   },
   checkInTimes: {
     type: [
