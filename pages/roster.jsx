@@ -70,19 +70,11 @@ function Roster({ schools }) {
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
   const [studentSchool, setStudentSchool] = React.useState("");
-  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
 
   const handleSubmit = () => {
     setStudent({ firstName, lastName, school });
     // add to database
   };
-
-  // React.useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     setSnackbarOpen(true);
-  //   }, 1000);
-  //   return () => clearTimeout(timer);
-  // }, [student]);
 
   return (
     <div id="main">
@@ -174,16 +166,6 @@ function Roster({ schools }) {
           ))}
         </div>
       </div>
-      <Snackbar open={snackbarOpen} onClose={() => setSnackbarOpen(false)}>
-        <MuiAlert
-          elevation={6}
-          variant="filled"
-          onClose={() => setSnackbarOpen(false)}
-          severity="success"
-        >
-          Successfully Added Student!
-        </MuiAlert>
-      </Snackbar>
     </div>
   );
 }

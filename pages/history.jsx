@@ -97,17 +97,21 @@ function History() {
   const [visibleStudents, setVisibleStudents] = React.useState([]);
   const [filters, setFilters] = React.useState(["", "", ""]);
   const filterLabels = ["schoolName", "grade", "attendance"];
+  const [filteredStudents, setFilteredStudents] = React.useState([]);
   const [sort, setSort] = React.useState("");
-  const sortingNames = ["Alphabetical", "Grade", "Low Attendance"];
+  const sortingLabels = ["Alphabetical", "Grade", "Low Attendance"];
   const [date, setDate] = React.useState(new Date("1/1/2020"));
 
   // fetching date data from api
   React.useEffect(() => {
+    // sort and filter data once fetched from api
     setVisibleStudents(
       visibleStudents.map(student => {
         return { ...student, attendance: Math.round(Math.random() * 10) / 10 };
       })
     );
+    students = visibleStudents;
+    // reset all sorting and filters
   }, [date]);
 
   // fetching initial student data
@@ -127,7 +131,7 @@ function History() {
         firstName: "David",
         lastName: "Rogers",
         schoolName: "Holy Trinity",
-        grade: "Grade 2",
+        grade: "Grade 6",
         attendance: 0.2
       },
       {
@@ -170,28 +174,28 @@ function History() {
         lastName: "Sheehan",
         schoolName: "Holland Elementary",
         grade: "Grade 4",
-        attendance: 0.1
+        attendance: 0.3
       },
       {
-        firstName: "Ariel",
-        lastName: "Sheehan",
+        firstName: "Glen ",
+        lastName: "Pham",
         schoolName: "Holland Elementary",
         grade: "Grade 4",
         attendance: 0.1
       },
       {
-        firstName: "Ariel",
-        lastName: "Sheehan",
+        firstName: "Alicia",
+        lastName: "Watts",
         schoolName: "Holland Elementary",
         grade: "Grade 4",
-        attendance: 0.1
+        attendance: 0.6
       },
       {
-        firstName: "Ariel",
-        lastName: "Sheehan",
+        firstName: "Buster",
+        lastName: "Dally",
         schoolName: "Holland Elementary",
         grade: "Grade 4",
-        attendance: 0.1
+        attendance: 0.8
       }
     ];
     setVisibleStudents(students);
@@ -199,40 +203,46 @@ function History() {
 
   // sorting
   React.useEffect(() => {
+    const sortedStudents = [...visibleStudents];
+    if (sort == "") {
+      setVisibleStudents(filteredStudents);
+    }
     if (sort == "Alphabetical") {
       setVisibleStudents(
-        visibleStudents.sort((a, b) => a.lastName.localeCompare(b.lastName))
+        sortedStudents.sort((a, b) => a.lastName.localeCompare(b.lastName))
       );
     }
     if (sort == "Grade") {
       setVisibleStudents(
-        visibleStudents.sort((a, b) => a.grade.localeCompare(b.grade))
+        sortedStudents.sort((a, b) => a.grade.localeCompare(b.grade))
       );
     }
     if (sort == "Low Attendance") {
       setVisibleStudents(
-        visibleStudents.sort((a, b) => a.attendance - b.attendance)
+        sortedStudents.sort((a, b) => a.attendance - b.attendance)
       );
     }
   }, [sort]);
 
   // filtering
   React.useEffect(() => {
-    let filtered = false;
-    setVisibleStudents(students);
-    filters.forEach((filter, i) => {
-      if (filter != "" && !filtered) {
-        filtered = true;
-        setVisibleStudents(
-          students.filter(student => student[filterLabels[i]] == filter)
-        );
-      }
-      if (filter != "" && filtered) {
-        setVisibleStudents(
-          visibleStudents.filter(student => student[filterLabels[i]] == filter)
+    let filteredStudents = [...students];
+    // filter grade and school
+    filters.slice(0, 2).forEach((filter, i) => {
+      if (filter != "") {
+        filteredStudents = filteredStudents.filter(
+          student => student[filterLabels[i]] == filter
         );
       }
     });
+    // filter low attendance
+    if (filters[2] != "") {
+      filteredStudents = filteredStudents.filter(
+        student => student[filterLabels[2]] < 0.6
+      );
+    }
+    setFilteredStudents(filteredStudents);
+    setVisibleStudents(filteredStudents);
   }, [filters]);
 
   const handleUpdateFilters = (newFilter, index) => {
@@ -274,11 +284,11 @@ function History() {
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
-            {[...new Set(students.map(students => students.schoolName))].map(
-              schoolName => {
+            {[...new Set(students.map(students => students.schoolName))]
+              .sort()
+              .map(schoolName => {
                 return <MenuItem value={schoolName}>{schoolName}</MenuItem>;
-              }
-            )}
+              })}
           </Select>
         </FormControl>
         <FormControl variant="outlined" className={classes.formControl}>
@@ -292,11 +302,11 @@ function History() {
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
-            {[...new Set(students.map(students => students.grade))].map(
-              grade => {
+            {[...new Set(students.map(students => students.grade))]
+              .sort()
+              .map(grade => {
                 return <MenuItem value={grade}>{grade}</MenuItem>;
-              }
-            )}
+              })}
           </Select>
         </FormControl>
         <Button
@@ -315,7 +325,7 @@ function History() {
 
       <div className={styles.sort}>
         <h2>Sort By</h2>
-        {sortingNames.map(name => {
+        {sortingLabels.map(name => {
           return (
             <Button
               className={classes.button}
@@ -358,6 +368,7 @@ function History() {
               <td>Status </td>
             </tr>
           </thead>
+
           <tbody className={classes.tbody}>
             {visibleStudents.map(student => (
               <tr className={classes.tr}>
