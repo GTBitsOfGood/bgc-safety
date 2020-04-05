@@ -9,6 +9,8 @@ import Chip from "@material-ui/core/Chip";
 import IconButton from "@material-ui/core/IconButton";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
+import Calendar from "../client/components/calendar";
+import SimpleModal from "../client/components/SimpleModal";
 import styles from "./history.module.css";
 
 const sortingNames = ["Alphabetical", "Grade", "Low Attendance"];
@@ -89,6 +91,41 @@ const useStyles = makeStyles(theme => ({
     alignSelf: "center",
     display: "flex",
     flexDirection: "row"
+  },
+  modal: {
+    position: "absolute",
+    width: "500px",
+    height: "300px",
+    boxShadow: theme.shadows[5],
+    backgroundColor: "#fff",
+    left: "50%",
+    marginLeft: "-250px",
+    top: "50%",
+    marginTop: "-150px",
+    padding: theme.spacing(2, 4, 3),
+    display: "flex",
+    flexFlow: "column wrap",
+    textAlign: "center",
+    justifyContent: "space-around"
+  },
+  content: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center"
+  },
+  modalButton: {
+    border: "none",
+    backgroundColor: "rgb(0, 0, 0, 0)",
+    fontSize: 14
+  },
+  info: {
+    flex: 1,
+    padding: 10,
+    textAlign: "left"
+  },
+  calendar: {
+    flex: 1
   }
 }));
 
@@ -101,6 +138,12 @@ function History() {
   const filterLabels = ["schoolName", "grade", "attendance"];
   const [sort, setSort] = React.useState("");
   const [date, setDate] = React.useState(new Date("1/1/2020"));
+
+  const datesAttended = [
+    new Date(2020, 0, 3),
+    new Date(2020, 0, 6),
+    new Date(2020, 0, 8)
+  ];
 
   React.useEffect(() => {
     // fetch date data from the api
@@ -328,10 +371,30 @@ function History() {
                 width: "20%"
               }}
             >
-              <div>
-                {student.lastName},
-{` ${student.firstName}`}
-              </div>
+              <SimpleModal
+                button={<>{`${student.lastName}, ${student.firstName}`}</>}
+                buttonStyle={classes.modalButton}
+              >
+                <div className={classes.modal}>
+                  <div className={classes.content}>
+                    <div className={classes.info}>
+                      <h1>{`${student.firstName} ${student.lastName}`}</h1>
+                      <p>{`School: ${student.schoolName}`}</p>
+                      <p>{`Grade: ${student.grade}`}</p>
+                      <p>{`Status: ${student.status}`}</p>
+                      <p>{`Contact: ${student.contact}`}</p>
+                      <p>{`Emergency: ${student.emergency}`}</p>
+                    </div>
+                    <div className={classes.calendar}>
+                      <Calendar
+                        defaultMonth={date.getMonth()}
+                        defaultYear={date.getFullYear()}
+                        getDatesAttended={() => datesAttended}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </SimpleModal>
             </td>
             <td className={classes.td} style={{ width: "60%" }}>
               <div
