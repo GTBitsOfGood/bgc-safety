@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
@@ -12,11 +13,12 @@ import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import Calendar from "../client/components/calendar";
 import SimpleModal from "../client/components/SimpleModal";
 import styles from "./history.module.css";
-
-const sortingNames = ["Alphabetical", "Grade", "Low Attendance"];
+const fetch = require("node-fetch");
 
 const lowAttendance = "#FFCF50";
 const highAttendance = "#40B24B";
+const ClubName = "Club" //TODO: Allow user to select a club
+const startDate = "1/01/2020"
 
 const getMonth = date => {
   const months = [
@@ -51,12 +53,10 @@ const useStyles = makeStyles(theme => ({
   },
   button: {
     borderRadius: "20px",
-
     margin: "10px"
   },
   table: {
     width: "100%",
-    marginTop: "20px",
     borderSpacing: "2px",
     textAlign: "center",
     overflow: "scroll"
@@ -74,10 +74,8 @@ const useStyles = makeStyles(theme => ({
   },
   firstTr: {
     backgroundColor: "#E0E0E0",
-    td: {
-      "&:nth-child(-n+3)": {
-        padding: "20px"
-      }
+    "& td": {
+      padding: "10px"
     }
   },
   dot: {
@@ -129,15 +127,68 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-let students = [];
 
-function History() {
+let daysInMonth = -1
+
+async function updateStudents(date, students) {
+  var data = []
+
+  let day_list = []
+  var curr = new Date(date);
+  var today = new Date
+  while (curr.getMonth() === date.getMonth() && (curr.getMonth() !== today.getMonth() || curr.getFullYear() !== today.getFullYear() || curr.getDate() <= today.getDate())) {
+
+    if (curr.getDay() >= 1 && curr.getDay() <= 5) {
+      day_list.push(((curr.getMonth() + 1) + '/' + String(curr.getDate()).padStart(2, '0') + '/' + curr.getFullYear()));
+    }
+
+    curr.setDate(curr.getDate() + 1);
+  }
+
+  daysInMonth = day_list.length
+
+  for (var student of students) {
+    const res1 = await fetch('http://localhost:3000/api/attendance?studentID=' + student.studentID + '&startDate=' + day_list[0] + '&endDate=' + day_list[day_list.length - 1])
+    const d = await res1.json()
+
+    if (d.success) {
+
+      var count = 0
+      for (var day of day_list) {
+        count += 1 ? d.payload.includes(day) : 0
+      }
+
+      data.push({
+        firstName: student.firstName,
+        lastName: student.lastName,
+        schoolName: student.schoolName,
+        grade: student.grade,
+        attendance: count/day_list.length,
+        studentID: student.studentID
+      })
+
+    }
+  }
+
+
+  return data;
+}
+
+
+function History({ students }) {
   const classes = useStyles();
   const [visibleStudents, setVisibleStudents] = React.useState([]);
   const [filters, setFilters] = React.useState(["", "", ""]);
   const filterLabels = ["schoolName", "grade", "attendance"];
   const [sort, setSort] = React.useState("");
-  const [date, setDate] = React.useState(new Date("1/1/2020"));
+  const sortingNames = ["Alphabetical", "Grade", "Low Attendance"];
+  const [date, setDate] = React.useState(new Date(startDate));
+
+  // fetching date data from api
+  React.useEffect(() => async () => {
+    students = await updateStudents(date, students)
+    setVisibleStudents(students)
+  }, [date]);
 
   const datesAttended = [
     new Date(2020, 0, 3),
@@ -145,77 +196,28 @@ function History() {
     new Date(2020, 0, 8)
   ];
 
-  React.useEffect(() => {
-    // fetch date data from the api
-  }, [date]);
 
+  // sorting
   React.useEffect(() => {
-    // fetch("api").then(res => res.json).then(response => {
-    //   setStudents(response.students)
-    // })
-    students = [
-      {
-        firstName: "Jabreal",
-        lastName: "Diah",
-        schoolName: "Manatee Elementary",
-        grade: "Grade 1",
-        attendance: 0.5
-      },
-      {
-        firstName: "David",
-        lastName: "Rogers",
-        schoolName: "Holy Trinity",
-        grade: "Grade 2",
-        attendance: 0.5
-      },
-      {
-        firstName: "Saurav",
-        lastName: "Ghosal",
-        schoolName: "Suntree Elementary",
-        grade: "Grade 3",
-        attendance: 0.5
-      },
-      {
-        firstName: "Marshall",
-        lastName: "JerMiya",
-        schoolName: "Holland Elementary",
-        grade: "Grade 4",
-        attendance: 0.6
-      },
-      {
-        firstName: "Marshall",
-        lastName: "JerMiya",
-        schoolName: "Holland Elementary",
-        grade: "Grade 4",
-        attendance: 0.6
-      },
-      {
-        firstName: "Marshall",
-        lastName: "JerMiya",
-        schoolName: "Holland Elementary",
-        grade: "Grade 4",
-        attendance: 0.6
-      },
-      {
-        firstName: "Marshall",
-        lastName: "JerMiya",
-        schoolName: "Holland Elementary",
-        grade: "Grade 4",
-        attendance: 0.6
-      },
-      {
-        firstName: "Marshall",
-        lastName: "JerMiya",
-        schoolName: "Holland Elementary",
-        grade: "Grade 4",
-        attendance: 0.6
-      }
-    ];
-    setVisibleStudents(students);
-  }, []);
+    if (sort == "Alphabetical") {
+      setVisibleStudents(
+        visibleStudents.sort((a, b) => a.lastName.localeCompare(b.lastName))
+      );
+    }
+    if (sort == "Grade") {
+      setVisibleStudents(
+        visibleStudents.sort((a, b) => a.grade.localeCompare(b.grade))
+      );
+    }
+    if (sort == "Low Attendance") {
+      setVisibleStudents(
+        visibleStudents.sort((a, b) => a.attendance - b.attendance)
+      );
+    }
+  }, [sort]);
 
+  // filtering
   React.useEffect(() => {
-    console.log(filters);
     let filtered = false;
     setVisibleStudents(students);
     filters.forEach((filter, i) => {
@@ -226,7 +228,6 @@ function History() {
         );
       }
       if (filter != "" && filtered) {
-        console.log(visibleStudents);
         setVisibleStudents(
           visibleStudents.filter(student => student[filterLabels[i]] == filter)
         );
@@ -259,9 +260,77 @@ function History() {
   return (
     <div className={styles.container}>
       <p style={{ fontSize: "200" }}>Bus Attendance Matrix</p>
-      <h1 style={{ margin: 0 }}>
-        Harland Boys and Girls Club 2019-2020 Afterschool Registration
-      </h1>
+      <h1>{ClubName} 2019-2020 Afterschool Registration</h1>
+      <div className={styles.filters}>
+        <h2>Filter By</h2>
+        <FormControl variant="outlined" className={classes.formControl}>
+          <InputLabel>School</InputLabel>
+          <Select
+            value={filters[0]}
+            onChange={e => handleUpdateFilters(e.target.value, 0)}
+            className={classes.selectButton}
+            label="School"
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            {[...new Set(students.map(students => students.schoolName))].map(
+              schoolName => {
+                return <MenuItem value={schoolName}>{schoolName}</MenuItem>;
+              }
+            )}
+          </Select>
+        </FormControl>
+        <FormControl variant="outlined" className={classes.formControl}>
+          <InputLabel>Grade</InputLabel>
+          <Select
+            value={filters[1]}
+            onChange={e => handleUpdateFilters(e.target.value, 1)}
+            className={classes.selectButton}
+            label="Grade"
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            {[...new Set(students.map(students => students.grade))].map(
+              grade => {
+                return <MenuItem value={grade}>{grade}</MenuItem>;
+              }
+            )}
+          </Select>
+        </FormControl>
+        <Button
+          className={classes.button}
+          color={filters[2] == "" ? "default" : "primary"}
+          variant="contained"
+          onClick={() => {
+            filters[2] == ""
+              ? handleUpdateFilters("Low Attendance", 2)
+              : handleDeleteFilters("Low Attendance");
+          }}
+        >
+          Low Attendance
+        </Button>
+      </div>
+
+      <div className={styles.sort}>
+        <h2>Sort By</h2>
+        {sortingNames.map(name => {
+          return (
+            <Button
+              className={classes.button}
+              variant="contained"
+              color={name == sort ? "primary" : "default"}
+              onClick={() => {
+                sort != name ? setSort(name) : setSort("");
+              }}
+            >
+              {name}
+            </Button>
+          );
+        })}
+      </div>
+
       <div className={classes.dateSelect}>
         <IconButton
           aria-label="change-month"
@@ -280,154 +349,130 @@ function History() {
         </IconButton>
       </div>
 
-      <div className={styles.chips}>
-        {filters
-          .filter(filter => filter != "")
-          .map(filter => {
-            return (
-              <Chip
-                label={filter}
-                onDelete={() => handleDeleteFilters(filter)}
-                style={{ margin: "10px" }}
-                color="primary"
-              />
-            );
-          })}
-      </div>
-      <div className={styles.filters}>
-        <h2>Filter By</h2>
-        <FormControl variant="outlined" className={classes.formControl}>
-          <InputLabel>School</InputLabel>
-          <Select
-            value={filters[0]}
-            onChange={e => handleUpdateFilters(e.target.value, 0)}
-            className={classes.selectButton}
-            label="School"
-          >
-            <MenuItem value="Manatee Elementary">Manatee Elementary</MenuItem>
-            <MenuItem value="Suntree Elementary">Suntree Elementary</MenuItem>
-            <MenuItem value="Holy Trinity">Holy Trinity</MenuItem>
-            <MenuItem value="Holland Elementary">Holland Elementary</MenuItem>
-          </Select>
-        </FormControl>
-        <FormControl variant="outlined" className={classes.formControl}>
-          <InputLabel>Grade</InputLabel>
-          <Select
-            value={filters[1]}
-            onChange={e => handleUpdateFilters(e.target.value, 1)}
-            className={classes.selectButton}
-            label="Grade"
-          >
-            <MenuItem value="Grade 1">Grade 1</MenuItem>
-            <MenuItem value="Grade 2">Grade 2</MenuItem>
-            <MenuItem value="Grade 3">Grade 3</MenuItem>
-          </Select>
-        </FormControl>
-        <Button
-          className={classes.button}
-          variant="contained"
-          onClick={() => {
-            if (filters[2] == "") {
-              handleUpdateFilters("Low Attendance", 2);
-            } else {
-              handleDeleteFilters("Low Attendance");
-            }
-          }}
-        >
-          Low Attendance
-        </Button>
-      </div>
-
-      <div className={styles.sort}>
-        <h2>Sort By</h2>
-        {sortingNames.map(name => {
-          return (
-            <Button
-              className={classes.button}
-              variant="contained"
-              color={name == sort ? "primary" : ""}
-              onClick={() => {
-                sort != name ? setSort(name) : setSort("");
-              }}
-            >
-              {name}
-            </Button>
-          );
-        })}
-      </div>
-
-      <table className={classes.table}>
-        <tr className={classes.firstTr}>
-          <td className={classes.td}>Student Name</td>
-          <td className={classes.td}>Overall Attendance </td>
-          <td className={classes.td}>Status </td>
-        </tr>
-        {visibleStudents.map(student => (
-          <tr className={classes.tr}>
-            <td
-              className={classes.td}
-              style={{
-                backgroundColor: student.attendance < 0.6 ? lowAttendance : "",
-                width: "20%"
-              }}
-            >
-              <SimpleModal
-                button={<>{`${student.lastName}, ${student.firstName}`}</>}
-                buttonStyle={classes.modalButton}
-              >
-                <div className={classes.modal}>
-                  <div className={classes.content}>
-                    <div className={classes.info}>
-                      <h1>{`${student.firstName} ${student.lastName}`}</h1>
-                      <p>{`School: ${student.schoolName}`}</p>
-                      <p>{`Grade: ${student.grade}`}</p>
-                      <p>{`Status: ${student.status}`}</p>
-                      <p>{`Contact: ${student.contact}`}</p>
-                      <p>{`Emergency: ${student.emergency}`}</p>
-                    </div>
-                    <div className={classes.calendar}>
-                      <Calendar
-                        defaultMonth={date.getMonth()}
-                        defaultYear={date.getFullYear()}
-                        getDatesAttended={() => datesAttended}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </SimpleModal>
-            </td>
-            <td className={classes.td} style={{ width: "60%" }}>
-              <div
-                style={{
-                  width: `${100 * student.attendance}%`,
-                  height: "20px",
-                  backgroundColor:
-                    student.attendance < 0.6 ? lowAttendance : highAttendance
-                }}
-              />
-            </td>
-            <td className={classes.td} style={{ width: "20%" }}>
-              <div className={styles.status}>
-                <span
-                  className={classes.dot}
+      <div className={classes.tableWrapper}>
+        <table className={classes.table}>
+          <thead>
+            <tr className={classes.firstTr}>
+              <td>Student Name</td>
+              <td>Overall Attendance </td>
+              <td>Status </td>
+            </tr>
+          </thead>
+          <tbody className={classes.tbody}>
+            {visibleStudents.map(student => (
+              <tr className={classes.tr}>
+                <td
+                  className={classes.td}
                   style={{
                     backgroundColor:
-                      student.attendance < 0.6 ? lowAttendance : highAttendance
+                      student.attendance < 0.6 ? lowAttendance : "",
+                    width: "300px"
                   }}
-                />
+                >
+                  <SimpleModal
+                    button={<>{`${student.lastName}, ${student.firstName}`}</>}
+                    buttonStyle={classes.modalButton}
+                  >
+                    <div className={classes.modal}>
+                      <div className={classes.content}>
+                        <div className={classes.info}>
+                          <h1>{`${student.firstName} ${student.lastName}`}</h1>
+                          <p>{`School: ${student.schoolName}`}</p>
+                          <p>{`Grade: ${student.grade}`}</p>
+                          <p>{`Status: ${student.status}`}</p>
+                          <p>{`Contact: ${student.contact}`}</p>
+                          <p>{`Emergency: ${student.emergency}`}</p>
+                        </div>
+                        <div className={classes.calendar}>
+                          <Calendar
+                            defaultMonth={date.getMonth()}
+                            defaultYear={date.getFullYear()}
+                            getDatesAttended={() => datesAttended}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </SimpleModal>
+                </td>
+                <td className={classes.td}>
+                  <div style={{ display: "flex", flexDirection: "row" }}>
+                    <div
+                      style={{
+                        width: `${100 * student.attendance}%`,
+                        height: "20px",
+                        backgroundColor:
+                          student.attendance < 0.6
+                            ? lowAttendance
+                            : highAttendance
+                      }}
+                    />
+                    <p style={{ margin: "0px 0px 0px 3px" }}>
+                      {Math.round(student.attendance * daysInMonth)}
+                    </p>
+                  </div>
+                </td>
+                <td className={classes.td} style={{ width: "300px" }}>
+                  <div className={styles.status}>
+                    <span
+                      className={classes.dot}
+                      style={{
+                        backgroundColor:
+                          student.attendance < 0.6
+                            ? lowAttendance
+                            : highAttendance
+                      }}
+                    />
 
-                {student.attendance < 0.6 ? (
-                  <p style={{ margin: "5px" }}>Low Attendance</p>
-                ) : (
-                  <p style={{ margin: "5px" }}>Active</p>
-                )}
-              </div>
-            </td>
-          </tr>
-        ))}
-      </table>
+                    {student.attendance < 0.6 ? (
+                      <p style={{ margin: "5px" }}>Low Attendance</p>
+                    ) : (
+                      <p style={{ margin: "5px" }}>Active</p>
+                    )}
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
+
+
+
+// Declaring type of schools prop
+History.propTypes = {
+  students: PropTypes.arrayOf(PropTypes.object)
+};
+
+// Setting default value for schools prop
+History.defaultProps = {
+  students: null
+};
+
+History.getInitialProps = async () => {
+  const res = await fetch('http://localhost:3000/api/club?ClubName=' + ClubName)
+  const schools_data = await res.json()
+
+  var schools = []
+  if (schools_data.success && schools_data.payload.length > 0) {
+    schools = schools_data.payload[0].SchoolNames
+  }
+
+  var students = []
+
+  let school;
+  for (school of schools) {
+    const res2 = await fetch('http://localhost:3000/api/school?schoolName=' + school)
+    const students_data = await res2.json()
+    if (students_data.success) {
+      students = students.concat(students_data.payload)
+    }
+  }
+
+  return {students: await updateStudents(new Date(startDate), students)};
+
+};
 
 export default History;
