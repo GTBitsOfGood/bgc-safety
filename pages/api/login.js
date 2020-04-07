@@ -3,10 +3,8 @@ import mongoDB from "../../server/mongodb/index";
 import { login } from "../../server/mongodb/actions/User";
 
 export default async (req, res) => {
-  console.log("mongo connecting");
 
   await mongoDB();
-  console.log("mongo is good");
 
   const { method } = req;
 

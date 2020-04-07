@@ -17,7 +17,6 @@ class Login extends React.Component {
 
   }
 
-
   sendCredentials = () => {
     const data = {
       email: this.state.email, 
@@ -43,7 +42,7 @@ class Login extends React.Component {
   render () {
     const { user } = this.state;
     const { sentCredentials } = this.state;
-
+    const classes = useStyles();
     return (
       <div className="container">
         <div>
@@ -84,6 +83,7 @@ class Login extends React.Component {
 
 
 const useStyles = makeStyles(theme => ({
+  // TODO: Remove CSS from App.css
   /* Rectangle 3 */
   // login-btn: {
   //   position: absolute,
@@ -120,8 +120,6 @@ const useStyles = makeStyles(theme => ({
   //   background: #E0E0E0;
   //   border-radius: 30px;
   // },
-
-
 
   root: {
     flexGrow: 1
