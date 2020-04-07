@@ -1,10 +1,13 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles(() => ({
   container: {
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center"
   },
   btn: {
     borderRadius: "20px",
@@ -16,16 +19,16 @@ const useStyles = makeStyles(() => ({
 }));
 
 const RouteSelection = () => {
+  const [schools, setSchools] = React.useState([]);
   const classes = useStyles();
-  let schools = [];
   React.useEffect(() => {
     //   get schools from database
-    schools = [
+    setSchools([
       "Example Elementary 1",
       "Example Elementary 2",
       "Example Elementary 3",
       "Example Elementary 4"
-    ];
+    ]);
   }, []);
 
   const handleClick = e => {
@@ -35,7 +38,7 @@ const RouteSelection = () => {
 
   return (
     <div className={classes.container}>
-      <h1 className={classes.text}>Select a Bus Route</h1>
+      <h1 className={classes.text}>Select a Bus Route:</h1>
       {schools.map(school => {
         return (
           <Button className={classes.btn} onClick={handleClick}>

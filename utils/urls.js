@@ -14,7 +14,7 @@ export default {
     csv_upload: "/csv_upload",
     roster: "/roster",
     history: "/history",
-    routeSelection: "/route_selection"
+    route_selection: "/route_selection"
   },
   api: {
     example: "/api/example",

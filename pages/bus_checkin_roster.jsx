@@ -22,6 +22,8 @@ const Roster = props => {
   React.useEffect(() => {
     //   get students from school (passed in from props) from api
   }, []);
+
+  return <h1> Hello!</h1>;
 };
 
 export default Roster;

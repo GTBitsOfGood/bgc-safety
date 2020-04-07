@@ -17,12 +17,7 @@ const ModalComponent = props => {
       <button type="button" onClick={handleOpen} className={props.buttonStyle}>
         {props.button}
       </button>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
-      >
+      <Modal open={open} onClose={handleClose}>
         {props.children}
       </Modal>
     </div>

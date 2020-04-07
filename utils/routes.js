@@ -20,6 +20,10 @@ const routes = [
   {
     name: "History",
     link: urls.pages.history
+  },
+  {
+    name: "Route Selection",
+    link: urls.pages.route_selection
   }
 ];
 
