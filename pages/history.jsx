@@ -1,18 +1,24 @@
 import React from "react";
+import PropTypes from "prop-types";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
 import Select from "@material-ui/core/Select";
 import { makeStyles } from "@material-ui/core/styles";
-import Chip from "@material-ui/core/Chip";
 import IconButton from "@material-ui/core/IconButton";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
+import Calendar from "../client/components/calendar";
+import ModalComponent from "../client/components/modal";
 import styles from "./history.module.css";
+
+const fetch = require("node-fetch");
 
 const lowAttendance = "#FFCF50";
 const highAttendance = "#40B24B";
+const ClubName = "Harland"; // TODO: Allow user to select a club
+const startDate = "1/01/2020";
 
 const getMonth = date => {
   const months = [
@@ -83,123 +89,147 @@ const useStyles = makeStyles(theme => ({
     alignSelf: "center",
     display: "flex",
     flexDirection: "row"
+  },
+  ModalComponent: {
+    position: "absolute",
+    width: "500px",
+    height: "300px",
+    boxShadow: theme.shadows[5],
+    backgroundColor: "#fff",
+    left: "50%",
+    marginLeft: "-250px",
+    top: "50%",
+    marginTop: "-150px",
+    padding: theme.spacing(2, 4, 3),
+    display: "flex",
+    flexFlow: "column wrap",
+    textAlign: "center",
+    justifyContent: "space-around"
+  },
+  content: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center"
+  },
+  ModalComponentButton: {
+    border: "none",
+    backgroundColor: "rgb(0, 0, 0, 0)",
+    fontSize: 14
+  },
+  info: {
+    flex: 1,
+    padding: 10,
+    textAlign: "left"
+  },
+  calendar: {
+    flex: 1
   }
 }));
 
-let students = [];
+let daysInMonth = -1;
 
-const getDaysInMonth = date => {
-  return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+async function updateStudents(date, students) {
+  const data = [];
+
+  const day_list = [];
+  const curr = new Date(date);
+  const today = new Date();
+  while (
+    curr.getMonth() === date.getMonth() &&
+    (curr.getMonth() !== today.getMonth() ||
+      curr.getFullYear() !== today.getFullYear() ||
+      curr.getDate() <= today.getDate())
+  ) {
+    if (curr.getDay() >= 1 && curr.getDay() <= 5) {
+      day_list.push(
+        `${curr.getMonth() + 1}/${String(curr.getDate()).padStart(
+          2,
+          "0"
+        )}/${curr.getFullYear()}`
+      );
+    }
+
+    curr.setDate(curr.getDate() + 1);
+  }
+
+  daysInMonth = day_list.length;
+
+  for (const student of students) {
+    const res1 = await fetch(
+      `http://localhost:3000/api/attendance?studentID=${
+        student.studentID
+      }&startDate=${day_list[0]}&endDate=${day_list[day_list.length - 1]}`
+    );
+    const d = await res1.json();
+
+    if (d.success) {
+      let count = 0;
+      for (const day of day_list) {
+        count += 1 ? d.payload.includes(day) : 0;
+      }
+
+      data.push({
+        firstName: student.firstName,
+        lastName: student.lastName,
+        schoolName: student.schoolName,
+        grade: student.grade,
+        attendance: count / day_list.length,
+        studentID: student.studentID
+      });
+    }
+  }
+
+  return data;
+}
+
+const DateSelect = props => {
+  const { date, setDate } = props;
+
+  return (
+    <div className={classes.dateSelect}>
+      <IconButton
+        aria-label="change-month"
+        onClick={() => setDate(new Date(date.setMonth(date.getMonth() - 1)))}
+      >
+        <ArrowBackIosIcon />
+      </IconButton>
+      <p style={{ marginLeft: "40px", marginRight: "40px" }}>
+        {getMonth(date)}
+      </p>
+      <IconButton
+        aria-label="change-month"
+        onClick={() => setDate(new Date(date.setMonth(date.getMonth() + 1)))}
+      >
+        <ArrowForwardIosIcon />
+      </IconButton>
+    </div>
+  );
 };
 
-function History() {
+function History({ students }) {
   const classes = useStyles();
   const [visibleStudents, setVisibleStudents] = React.useState([]);
   const [filters, setFilters] = React.useState(["", "", ""]);
   const filterLabels = ["schoolName", "grade", "attendance"];
   const [filteredStudents, setFilteredStudents] = React.useState([]);
   const [sort, setSort] = React.useState("");
-  const sortingLabels = ["Alphabetical", "Grade", "Low Attendance"];
-  const [date, setDate] = React.useState(new Date("1/1/2020"));
+  const [date, setDate] = React.useState(new Date(startDate));
 
   // fetching date data from api
-  React.useEffect(() => {
-    // sort and filter data once fetched from api
-    setVisibleStudents(
-      visibleStudents.map(student => {
-        return { ...student, attendance: Math.round(Math.random() * 10) / 10 };
-      })
-    );
-    students = visibleStudents;
-    // reset all sorting and filters
-  }, [date]);
+  React.useEffect(
+    () => async () => {
+      students = await updateStudents(date, students);
+      setVisibleStudents(students);
+    },
+    [date]
+  );
 
-  // fetching initial student data
-  React.useEffect(() => {
-    // fetch("api").then(res => res.json).then(response => {
-    //   setStudents(response.students)
-    // })
-    students = [
-      {
-        firstName: "Jabreal",
-        lastName: "Diah",
-        schoolName: "Manatee Elementary",
-        grade: "Grade 1",
-        attendance: 0.8
-      },
-      {
-        firstName: "David",
-        lastName: "Rogers",
-        schoolName: "Holy Trinity",
-        grade: "Grade 6",
-        attendance: 0.2
-      },
-      {
-        firstName: "Saurav",
-        lastName: "Ghosal",
-        schoolName: "Suntree Elementary",
-        grade: "Grade 3",
-        attendance: 0.9
-      },
-      {
-        firstName: "Marshall",
-        lastName: "JerMiya",
-        schoolName: "Holland Elementary",
-        grade: "Grade 4",
-        attendance: 0.6
-      },
-      {
-        firstName: "Dave",
-        lastName: "Smyth",
-        schoolName: "Holland Elementary",
-        grade: "Grade 4",
-        attendance: 0.7
-      },
-      {
-        firstName: "Ismaeel",
-        lastName: "Bauer",
-        schoolName: "Holland Elementary",
-        grade: "Grade 4",
-        attendance: 0.6
-      },
-      {
-        firstName: "Carter",
-        lastName: "Kendall",
-        schoolName: "Holland Elementary",
-        grade: "Grade 4",
-        attendance: 1
-      },
-      {
-        firstName: "Ariel",
-        lastName: "Sheehan",
-        schoolName: "Holland Elementary",
-        grade: "Grade 4",
-        attendance: 0.3
-      },
-      {
-        firstName: "Glen ",
-        lastName: "Pham",
-        schoolName: "Holland Elementary",
-        grade: "Grade 4",
-        attendance: 0.1
-      },
-      {
-        firstName: "Alicia",
-        lastName: "Watts",
-        schoolName: "Holland Elementary",
-        grade: "Grade 4",
-        attendance: 0.6
-      },
-      {
-        firstName: "Buster",
-        lastName: "Dally",
-        schoolName: "Holland Elementary",
-        grade: "Grade 4",
-        attendance: 0.8
-      }
-    ];
-    setVisibleStudents(students);
-  }, []);
+  const datesAttended = [
+    new Date(2020, 0, 3),
+    new Date(2020, 0, 6),
+    new Date(2020, 0, 8)
+  ];
 
   // sorting
   React.useEffect(() => {
@@ -270,7 +300,10 @@ function History() {
   return (
     <div className={styles.container}>
       <p style={{ fontSize: "200" }}>Bus Attendance Matrix</p>
-      <h1>Harland Boys and Girls Club 2019-2020 Afterschool Registration</h1>
+      <h1>{ClubName}
+{' '}
+2019-2020 Afterschool Registration
+</h1>
       <div className={styles.filters}>
         <h2>Filter By</h2>
         <FormControl variant="outlined" className={classes.formControl}>
@@ -341,23 +374,7 @@ function History() {
         })}
       </div>
 
-      <div className={classes.dateSelect}>
-        <IconButton
-          aria-label="change-month"
-          onClick={() => setDate(new Date(date.setMonth(date.getMonth() - 1)))}
-        >
-          <ArrowBackIosIcon />
-        </IconButton>
-        <p style={{ marginLeft: "40px", marginRight: "40px" }}>
-          {getMonth(date)}
-        </p>
-        <IconButton
-          aria-label="change-month"
-          onClick={() => setDate(new Date(date.setMonth(date.getMonth() + 1)))}
-        >
-          <ArrowForwardIosIcon />
-        </IconButton>
-      </div>
+      <DateSelect date={date} setDate={setDate} />
 
       <div className={classes.tableWrapper}>
         <table className={classes.table}>
@@ -380,10 +397,30 @@ function History() {
                     width: "300px"
                   }}
                 >
-                  <div>
-                    {student.lastName},
-{` ${student.firstName}`}
-                  </div>
+                  <ModalComponent
+                    button={<>{`${student.lastName}, ${student.firstName}`}</>}
+                    buttonStyle={classes.ModalComponentButton}
+                  >
+                    <div className={classes.ModalComponent}>
+                      <div className={classes.content}>
+                        <div className={classes.info}>
+                          <h1>{`${student.firstName} ${student.lastName}`}</h1>
+                          <p>{`School: ${student.schoolName}`}</p>
+                          <p>{`Grade: ${student.grade}`}</p>
+                          <p>{`Status: ${student.status}`}</p>
+                          <p>{`Contact: ${student.contact}`}</p>
+                          <p>{`Emergency: ${student.emergency}`}</p>
+                        </div>
+                        <div className={classes.calendar}>
+                          <Calendar
+                            defaultMonth={date.getMonth()}
+                            defaultYear={date.getFullYear()}
+                            getDatesAttended={() => datesAttended}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </ModalComponent>
                 </td>
                 <td className={classes.td}>
                   <div style={{ display: "flex", flexDirection: "row" }}>
@@ -398,7 +435,7 @@ function History() {
                       }}
                     />
                     <p style={{ margin: "0px 0px 0px 3px" }}>
-                      {Math.round(student.attendance * getDaysInMonth(date))}
+                      {Math.round(student.attendance * daysInMonth)}
                     </p>
                   </div>
                 </td>
@@ -429,5 +466,42 @@ function History() {
     </div>
   );
 }
+
+// Declaring type of schools prop
+History.propTypes = {
+  students: PropTypes.arrayOf(PropTypes.object)
+};
+
+// Setting default value for schools prop
+History.defaultProps = {
+  students: null
+};
+
+History.getInitialProps = async () => {
+  const res = await fetch(
+    `http://localhost:3000/api/club?ClubName=${ClubName}`
+  );
+  const schools_data = await res.json();
+
+  let schools = [];
+  if (schools_data.success && schools_data.payload.length > 0) {
+    schools = schools_data.payload[0].SchoolNames;
+  }
+
+  let students = [];
+
+  let school;
+  for (school of schools) {
+    const res2 = await fetch(
+      `http://localhost:3000/api/school?schoolName=${school}`
+    );
+    const students_data = await res2.json();
+    if (students_data.success) {
+      students = students.concat(students_data.payload);
+    }
+  }
+
+  return { students: await updateStudents(new Date(startDate), students) };
+};
 
 export default History;

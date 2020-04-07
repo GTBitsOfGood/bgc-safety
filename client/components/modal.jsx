@@ -1,7 +1,7 @@
 import React from "react";
 import Modal from "@material-ui/core/Modal";
 
-const SimpleModal = props => {
+const ModalComponent = props => {
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => {
@@ -29,4 +29,4 @@ const SimpleModal = props => {
   );
 };
 
-export default SimpleModal;
+export default ModalComponent;
