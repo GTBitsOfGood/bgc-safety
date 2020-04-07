@@ -115,7 +115,10 @@ const useStyles = makeStyles(theme => ({
   ModalComponentButton: {
     border: "none",
     backgroundColor: "rgb(0, 0, 0, 0)",
-    fontSize: 14
+    fontSize: 14,
+    "&:hover": {
+      pointer: "cursor"
+    }
   },
   info: {
     flex: 1,
