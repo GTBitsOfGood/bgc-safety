@@ -3,7 +3,10 @@ import mongoDB from "../../server/mongodb/index";
 import { login } from "../../server/mongodb/actions/User";
 
 export default async (req, res) => {
+  console.log("mongo connecting");
+
   await mongoDB();
+  console.log("mongo is good");
 
   const { method } = req;
 
@@ -17,7 +20,7 @@ export default async (req, res) => {
 
 async function loginUser(req, res) {
   const { email, password } = req.body;
-
+  console.log(req.body);
   login(email, password)
     .then(token =>
       res.status(200).send({

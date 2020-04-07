@@ -114,3 +114,22 @@ input[type="file"] {
   font-size: 64px;
   padding-bottom: 15px;
 }
+
+input.login-text-field {
+  width: 558px;
+  height: 63px;
+  left: 441px;
+  top: 605px;
+
+  background: #E0E0E0;
+  border-radius: 30px;
+}
+
+button.btn-login {
+  width: 468px;
+  height: 63px;
+  left: 486px;
+  top: 800px;
+  background-color: #1C7DB4;
+  border-radius: 30px;
+}

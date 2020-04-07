@@ -13,7 +13,8 @@ export default {
     ssr: "/ssr",
     csv_upload: "/csv_upload",
     roster: "/roster",
-    history: "/history"
+    history: "/history",
+    login: '/login'
   },
   api: {
     example: "/api/example",
@@ -24,7 +25,7 @@ export default {
     attendance: "api/attendance",
     checkIn: "/api/checkIn",
     uploadCsv: "/api/upload_csv",
-    users: "/api/users",
+    users: "/api/user",
     login: "/api/login"
   }
 };

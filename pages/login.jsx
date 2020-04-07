@@ -1,103 +1,146 @@
-
 import React from "react";
 import axios from "axios";
-import { Component } from 'react'
+import { makeStyles } from "@material-ui/core/styles";
+import Router from 'next/router';
 
-class Login extends Component {
-
-
-  static getInitialProps ({ req }) {
-    const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http'
-
-    const apiUrl = process.browser
-      ? `${protocol}://${window.location.host}/api/login.js`
-      : `${protocol}://${req.headers.host}/api/login.js`
-
-    return { apiUrl }
-  }
+class Login extends React.Component {
 
   constructor (props) {
     super(props)
 
-    this.state = { username: '', error: '' }
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
+    this.state = {
+      email: "klucas-bd@bgcma.org",
+      password: "KLucasBGCBusDriver", 
+      user: '', 
+      sentCredentials: false
+    };
+
   }
 
-  // constructor(props) {
-  //   super(props);
-  
-  //   this.state = {
-  //     showContent: false,
-  //     selected: props.defaultSelected
-  //   };
-  
-  //   this.toggleDropdown = this.toggleDropdown.bind(this);
-  
-  //   Router.events.on("routeChangeComplete", url => {
-  //     const route = routes.find(rt => rt.link === url);
-  //     if (route) {
-  //       this.setState({ selected: route.name });
-  //     }
-  //     this.setState({ showContent: false });
-  //   });
-  // }
-  
-  handleChange (event) {
-    this.setState({ username: event.target.value })
-  }
 
-  async handleSubmit (event) {
-    event.preventDefault()
-    const username = this.state.username
-    const url = this.props.apiUrl
-  
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username })
+  sendCredentials = () => {
+    const data = {
+      email: this.state.email, 
+      password: this.state.password
+    };
+
+    console.log(data);
+    axios
+      .post("http://localhost:3000/api/login", data)
+      .then(function(response) {
+        console.log(response);
+        self.setState({sentCredentials: true});
+        self.setState({user: response});
+        console.log(this.state.user);
+        // cookie.set("token", token, { expires: 1 });
+        // Router.push("/roster");
       })
-      if (response.ok) {
-        const { token } = await response.json()
-        login({ token })
-      } else {
-        console.log('Login failed.')
-        let error = new Error(response.statusText)
-        error.response = response
-        return Promise.reject(error)
-      }
-    } catch (error) {
-      console.error(
-        'You have an error in your code or there are Network issues.',
-        error
-      )
-      throw new Error(error)
-    }
+      .catch(function(error) {
+        console.log(error);
+      });
   }
 
   render () {
+    const { user } = this.state;
+    const { sentCredentials } = this.state;
+
     return (
-      <div className='login'>
-        <form onSubmit={this.handleSubmit}>
-          <label htmlFor='username'>GitHub username</label>
-
-          <input
-            type='text'
-            id='username'
-            name='username'
-            value={this.state.username}
-            onChange={this.handleChange}
-          />
-
-          <button type='submit'>Login</button>
-
-          <p className={`error ${this.state.error && 'show'}`}>
-            {this.state.error && `Error: ${this.state.error}`}
-          </p>
-        </form>
+      <div className="container">
+        <div>
+          <div>
+            <input className="login-text-field" 
+              value={this.state.email} 
+              onChange={ this.handleChangeEmail.bind(this) }
+              placeholder="Username" />
+          </div>
+          <div>
+            <input className="login-text-field" 
+              value={this.state.password} 
+              onChange={ this.handleChangePassword.bind(this) }
+              placeholder="Password" />
+          </div>
+        </div>
+        <div className="button-container">
+          <button type="button" 
+            className="btn-login" 
+            onClick={this.sendCredentials}>
+            Login
+          </button>
+        </div>
       </div>
     )
   }
+
+  handleChangeEmail(e) {
+    this.setState({ email: e.target.value });
+  }
+
+  handleChangePassword(e) {
+    this.setState({ password: e.target.value });
+  }
+  
+   
 }
+
+
+const useStyles = makeStyles(theme => ({
+  /* Rectangle 3 */
+  // login-btn: {
+  //   position: absolute,
+  //   width: "468px",
+  //   height: "63px",
+  //   left: "486px",
+  //   top: "800px",
+
+  //   background:"#1C7DB4",
+  //   border-radius: "30px",
+  //   transform: theme.matrix(1, 0, 0, -1, 0, 0)
+  // },
+
+  /* Rectangle 2 */
+  // pass-field: {
+  //   position: absolute;
+  //   width: 558px;
+  //   height: 63px;
+  //   left: 441px;
+  //   top: 605px;
+
+  //   background: #E0E0E0;
+  //   border-radius: 30px;
+  // },
+
+  /* Rectangle 1 */
+  // user-field: {
+  //   position: absolute;
+  //   width: 558px;
+  //   height: 63px;
+  //   left: 441px;
+  //   top: 524px;
+    
+  //   background: #E0E0E0;
+  //   border-radius: 30px;
+  // },
+
+
+
+  root: {
+    flexGrow: 1
+  },
+  header: {
+    backgroundColor: "#1594D0"
+  },
+  menuButton: {
+    marginRight: theme.spacing(2)
+  },
+  title: {
+    flexGrow: 1,
+    fontSize: 16,
+    fontWeight: "bold"
+  },
+  date: {
+    padding: "10px 20px",
+    textAlign: "center"
+  }
+}));
+
 export default Login;

@@ -4,6 +4,9 @@ import mongoDB from "../index";
 import User from "../models/User";
 
 export async function login(email, password) {
+  console.log('received')
+  console.log(email);
+  console.log(password)
   await mongoDB();
 
   return new Promise((resolve, reject) => {
@@ -12,10 +15,15 @@ export async function login(email, password) {
     })
       .then(user => {
         if (user) {
+          console.log('found user!')
+
+          console.log(bcrypt.compare(password, user.password));
           return bcrypt.compare(password, user.password).then(result => {
             if (result) {
+              console.log('resolved the user!')
               return Promise.resolve(user);
             }
+            console.log('rejected the user!')
             return Promise.reject(
               new Error("The password you entered is incorrect.")
             );
@@ -43,6 +51,7 @@ export async function login(email, password) {
         );
       })
       .catch(error => {
+        console.log(error.message);
         return reject(error.message);
       });
   });
