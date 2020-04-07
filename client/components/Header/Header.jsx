@@ -82,6 +82,9 @@ class Header extends React.Component {
           <Link href="/history">
             <a>Attendance History</a>
           </Link>
+          <Link href="/route_selection">
+            <a>Route Selection</a>
+          </Link>
         </Dropdown>
         <h3 style={{ padding: "10px 20px", textAlign: "center" }}>
           {getDate()}

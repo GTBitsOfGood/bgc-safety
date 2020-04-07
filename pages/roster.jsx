@@ -10,7 +10,7 @@ import ModalComponent from "../client/components/modal";
 const fetch = require("node-fetch");
 
 const useStyles = makeStyles(theme => ({
-  content: {
+  ModalContent: {
     position: "absolute",
     width: "500px",
     height: " 300px",
@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexFlow: "column wrap",
     textAlign: "center",
-    justifyContent: "space-around"
+    justifyModalContent: "space-around"
   },
   button: {
     width: "100%",
@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    justifyModalContent: "center",
     "&:hover": {
       cursor: "pointer"
     }
@@ -134,7 +134,10 @@ function Roster({ schools }) {
                   }
                   buttonStyle={classes.button}
                 >
-                  <form className={classes.content} onSubmit={handleSubmit}>
+                  <form
+                    className={classes.ModalContent}
+                    onSubmit={handleSubmit}
+                  >
                     <h1>Manual Data Entry</h1>
                     <input
                       id="firstName"

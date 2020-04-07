@@ -13,7 +13,8 @@ export default {
     ssr: "/ssr",
     csv_upload: "/csv_upload",
     roster: "/roster",
-    history: "/history"
+    history: "/history",
+    routeSelection: "/route_selection"
   },
   api: {
     example: "/api/example",

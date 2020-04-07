@@ -184,6 +184,7 @@ async function updateStudents(date, students) {
 }
 
 const DateSelect = props => {
+  const classes = useStyles();
   const { date, setDate } = props;
 
   return (
@@ -214,6 +215,7 @@ function History({ students }) {
   const filterLabels = ["schoolName", "grade", "attendance"];
   const [filteredStudents, setFilteredStudents] = React.useState([]);
   const [sort, setSort] = React.useState("");
+  const sortingLabels = ['Alphabetical', 'Grade','Low Attendance']
   const [date, setDate] = React.useState(new Date(startDate));
 
   // fetching date data from api
