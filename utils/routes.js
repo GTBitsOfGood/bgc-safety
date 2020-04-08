@@ -24,6 +24,10 @@ const routes = [
   {
     name: "Route Selection",
     link: urls.pages.route_selection
+  },
+  {
+    name: "Bus Checkin",
+    link: urls.pages.bus_checkin_roster
   }
 ];
 
