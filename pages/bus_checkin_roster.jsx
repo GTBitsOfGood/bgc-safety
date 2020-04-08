@@ -3,25 +3,29 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
+import EditIcon from "@material-ui/icons/Edit";
 import ModalComponent from "../client/components/modal";
 
 const useStyles = makeStyles(() => ({
   container: {
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
+    alignItems: "center"
   },
   backbtn: {
+    alignSelf: "flex-start",
     display: "flex",
     alignItems: "center",
     outline: "none",
     border: "none",
+    background: "white",
     "&:hover": {
       cursor: "pointer"
     }
   },
   header: {
     display: "flex",
-    justifyContent: "space-between"
+    alignItems: "center"
   },
   btn: {
     borderRadius: "20px",
@@ -31,7 +35,14 @@ const useStyles = makeStyles(() => ({
   text: {
     margin: "30px"
   },
-  headerTr: {
+  tbody: {
+    display: "block",
+    height: "450px",
+    overflowY: "scroll",
+    overflowX: "hidden"
+  },
+  th: {
+    width: "calc( 100% - 1em )",
     backgroundColor: "#828282",
     padding: "10px"
   },
@@ -41,10 +52,15 @@ const useStyles = makeStyles(() => ({
     padding: "5px"
   },
   tr: {
+    display: "table",
+    width: "100%",
+
+    tableLayout: "fixed",
     "&:nth-child(even)": {
       backgroundColor: "#efefef"
     }
   },
+
   checkedIn: {
     display: "flex",
     flexDirection: "row",
@@ -81,31 +97,46 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const Roster = props => {
+const Roster = ({ initialStudents }) => {
   const classes = useStyles();
   // const { schoolName } = props;
   const schoolName = "Example Bus Route 1";
-  const [students, setStudents] = React.useState([]);
+  const [students, setStudents] = React.useState(initialStudents);
   const [note, setNote] = React.useState("");
 
-  React.useEffect(() => {
-    //   get students from school (passed in from props) from api
+  const submitNote = index => {
     setStudents(
-      ["Bruce Wayne", "Bruce Wayne", "Valeria F.", "Jeremy H"].map(student => {
-        return { name: student, checkedIn: Math.random() < 0.5 };
+      students.map((student, i) => {
+        if (index == i) {
+          return { name: student.name, checkedIn: true, note };
+        }
+        return student;
       })
     );
-  }, []);
-
-  const handleSubmit = e => {
-    e.preventDefault();
-    // add note to student in database
-    console.log(note);
   };
 
-  const ModalContent = () => (
-    <form className={classes.ModalContent} onSubmit={handleSubmit}>
-      <h1>Manual Data Entry</h1>
+  const handleSubmit = index => {
+    // push to backend?
+    console.log("clicked");
+  };
+
+  const checkInStudent = index => {
+    setStudents(
+      students.map((student, i) => {
+        if (index == i) {
+          return { name: student.name, checkedIn: true, note: "" };
+        }
+        return student;
+      })
+    );
+  };
+
+  const ModalContent = props => (
+    <form
+      className={classes.ModalContent}
+      onSubmit={() => submitNote(props.index)}
+    >
+      <h1>Add/Edit Note</h1>
       <input
         id="note"
         name="note"
@@ -122,18 +153,28 @@ const Roster = props => {
     </form>
   );
 
-  const StudentCheckedIn = () => {
+  const EditButton = () => (
+    <>
+      <EditIcon />
+      Edit Note
+    </>
+  );
+
+  const AddButton = index => (
+    <>
+      <AddIcon />
+      Add Note
+    </>
+  );
+
+  const StudentCheckedIn = props => {
     return (
       <td className={classes.checkedIn}>
         <p>Checked In</p>
         <ModalComponent
-          button={
-            <>
-              <AddIcon />
-              Add Note
-            </>
-          }
+          button={props.justCheckedIn ? <AddButton /> : <EditButton />}
           buttonStyle={classes.ModalButton}
+          index={props.index}
         >
           <ModalContent />
         </ModalComponent>
@@ -141,12 +182,13 @@ const Roster = props => {
     );
   };
 
-  const StudentNotCheckedIn = () => {
+  const StudentNotCheckedIn = props => {
     return (
       <td className={classes.td}>
         <Button
+          onClick={() => checkInStudent(props.index)}
           className={classes.btn}
-          style={{ backgroundColor: "#C4C4C4", width: "100%" }}
+          style={{ backgroundColor: "#C4C4C4", width: "80%" }}
           variant="outlined"
         >
           Tap to Check In
@@ -157,35 +199,68 @@ const Roster = props => {
 
   return (
     <div className={classes.container}>
+      {console.log(students)}
       <div className={classes.header}>
         <button className={classes.backbtn}>
           <ArrowBackIosIcon />
-          Back
+          <h1>Back </h1>
         </button>
         <h1>{schoolName}</h1>
       </div>
-      <table>
+      <table style={{ width: "100%" }}>
         <thead>
-          <tr>
-            <th className={classes.headerTr}>Name</th>
-            <th className={classes.headerTr}>Status</th>
+          <tr className={classes.tr}>
+            <th className={classes.th} style={{ width: "25%" }}>
+              Name
+            </th>
+            <th className={classes.th}>Status</th>
           </tr>
         </thead>
-        <tbody>
-          {students.map(student => (
+        <tbody className={classes.tbody}>
+          {students.map((student, index) => (
             <tr className={classes.tr}>
-              <td className={classes.td}>{student.name}</td>
+              <td className={classes.td} style={{ width: "25%" }}>
+                {student.name}
+              </td>
               {student.checkedIn ? (
-                <StudentCheckedIn />
+                <StudentCheckedIn
+                  justCheckedIn={student.note == ""}
+                  index={index}
+                />
               ) : (
-                <StudentNotCheckedIn />
+                <StudentNotCheckedIn index={index} />
               )}
             </tr>
           ))}
         </tbody>
       </table>
+      <Button
+        className={classes.btn}
+        style={{ backgroundColor: "#C4C4C4", width: "30%" }}
+        variant="outlined"
+        onClick={handleSubmit}
+      >
+        <h1 style={{ margin: "0px" }}>Submit</h1>
+      </Button>
     </div>
   );
+};
+
+Roster.getInitialProps = async () => {
+  const data = [
+    "Bruce Wayne",
+    "Bruce Wayne",
+    "Valeria F.",
+    "Jeremy H",
+    "Saurav Ghosal",
+    "Katherine Harrel",
+    "Nidhi Chary",
+    "Chris Farid",
+    "Sajan Gutta"
+  ].map(student => {
+    return { name: student, checkedIn: false, note: "" };
+  });
+  return { initialStudents: data };
 };
 
 export default Roster;
