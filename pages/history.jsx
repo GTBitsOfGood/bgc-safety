@@ -69,12 +69,14 @@ const useStyles = makeStyles(theme => ({
   th: {
     width: "calc( 100% - 1em )",
     backgroundColor: "#828282",
-    padding: "10px"
+    padding: "10px",
+    border: "1px solid #ddd"
   },
   td: {
     textAlign: "center",
     width: "fill",
-    padding: "5px"
+    padding: "5px",
+    border: "1px solid #ddd"
   },
   tr: {
     display: "table",
