@@ -57,8 +57,9 @@ const useStyles = makeStyles(theme => ({
   },
   table: {
     width: "100%",
-    borderSpacing: "2px",
-    textAlign: "center"
+    borderSpacing: "5px",
+    textAlign: "center",
+    borderCollapse: "collapse"
   },
   tbody: {
     display: "block",
@@ -68,15 +69,17 @@ const useStyles = makeStyles(theme => ({
   },
   th: {
     width: "calc( 100% - 1em )",
-    backgroundColor: "#828282",
+    backgroundColor: "#E0E0E0",
     padding: "10px",
-    border: "1px solid #ddd"
+    border: "1px solid #BDBDBD",
+    borderCollapse: "collapse"
   },
   td: {
     textAlign: "center",
     width: "fill",
     padding: "5px",
-    border: "1px solid #ddd"
+    borderLeft: "1px solid #BDBDBD",
+    borderRight: "1px solid #BDBDBD"
   },
   tr: {
     display: "table",
@@ -392,9 +395,13 @@ function History({ students }) {
       <table className={classes.table}>
         <thead style={{ backgroundColor: "#E0E0E0" }}>
           <tr className={classes.tr}>
-            <th style={{ width: "25%", padding: "10px" }}>Student Name</th>
-            <th>Overall Attendance </th>
-            <th style={{ width: "25%" }}>Status </th>
+            <th className={classes.th} style={{ width: "25%" }}>
+              Student Name
+            </th>
+            <th className={classes.th}>Overall Attendance </th>
+            <th className={classes.th} style={{ width: "25%" }}>
+              Status{" "}
+            </th>
           </tr>
         </thead>
 
