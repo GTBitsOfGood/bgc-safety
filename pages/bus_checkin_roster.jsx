@@ -64,6 +64,15 @@ const useStyles = makeStyles(() => ({
       backgroundColor: "#efefef"
     }
   },
+  mainSubmitBtn: {
+    borderRadius: "20px",
+    margin: "5px",
+    border: "none",
+    padding: "15px",
+    "&:hover": {
+      cursor: "pointer"
+    }
+  },
 
   checkedIn: {
     display: "grid",
@@ -112,7 +121,7 @@ const Roster = ({ initialStudents }) => {
   const schoolName = "Example Bus Route 1";
   const [students, setStudents] = React.useState(initialStudents);
 
-  const handleSubmit = index => {
+  const submitAttendance = index => {
     // show modal
     // push to backend?
     console.log("clicked");
@@ -140,7 +149,65 @@ const Roster = ({ initialStudents }) => {
     );
   };
 
-  const ModalContent = props => {
+  const SubmitModalContent = () => {
+    let date = new Date();
+    date = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+    const [note, setNote] = React.useState("");
+
+    return (
+      <form
+        className={classes.ModalContent}
+        onSubmit={submitAttendance}
+        style={{
+          width: "750px",
+          height: "350px",
+          marginLeft: "-375px",
+          marginTop: "-175px"
+        }}
+      >
+        <h1 style={{ margin: "0" }}>Submission Notice</h1>
+        <p style={{ margin: "0" }}>
+          You are about to submit attendance for {date}
+        </p>
+        <textarea
+          rows="10"
+          cols="30"
+          name="note"
+          type="text"
+          placeholder="Type your note here"
+          style={{ width: "600px", height: "100x" }}
+          value={note}
+          onChange={e => {
+            setNote(e.target.value);
+          }}
+        />
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-around",
+            width: "100%"
+          }}
+        >
+          <Button
+            onClick={() => console.log("clicked!")}
+            className={classes.submitBtn}
+            style={{ backgroundColor: "#EB5757" }}
+          >
+            Back
+          </Button>
+          <Button
+            type="submit"
+            className={classes.submitBtn}
+            style={{ backgroundColor: "#6FCF97" }}
+          >
+            Submit Note
+          </Button>
+        </div>
+      </form>
+    );
+  };
+
+  const NoteModalContent = props => {
     const [studentNote, setStudentNote] = React.useState(
       students[props.index].note
     );
@@ -199,7 +266,7 @@ const Roster = ({ initialStudents }) => {
             style={{ marginLeft: "auto" }}
             buttonStyle={classes.ModalButton}
           >
-            <ModalContent index={props.index} />
+            <NoteModalContent index={props.index} />
           </ModalComponent>
         </div>
       </td>
@@ -258,14 +325,12 @@ const Roster = ({ initialStudents }) => {
           ))}
         </tbody>
       </table>
-      <Button
-        className={classes.btn}
-        style={{ backgroundColor: "#C4C4C4", width: "30%" }}
-        variant="outlined"
-        onClick={handleSubmit}
+      <ModalComponent
+        button={<h1 style={{ margin: "0px" }}>Submit</h1>}
+        buttonStyle={classes.mainSubmitBtn}
       >
-        <h1 style={{ margin: "0px" }}>Submit</h1>
-      </Button>
+        <SubmitModalContent />
+      </ModalComponent>
     </div>
   );
 };
