@@ -1,7 +1,8 @@
 import React from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
-import { Button, TextField, Typography, InputBase } from "@material-ui/core";
+import Router from "next/router";
+import { Button, Typography, InputBase } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
@@ -34,6 +35,9 @@ const useStyles = makeStyles({
     fontSize: "20px",
     minWidth: "35%",
     borderRadius: 25
+  },
+  error: {
+    color: "red"
   }
 });
 
@@ -56,26 +60,34 @@ const Login = props => {
     const url = props.apiUrl;
 
     try {
-      const response = await fetch(url, {
+      fetch(url, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username })
-      });
-      if (response.ok) {
-        const { token } = await response.json();
-        login({ token });
-      } else {
-        console.log("Login failed.");
-        const err = new Error(response.statusText);
-        err.response = response;
-        return Promise.reject(error);
-      }
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: username,
+          password
+        })
+      })
+        .then(res => res.json())
+        .then(response => {
+          if (response.success) {
+            sessionStorage.token = response.payload;
+            Router.replace("/");
+          } else {
+            setError(response.message);
+          }
+        })
+        .catch(err => {
+          setError(err);
+        });
     } catch (err) {
       console.error(
         "You have an error in your code or there are Network issues.",
-        error
+        err
       );
-      throw new Error(error);
+      throw new Error(err);
     }
   }
   return (
@@ -84,6 +96,8 @@ const Login = props => {
       <Typography className={classes.title} variant="h3">
         BGCMA Bus Safety App
       </Typography>
+
+      {error && <p className={classes.error}>{error}</p>}
 
       <LoginField
         className={classes.input}
@@ -96,15 +110,18 @@ const Login = props => {
         className={classes.input}
         variant="filled"
         placeholder="Password"
+        type="password"
         value={password}
         onChange={e => setPassword(e.target.value)}
       />
 
-      <Button className={classes.button} variant="contained">
+      <Button
+        className={classes.button}
+        variant="contained"
+        onClick={handleSubmit}
+      >
         Log In
       </Button>
-
-      <p className={`error ${error && "show"}`}>{error && `Error: ${error}`}</p>
     </div>
   );
 };
@@ -113,8 +130,8 @@ Login.getInitialProps = ({ req }) => {
   const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
 
   const apiUrl = process.browser
-    ? `${protocol}://${window.location.host}/api/login.js`
-    : `${protocol}://${req.headers.host}/api/login.js`;
+    ? `${protocol}://${window.location.host}/api/login`
+    : `${protocol}://${req.headers.host}/api/login`;
 
   return { apiUrl };
 };

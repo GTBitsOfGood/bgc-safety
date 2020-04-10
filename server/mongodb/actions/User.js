@@ -8,25 +8,33 @@ export async function login(email, password) {
 
   return new Promise((resolve, reject) => {
     User.findOne({
-      BGCMA_email: email
+      username: email
     })
       .then(user => {
         if (user) {
-          return bcrypt.compare(password, user.password).then(result => {
-            if (result) {
-              return Promise.resolve(user);
-            }
+          console.log(password, user.password);
+          // return bcrypt.compare(password, user.password).then(result => {
+          //   console.log(result);
+          //   if (result) {
+          //     return Promise.resolve(user);
+          //   }
+          //   return Promise.reject(
+          //     new Error("The password you entered is incorrect.")
+          //   );
+          // });
+          if (password !== user.password) {
             return Promise.reject(
               new Error("The password you entered is incorrect.")
             );
-          });
+          }
+          return Promise.resolve(user);
         }
         return Promise.reject(new Error("That account does not exist."));
       })
       .then(user => {
         return jwt.sign(
           {
-            email: user.BGCMA_email,
+            email: user.username,
             type: user.type,
             club: user.club
           },
@@ -36,6 +44,7 @@ export async function login(email, password) {
           },
           (error, token) => {
             if (token) {
+              console.log(token);
               return resolve(token);
             }
             return reject(new Error("The login attempt failed."));
