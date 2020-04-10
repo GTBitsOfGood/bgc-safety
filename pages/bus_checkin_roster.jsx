@@ -13,27 +13,31 @@ const useStyles = makeStyles(() => ({
     alignItems: "center"
   },
   backbtn: {
-    alignSelf: "flex-start",
     display: "flex",
     alignItems: "center",
     outline: "none",
     border: "none",
+    marginRight: "auto",
     background: "white",
     "&:hover": {
       cursor: "pointer"
     }
   },
   header: {
-    display: "flex",
+    display: "grid",
+    width: "100%",
+    gridTemplateColumns: "1fr repeat(3, auto) 1fr",
+    gridColumnGap: "5px",
+    justifyItems: "center",
     alignItems: "center"
   },
   btn: {
     borderRadius: "20px",
-    margin: "10px",
+    margin: "5px",
     border: "none"
   },
   text: {
-    margin: "30px"
+    margin: "5px"
   },
   tbody: {
     display: "block",
@@ -62,10 +66,11 @@ const useStyles = makeStyles(() => ({
   },
 
   checkedIn: {
-    display: "flex",
-    flexDirection: "row",
+    display: "grid",
+    gridTemplateColumns: "1fr repeat(3, auto) 1fr",
+    gridColumnGap: "5px",
+    justifyItems: "center",
     alignItems: "center",
-    justifyContent: "center",
     backgroundColor: "#6FCF97"
   },
   ModalButton: {
@@ -81,6 +86,10 @@ const useStyles = makeStyles(() => ({
       cursor: "pointer"
     }
   },
+  submitBtn: {
+    width: "40%",
+    borderRadius: "30px"
+  },
   ModalContent: {
     position: "absolute",
     width: "500px",
@@ -92,8 +101,8 @@ const useStyles = makeStyles(() => ({
     marginTop: "-150px",
     display: "flex",
     flexFlow: "column wrap",
-    textAlign: "center",
-    justifyModalContent: "space-around"
+    justifyContent: "space-around",
+    alignItems: "center"
   }
 }));
 
@@ -102,9 +111,14 @@ const Roster = ({ initialStudents }) => {
   // const { schoolName } = props;
   const schoolName = "Example Bus Route 1";
   const [students, setStudents] = React.useState(initialStudents);
-  const [note, setNote] = React.useState("");
 
-  const submitNote = index => {
+  const handleSubmit = index => {
+    // show modal
+    // push to backend?
+    console.log("clicked");
+  };
+
+  const submitNote = (index, note) => {
     setStudents(
       students.map((student, i) => {
         if (index == i) {
@@ -113,11 +127,6 @@ const Roster = ({ initialStudents }) => {
         return student;
       })
     );
-  };
-
-  const handleSubmit = index => {
-    // push to backend?
-    console.log("clicked");
   };
 
   const checkInStudent = index => {
@@ -131,36 +140,49 @@ const Roster = ({ initialStudents }) => {
     );
   };
 
-  const ModalContent = props => (
-    <form
-      className={classes.ModalContent}
-      onSubmit={() => submitNote(props.index)}
-    >
-      <h1>Add/Edit Note</h1>
-      <input
-        id="note"
-        name="note"
-        type="text"
-        placeholder="Type your note here"
-        value={note}
-        onChange={e => {
-          setNote(e.target.value);
+  const ModalContent = props => {
+    const [studentNote, setStudentNote] = React.useState(
+      students[props.index].note
+    );
+    return (
+      <form
+        className={classes.ModalContent}
+        onSubmit={() => {
+          submitNote(props.index, studentNote);
+          setStudentNote("");
         }}
-      />
-      <button type="submit" className="btn btn-success">
-        Submit Note
-      </button>
-    </form>
-  );
+      >
+        <h1 style={{ margin: "0" }}>Add/Edit Note</h1>
+        <textarea
+          rows="10"
+          cols="30"
+          name="note"
+          type="text"
+          placeholder="Type your note here"
+          style={{ width: "450px", height: "150x" }}
+          value={studentNote}
+          onChange={e => {
+            setStudentNote(e.target.value);
+          }}
+        />
+        <Button
+          type="submit"
+          className={classes.submitBtn}
+          style={{ backgroundColor: "#6FCF97" }}
+        >
+          Submit Note
+        </Button>
+      </form>
+    );
+  };
 
   const EditButton = () => (
     <>
-      <EditIcon />
-      Edit Note
+      <EditIcon /> Edit Note
     </>
   );
 
-  const AddButton = index => (
+  const AddButton = () => (
     <>
       <AddIcon />
       Add Note
@@ -170,14 +192,16 @@ const Roster = ({ initialStudents }) => {
   const StudentCheckedIn = props => {
     return (
       <td className={classes.checkedIn}>
-        <p>Checked In</p>
-        <ModalComponent
-          button={props.justCheckedIn ? <AddButton /> : <EditButton />}
-          buttonStyle={classes.ModalButton}
-          index={props.index}
-        >
-          <ModalContent />
-        </ModalComponent>
+        <p style={{ gridColumnStart: "4" }}>Checked In</p>
+        <div style={{ marginLeft: "auto", marginRight: "5px" }}>
+          <ModalComponent
+            button={props.justCheckedIn ? <AddButton /> : <EditButton />}
+            style={{ marginLeft: "auto" }}
+            buttonStyle={classes.ModalButton}
+          >
+            <ModalContent index={props.index} />
+          </ModalComponent>
+        </div>
       </td>
     );
   };
@@ -203,7 +227,7 @@ const Roster = ({ initialStudents }) => {
       <div className={classes.header}>
         <button className={classes.backbtn}>
           <ArrowBackIosIcon />
-          <h1>Back </h1>
+          <h1 className={classes.text}>Back </h1>
         </button>
         <h1>{schoolName}</h1>
       </div>
