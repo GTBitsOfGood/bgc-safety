@@ -41,7 +41,6 @@ const getMonth = date => {
 
 const useStyles = makeStyles(theme => ({
   formControl: {
-    borderRadius: "20px",
     margin: theme.spacing(1),
     minWidth: 120
   },
@@ -64,7 +63,7 @@ const useStyles = makeStyles(theme => ({
   tbody: {
     display: "block",
     height: "450px",
-    overflowY: "scroll",
+    overflowY: "auto",
     overflowX: "hidden"
   },
   th: {
@@ -236,7 +235,7 @@ function History({ students }) {
   React.useEffect(
     () => async () => {
       students = await updateStudents(date, students);
-      setVisibleStudents(students);
+      filterStudents();
     },
     [date]
   );
@@ -270,8 +269,7 @@ function History({ students }) {
     }
   }, [sort]);
 
-  // filtering
-  React.useEffect(() => {
+  function filterStudents() {
     let filteredStudents = [...students];
     // filter grade and school
     filters.slice(0, 2).forEach((filter, i) => {
@@ -289,6 +287,11 @@ function History({ students }) {
     }
     setFilteredStudents(filteredStudents);
     setVisibleStudents(filteredStudents);
+  }
+
+  // filtering
+  React.useEffect(() => {
+    filterStudents();
   }, [filters]);
 
   const handleUpdateFilters = (newFilter, index) => {
@@ -313,94 +316,103 @@ function History({ students }) {
     );
   };
 
+  const Filters = () => (
+    <div className={styles.filters}>
+      <h2>Filter By</h2>
+      <FormControl variant="outlined" className={classes.formControl}>
+        <InputLabel>School</InputLabel>
+        <Select
+          value={filters[0]}
+          onChange={e => handleUpdateFilters(e.target.value, 0)}
+          className={classes.selectButton}
+          label="School"
+        >
+          <MenuItem value="">
+            <em>None</em>
+          </MenuItem>
+          {[...new Set(students.map(students => students.schoolName))]
+            .sort()
+            .map(schoolName => {
+              return <MenuItem value={schoolName}>{schoolName}</MenuItem>;
+            })}
+        </Select>
+      </FormControl>
+      <FormControl variant="outlined" className={classes.formControl}>
+        <InputLabel>Grade</InputLabel>
+        <Select
+          value={filters[1]}
+          onChange={e => handleUpdateFilters(e.target.value, 1)}
+          className={classes.selectButton}
+          label="Grade"
+        >
+          <MenuItem value="">
+            <em>None</em>
+          </MenuItem>
+          {[...new Set(students.map(students => students.grade))]
+            .sort()
+            .map(grade => {
+              return <MenuItem value={grade}>{grade}</MenuItem>;
+            })}
+        </Select>
+      </FormControl>
+      <Button
+        className={classes.button}
+        color={filters[2] == "" ? "default" : "primary"}
+        variant="contained"
+        onClick={() => {
+          filters[2] == ""
+            ? handleUpdateFilters("Low Attendance", 2)
+            : handleDeleteFilters("Low Attendance");
+        }}
+      >
+        Low Attendance
+      </Button>
+    </div>
+  );
+
+  const Sorting = () => (
+    <div className={styles.sort}>
+      <h2>Sort By</h2>
+      {sortingLabels.map(name => {
+        return (
+          <Button
+            className={classes.button}
+            variant="contained"
+            color={name == sort ? "primary" : "default"}
+            onClick={() => {
+              sort != name ? setSort(name) : setSort("");
+            }}
+          >
+            {name}
+          </Button>
+        );
+      })}
+    </div>
+  );
+
   return (
     <div className={styles.container}>
-      <p style={{ fontSize: "200" }}>Bus Attendance Matrix</p>
-      <h1>{ClubName}
-{' '}
-2019-2020 Afterschool Registration
-</h1>
-      <div className={styles.filters}>
-        <h2>Filter By</h2>
-        <FormControl variant="outlined" className={classes.formControl}>
-          <InputLabel>School</InputLabel>
-          <Select
-            value={filters[0]}
-            onChange={e => handleUpdateFilters(e.target.value, 0)}
-            className={classes.selectButton}
-            label="School"
-          >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            {[...new Set(students.map(students => students.schoolName))]
-              .sort()
-              .map(schoolName => {
-                return <MenuItem value={schoolName}>{schoolName}</MenuItem>;
-              })}
-          </Select>
-        </FormControl>
-        <FormControl variant="outlined" className={classes.formControl}>
-          <InputLabel>Grade</InputLabel>
-          <Select
-            value={filters[1]}
-            onChange={e => handleUpdateFilters(e.target.value, 1)}
-            className={classes.selectButton}
-            label="Grade"
-          >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            {[...new Set(students.map(students => students.grade))]
-              .sort()
-              .map(grade => {
-                return <MenuItem value={grade}>{grade}</MenuItem>;
-              })}
-          </Select>
-        </FormControl>
-        <Button
-          className={classes.button}
-          color={filters[2] == "" ? "default" : "primary"}
-          variant="contained"
-          onClick={() => {
-            filters[2] == ""
-              ? handleUpdateFilters("Low Attendance", 2)
-              : handleDeleteFilters("Low Attendance");
-          }}
-        >
-          Low Attendance
-        </Button>
-      </div>
-
-      <div className={styles.sort}>
-        <h2>Sort By</h2>
-        {sortingLabels.map(name => {
-          return (
-            <Button
-              className={classes.button}
-              variant="contained"
-              color={name == sort ? "primary" : "default"}
-              onClick={() => {
-                sort != name ? setSort(name) : setSort("");
-              }}
-            >
-              {name}
-            </Button>
-          );
-        })}
-      </div>
+      <p style={{ fontSize: "200", margin: "0" }}>Bus Attendance Matrix</p>
+      <h2 style={{ marginTop: "5px", marginBottom: "20px" }}>
+        {`${ClubName} `}
+        2019-2020 Afterschool Registration
+      </h2>
+      <Filters />
+      <Sorting />
 
       <DateSelect date={date} setDate={setDate} />
 
       <table className={classes.table}>
-        <thead style={{ backgroundColor: "#E0E0E0" }}>
+        <thead
+          style={{ backgroundColor: "#E0E0E0", width: "calc( 100% - 1em )" }}
+        >
           <tr className={classes.tr}>
             <th className={classes.th} style={{ width: "25%" }}>
               Student Name
             </th>
-            <th className={classes.th}>Overall Attendance </th>
+            <th className={classes.th}>Days Attended This Month </th>
             <th className={classes.th} style={{ width: "25%" }}>
-              Status{" "}
+              Status
             </th>
           </tr>
         </thead>
