@@ -246,6 +246,26 @@ function History({ students }) {
     new Date(2020, 0, 8)
   ];
 
+  function filterStudents() {
+    let filteredStudents = [...students];
+    // filter grade and school
+    filters.slice(0, 2).forEach((filter, i) => {
+      if (filter != "") {
+        filteredStudents = filteredStudents.filter(
+          student => student[filterLabels[i]] == filter
+        );
+      }
+    });
+    // filter low attendance
+    if (filters[2] != "") {
+      filteredStudents = filteredStudents.filter(
+        student => student[filterLabels[2]] < 0.6
+      );
+    }
+    setFilteredStudents(filteredStudents);
+    setVisibleStudents(filteredStudents);
+  }
+
   // sorting
   React.useEffect(() => {
     const sortedStudents = [...visibleStudents];
@@ -268,26 +288,6 @@ function History({ students }) {
       );
     }
   }, [sort]);
-
-  function filterStudents() {
-    let filteredStudents = [...students];
-    // filter grade and school
-    filters.slice(0, 2).forEach((filter, i) => {
-      if (filter != "") {
-        filteredStudents = filteredStudents.filter(
-          student => student[filterLabels[i]] == filter
-        );
-      }
-    });
-    // filter low attendance
-    if (filters[2] != "") {
-      filteredStudents = filteredStudents.filter(
-        student => student[filterLabels[2]] < 0.6
-      );
-    }
-    setFilteredStudents(filteredStudents);
-    setVisibleStudents(filteredStudents);
-  }
 
   // filtering
   React.useEffect(() => {
@@ -318,7 +318,7 @@ function History({ students }) {
 
   const Filters = () => (
     <div className={styles.filters}>
-      <h2>Filter By</h2>
+      <h3>Filter By</h3>
       <FormControl variant="outlined" className={classes.formControl}>
         <InputLabel>School</InputLabel>
         <Select
@@ -372,7 +372,7 @@ function History({ students }) {
 
   const Sorting = () => (
     <div className={styles.sort}>
-      <h2>Sort By</h2>
+      <h3>Sort By</h3>
       {sortingLabels.map(name => {
         return (
           <Button
@@ -394,7 +394,7 @@ function History({ students }) {
     <div className={styles.container}>
       <p style={{ fontSize: "200", margin: "0" }}>Bus Attendance Matrix</p>
       <h2 style={{ marginTop: "5px", marginBottom: "20px" }}>
-        {`${ClubName} `}
+        {`${ClubName} Boys and Girls Club `}
         2019-2020 Afterschool Registration
       </h2>
       <Filters />
@@ -458,12 +458,9 @@ function History({ students }) {
                   <div
                     style={{
                       width: `${100 * student.attendance}%`,
-                      height: "20px",
-                      backgroundColor:
-                        student.attendance < 0.6
-                          ? lowAttendance
-                          : highAttendance
+                      height: "20px"
                     }}
+                    color={student.attendance < 0.6 ? "warning" : "success"}
                   />
                   <p style={{ margin: "0px 0px 0px 3px" }}>
                     {Math.round(student.attendance * daysInMonth)}

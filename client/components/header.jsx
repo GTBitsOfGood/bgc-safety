@@ -49,9 +49,7 @@ const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1
   },
-  header: {
-    backgroundColor: "#1594D0"
-  },
+
   menuButton: {
     marginRight: theme.spacing(2)
   },
@@ -90,7 +88,7 @@ const Header = props => {
   };
 
   return (
-    <AppBar position="static" className={classes.header}>
+    <AppBar position="static" color="primary">
       <Toolbar variant="dense">
         <IconButton
           edge="start"
@@ -118,10 +116,14 @@ const Header = props => {
         >
           {routes.map(route => (
             <MenuItem onClick={handleClose}>
-              <Link href={route.link}><a>{route.name}</a></Link>
+              <Link href={route.link}>
+                <a>{route.name}</a>
+              </Link>
             </MenuItem>
           ))}
-          <MenuItem onClick={handleClose}><a>My account</a></MenuItem>
+          <MenuItem onClick={handleClose}>
+            <a>My account</a>
+          </MenuItem>
         </Menu>
         <Typography variant="h6" className={classes.title}>
           {selected}
