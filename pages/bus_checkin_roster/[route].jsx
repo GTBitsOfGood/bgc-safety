@@ -43,7 +43,7 @@ const useStyles = makeStyles(() => ({
   },
   tbody: {
     display: "block",
-    height: "450px",
+    height: "500px",
     overflowY: "scroll",
     overflowX: "hidden"
   },
