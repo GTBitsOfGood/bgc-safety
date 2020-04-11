@@ -24,21 +24,18 @@ export default async (req, res) => {
 function createClub(req, res) {
   const { clubName, schoolNames } = req.body;
 
-  const newClub = new Club({
+  Club.create({
     ClubName: clubName,
     SchoolNames: schoolNames
-  });
-
-  newClub
-    .save()
+  })
     .then(club =>
-      res.status(201).json({
+      res.status(201).send({
         success: true,
         payload: club
       })
     )
     .catch(err =>
-      res.status(400).json({
+      res.status(400).send({
         success: false,
         message: err
       })
@@ -55,13 +52,13 @@ function updateClub(req, res) {
 
   Club.findByIdAndUpdate(id, filter, { new: true })
     .then(club =>
-      res.status(200).json({
+      res.status(200).send({
         success: true,
         payload: club
       })
     )
     .catch(err =>
-      res.status(400).json({
+      res.status(400).send({
         success: false,
         message: err
       })
@@ -73,13 +70,13 @@ function deleteClub(req, res) {
 
   Club.findByIdAndDelete(id)
     .then(club =>
-      res.status(200).json({
+      res.status(200).send({
         success: true,
         payload: club
       })
     )
     .catch(err =>
-      res.status(400).json({
+      res.status(400).send({
         success: false,
         message: err
       })

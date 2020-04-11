@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define */
 import mongoDB from "../../server/mongodb/index";
-import Student from "../../server/mongodb/models/StudentSchema";
+import Student from "../../server/mongodb/models/Student";
 
 export default async (req, res) => {
   await mongoDB();
@@ -30,13 +30,13 @@ function checkInStudent(req, res) {
     }
   )
     .then(student => {
-      res.status(200).json({
+      res.status(200).send({
         success: true,
         payload: student.checkInTimes
       });
     })
     .catch(err => {
-      res.status(400).json({
+      res.status(400).send({
         success: false,
         error: err
       });

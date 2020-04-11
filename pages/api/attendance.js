@@ -1,34 +1,33 @@
 /* eslint-disable no-use-before-define */
 import mongoDB from "../../server/mongodb/index";
-import Student from "../../server/mongodb/models/StudentSchema";
-import Club from "../../server/mongodb/models/Club"
+import Student from "../../server/mongodb/models/Student";
 
 export default async (req, res) => {
   await mongoDB();
 
   const { method } = req;
 
-  if (
-    method === "GET" &&
-    req.query.schoolName !== undefined &&
-    req.query.startDate !== undefined &&
-    req.query.endDate !== undefined
-  ) {
-    getSchoolAttendanceTimeRange(req, res);
-  } else if (method === "GET" && req.query.schoolName !== undefined) {
+  if (method === "GET" && req.query.schoolName) {
     getBusAttendanceInfo(req, res);
   } else if (
     method === "GET" &&
-    req.query.studentID !== undefined &&
-    req.query.startDate !== undefined &&
-    req.query.endDate !== undefined
+    req.query.studentID &&
+    req.query.startDate &&
+    req.query.endDate
   ) {
     getStudentAttendanceTimeRange(req, res);
-  } else if (method === "GET" && req.query.studentID !== undefined) {
+  } else if (method === "GET" && req.query.studentID) {
     getAttendanceOfStudent(req, res);
-  } else  {
-    res.setHeader("Allow", ["GET"]);
-    res.status(405).end("Method ${method} Not Allowed");
+  } else if (
+    method === "GET" &&
+    req.query.schoolName &&
+    req.query.startDate &&
+    req.query.endDate
+  ) {
+    getSchoolAttendanceTimeRange(req, res);
+  } else {
+    res.setHeader("Allow", "GET");
+    res.status(405).end(`Method ${method} Not Allowed`);
   }
 };
 
@@ -40,25 +39,22 @@ function getBusAttendanceInfo(req, res) {
       schoolName
     },
     {
-      firstName: 1,
-      lastName: 1,
       checkInTimes: 1
     }
   )
     .then(checkInTimes =>
       res.status(200).send({
         success: true,
-      payload: checkInTimes
-    })
-  )
-  .catch(err =>
-    res.status(400).json({
-      success: false,
-      message: err
-    })
-  );
-
-};
+        payload: checkInTimes
+      })
+    )
+    .catch(err =>
+      res.status(400).send({
+        success: false,
+        message: err
+      })
+    );
+}
 
 function getAttendanceOfStudent(req, res) {
   const { studentID } = req.query;
@@ -70,14 +66,15 @@ function getAttendanceOfStudent(req, res) {
     {
       checkInTimes: 1
     }
-  ).then(checkInTimes =>
-      res.status(200).json({
+  )
+    .then(checkInTimes =>
+      res.status(200).send({
         success: true,
         payload: checkInTimes
       })
     )
     .catch(err =>
-      res.status(400).json({
+      res.status(400).send({
         success: false,
         message: err
       })
@@ -87,9 +84,16 @@ function getAttendanceOfStudent(req, res) {
 function getStudentAttendanceTimeRange(req, res) {
   const { studentID, startDate, endDate } = req.query;
 
-  Student.find({ studentID }, { checkInTimes: 1 })
-    .then(student =>
-      res.status(200).json({
+  Student.find(
+    {
+      studentID
+    },
+    {
+      checkInTimes: 1
+    }
+  )
+    .then(checkInTimes =>
+      res.status(200).send({
         success: true,
         payload: filterTimes(
           Date.parse(startDate),
@@ -99,7 +103,7 @@ function getStudentAttendanceTimeRange(req, res) {
       })
     )
     .catch(err =>
-      res.status(400).json({
+      res.status(400).send({
         success: false,
         message: err
       })
@@ -118,28 +122,36 @@ function filterTimes(startDate, endDate, checkInTimes) {
   } catch (e) {
     console.log(e);
   }
+
   return filteredDates;
 }
+
 function getSchoolAttendanceTimeRange(req, res) {
   const { schoolName, startDate, endDate } = req.query;
 
-  Student.find({
-    schoolName
-  },
-  {
-    checkInTimes: 1,
-    firstName: 1,
-    lastName: 1,
-    studentID: 1
-  })
+  Student.find(
+    {
+      schoolName
+    },
+    {
+      checkInTimes: 1,
+      firstName: 1,
+      lastName: 1,
+      studentID: 1
+    }
+  )
     .then(students => {
-      res.status(200).json({
+      res.status(200).send({
         success: true,
-        payload: convertToDict(Date.parse(startDate), Date.parse(endDate), students)
+        payload: convertToDict(
+          Date.parse(startDate),
+          Date.parse(endDate),
+          students
+        )
       });
     })
     .catch(err => {
-      res.status(400).json({
+      res.status(400).send({
         success: false,
         error: err
       });
@@ -147,11 +159,10 @@ function getSchoolAttendanceTimeRange(req, res) {
 }
 
 function convertToDict(startDate, endDate, students) {
-
-  var dict = {};
+  const dict = {};
 
   try {
-    var student;
+    let student;
     for (student of students) {
       var date;
       for (date of student.checkInTimes) {
@@ -163,10 +174,9 @@ function convertToDict(startDate, endDate, students) {
         }
       }
     }
-  } catch(err) {
+  } catch (err) {
     console.log(err);
   }
 
   return dict;
 }
-
