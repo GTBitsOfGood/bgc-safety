@@ -118,30 +118,11 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const Roster = () => {
+const Roster = ({ data }) => {
   const router = useRouter();
   const classes = useStyles();
   const { route } = router.query;
-  const [students, setStudents] = React.useState([]);
-
-  React.useEffect(() => {
-    // send a request to the api trying to get students from route
-    setStudents(
-      [
-        "Bruce Wayne",
-        "Bruce Wayne",
-        "Valeria F.",
-        "Jeremy H",
-        "Saurav Ghosal",
-        "Katherine Harrel",
-        "Nidhi Chary",
-        "Chris Farid",
-        "Sajan Gutta"
-      ].map(student => {
-        return { name: student, checkedIn: false, note: "" };
-      })
-    );
-  }, []);
+  const [students, setStudents] = React.useState(data);
 
   const submitAttendance = index => {
     // show modal
@@ -356,6 +337,25 @@ const Roster = () => {
       </ModalComponent>
     </div>
   );
+};
+
+Roster.getInitialProps = () => {
+  // send a request to the api trying to get students from route
+
+  const students = [
+    "Bruce Wayne",
+    "Bruce Wayne",
+    "Valeria F.",
+    "Jeremy H",
+    "Saurav Ghosal",
+    "Katherine Harrel",
+    "Nidhi Chary",
+    "Chris Farid",
+    "Sajan Gutta"
+  ].map(student => {
+    return { name: student, checkedIn: false, note: "" };
+  });
+  return { data: students };
 };
 
 export default Roster;
