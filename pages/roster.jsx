@@ -93,13 +93,13 @@ function Roster({ schools }) {
           </tr>
         </table>
         <div>
-          {schools.map(school => (
+          {schools.map((school, i) => (
             <table className={styles.table}>
               <tr className={styles.tr}>
                 <th className={styles.th}>{school.name}</th>
               </tr>
               {school.students.map(student => (
-                <tr className={classes.tr}>
+                <tr className={classes.tr} key={i}>
                   <div className={classes.students}>
                     <td
                       className={styles.td}

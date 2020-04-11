@@ -4,7 +4,9 @@ import { Button } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import EditIcon from "@material-ui/icons/Edit";
-import ModalComponent from "../client/components/modal";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import ModalComponent from "../../client/components/modal";
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -65,6 +67,7 @@ const useStyles = makeStyles(() => ({
     }
   },
   mainSubmitBtn: {
+    backgroundColor: "#C4C4C4",
     borderRadius: "20px",
     margin: "5px",
     border: "none",
@@ -115,11 +118,30 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const Roster = ({ initialStudents }) => {
+const Roster = () => {
+  const router = useRouter();
   const classes = useStyles();
-  // const { schoolName } = props;
-  const schoolName = "Example Bus Route 1";
-  const [students, setStudents] = React.useState(initialStudents);
+  const { route } = router.query;
+  const [students, setStudents] = React.useState([]);
+
+  React.useEffect(() => {
+    // send a request to the api trying to get students from route
+    setStudents(
+      [
+        "Bruce Wayne",
+        "Bruce Wayne",
+        "Valeria F.",
+        "Jeremy H",
+        "Saurav Ghosal",
+        "Katherine Harrel",
+        "Nidhi Chary",
+        "Chris Farid",
+        "Sajan Gutta"
+      ].map(student => {
+        return { name: student, checkedIn: false, note: "" };
+      })
+    );
+  }, []);
 
   const submitAttendance = index => {
     // show modal
@@ -290,13 +312,14 @@ const Roster = ({ initialStudents }) => {
 
   return (
     <div className={classes.container}>
-      {console.log(students)}
       <div className={classes.header}>
-        <button className={classes.backbtn}>
-          <ArrowBackIosIcon />
-          <h1 className={classes.text}>Back </h1>
-        </button>
-        <h1>{schoolName}</h1>
+        <Link href="/route_selection">
+          <button className={classes.backbtn}>
+            <ArrowBackIosIcon />
+            <h1 className={classes.text}>Back </h1>
+          </button>
+        </Link>
+        <h1>{route}</h1>
       </div>
       <table style={{ width: "100%" }}>
         <thead>
@@ -309,7 +332,7 @@ const Roster = ({ initialStudents }) => {
         </thead>
         <tbody className={classes.tbody}>
           {students.map((student, index) => (
-            <tr className={classes.tr}>
+            <tr className={classes.tr} key={index}>
               <td className={classes.td} style={{ width: "25%" }}>
                 {student.name}
               </td>
@@ -333,23 +356,6 @@ const Roster = ({ initialStudents }) => {
       </ModalComponent>
     </div>
   );
-};
-
-Roster.getInitialProps = async () => {
-  const data = [
-    "Bruce Wayne",
-    "Bruce Wayne",
-    "Valeria F.",
-    "Jeremy H",
-    "Saurav Ghosal",
-    "Katherine Harrel",
-    "Nidhi Chary",
-    "Chris Farid",
-    "Sajan Gutta"
-  ].map(student => {
-    return { name: student, checkedIn: false, note: "" };
-  });
-  return { initialStudents: data };
 };
 
 export default Roster;

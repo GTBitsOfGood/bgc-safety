@@ -1,7 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import { useRouter } from "next/router";
+import Link from "next/link";
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -11,6 +10,9 @@ const useStyles = makeStyles(() => ({
     alignItems: "center"
   },
   btn: {
+    textDecoration: "none",
+    textAlign: "center",
+    color: "black",
     borderRadius: "20px",
     margin: "10px",
     padding: "10px"
@@ -25,15 +27,10 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const LinkBehavior = React.forwardRef((props, ref) => (
-  <RouterLink ref={ref} to="/" {...props} />
-));
-
 const RouteSelection = () => {
   const [schools, setSchools] = React.useState([]);
   const [selectedSchool, setselectedSchool] = React.useState("");
   const classes = useStyles();
-  const router = useRouter();
 
   React.useEffect(() => {
     //   get routes from database
@@ -62,15 +59,20 @@ const RouteSelection = () => {
       <div className={classes.btnContainer}>
         {schools.map(school => {
           return (
-            <Button
-              variant="contained"
-              className={classes.btn}
-              style={{ backgroundColor: school.complete ? "#6FCF97" : "" }}
-              onClick={handleClick}
+            <Link
+              href="/bus_checkin_roster/[route]"
+              as={`bus_checkin_roster/${school.name}`}
             >
-              {school.name} -
+              <a
+                className={classes.btn}
+                style={{
+                  backgroundColor: school.complete ? "#6FCF97" : "#C4C4C4"
+                }}
+              >
+                {school.name} -
 {school.complete ? " Complete" : " Incomplete"}
-            </Button>
+              </a>
+            </Link>
           );
         })}
       </div>
