@@ -188,6 +188,7 @@ async function updateStudents(date, students) {
         schoolName: student.schoolName,
         grade: student.grade,
         attendance: count / day_list.length,
+        datesAttended: d.payload.map(d => new Date(d)),
         studentID: student.studentID
       });
     }
@@ -446,7 +447,7 @@ function History({ students }) {
                         <Calendar
                           defaultMonth={date.getMonth()}
                           defaultYear={date.getFullYear()}
-                          getDatesAttended={() => datesAttended}
+                          getDatesAttended={() => student.datesAttended}
                         />
                       </div>
                     </div>
