@@ -118,23 +118,36 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const Roster = ({ data }) => {
+let initial = false;
+const Roster = () => {
   const router = useRouter();
   const classes = useStyles();
   const { route } = router.query;
-  const [students, setStudents] = React.useState(data);
+  const [students, setStudents] = React.useState([]);
+  
 
-  const submitAttendance = index => {
+  const submitAttendance = async (index) => {
     // show modal
-    // push to backend?
-    console.log("clicked");
+    const res = await fetch(
+      `http://localhost:3000/api/checkIn`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          studentIDs: students.filter((s) => s.checkedIn).map((s, i) => s.id)
+        })
+      }
+    );
+    const d = await res.json();
   };
 
   const submitNote = (index, note) => {
     setStudents(
       students.map((student, i) => {
         if (index == i) {
-          return { name: student.name, checkedIn: true, note };
+          return { name: student.name, id: student.id, checkedIn: true, note };
         }
         return student;
       })
@@ -145,7 +158,7 @@ const Roster = ({ data }) => {
     setStudents(
       students.map((student, i) => {
         if (index == i) {
-          return { name: student.name, checkedIn: true, note: "" };
+          return { name: student.name, id: student.id, checkedIn: true, note: "" };
         }
         return student;
       })
@@ -291,6 +304,33 @@ const Roster = ({ data }) => {
     );
   };
 
+  const getInitialStudents = async () => {
+    let schoolName = route
+    let data = [];
+
+    const res1 = await fetch(
+      `http://localhost:3000/api/school?schoolName=${schoolName}`
+    );
+    const d = await res1.json();
+
+    if (d.success) {
+      for (const student of d.payload) {
+        data.push({
+          name: `${student.firstName} ${student.lastName}`,
+          id: student.studentID,
+          checkedIn: student.onBus,
+          note: ""
+        });
+      }
+    }
+    setStudents(data)
+  }
+
+  if (!initial && router.query.route !== undefined) {
+    initial = true
+    getInitialStudents()
+  }
+
   return (
     <div className={classes.container}>
       <div className={classes.header}>
@@ -339,23 +379,5 @@ const Roster = ({ data }) => {
   );
 };
 
-Roster.getInitialProps = () => {
-  // send a request to the api trying to get students from route
-
-  const students = [
-    "Bruce Wayne",
-    "Bruce Wayne",
-    "Valeria F.",
-    "Jeremy H",
-    "Saurav Ghosal",
-    "Katherine Harrel",
-    "Nidhi Chary",
-    "Chris Farid",
-    "Sajan Gutta"
-  ].map(student => {
-    return { name: student, checkedIn: false, note: "" };
-  });
-  return { data: students };
-};
 
 export default Roster;

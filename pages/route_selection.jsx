@@ -1,6 +1,10 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Link from "next/link";
+const fetch = require("node-fetch");
+
+const ClubName = "Harland"; // TODO: Allow user to select a club
+
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -27,22 +31,9 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const RouteSelection = () => {
-  const [schools, setSchools] = React.useState([]);
+const RouteSelection = ({ schools }) => {
   const [selectedSchool, setselectedSchool] = React.useState("");
   const classes = useStyles();
-
-  React.useEffect(() => {
-    //   get routes from database
-    setSchools([
-      { name: "Route 1", complete: false },
-      { name: "Route 2", complete: true },
-      { name: "Route 3", complete: false },
-      { name: "Route 4", complete: false },
-      { name: "Route 5", complete: true },
-      { name: "Route 6", complete: true }
-    ]);
-  }, []);
 
   React.useEffect(() => {
     // render/link to bus checkin page passing in selected school as props
@@ -79,5 +70,29 @@ const RouteSelection = () => {
     </div>
   );
 };
+
+RouteSelection.getInitialProps = async () => {
+  const res = await fetch(
+    `http://localhost:3000/api/club?ClubName=${ClubName}`
+  );
+  const schools_data = await res.json();
+  let schools_list = [];
+  if (schools_data.success && schools_data.payload.length > 0) {
+    schools_list = schools_data.payload[0].SchoolNames;
+  }
+
+  let data = [];
+
+  for (let s of schools_list) {
+    data.push({
+      name: s,
+      complete: false
+    })
+  }
+
+
+  return { schools: data };
+};
+
 
 export default RouteSelection;
