@@ -37,7 +37,7 @@ const StudentSchema = new Schema({
   onBus: {
     type: Boolean,
     default: true
-  }
+  },
   checkInTimes: {
     type: [
       {
