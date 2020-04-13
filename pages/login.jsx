@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import Router from "next/router";
 import { Button, Typography, InputBase } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
+import urls from "../utils/urls";
 
 const useStyles = makeStyles({
   container: {
@@ -127,11 +128,12 @@ const Login = props => {
 };
 
 Login.getInitialProps = ({ req }) => {
-  const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
+  // const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
 
-  const apiUrl = process.browser
-    ? `${protocol}://${window.location.host}/api/login`
-    : `${protocol}://${req.headers.host}/api/login`;
+  // const apiUrl = process.browser
+  //   ? `${protocol}://${window.location.host}/api/login`
+  //   : `${protocol}://${req.headers.host}/api/login`;
+  const apiUrl = `/api/login`;
 
   return { apiUrl };
 };
