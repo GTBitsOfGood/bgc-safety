@@ -12,6 +12,7 @@ export async function login(email, password) {
     })
       .then(user => {
         if (user) {
+          console.log(password, user.password);
           return bcrypt.compare(password, user.password).then(result => {
             if (result) {
               return Promise.resolve(user);
