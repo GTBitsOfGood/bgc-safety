@@ -1,47 +1,51 @@
-.dropdown {
+.filter {
   position: relative;
   display: inline-block;
+  margin: 5px;
 }
 
 .dropbtn {
   align-items: stretch;
-  background-color: #efefef;
-  padding: 16px;
+  background-color: white;
+  padding: 8px;
   font-size: 16px;
-  border: none;
+  border: 1.5px solid #efefef;
+  border-radius: 20px;
   cursor: pointer;
   color: black;
 }
 
 .dropbtn:hover,
 .dropbtn:focus {
-  background-color: #e0e0e0;
+  background-color: #efefef;
   outline: none;
 }
 
 .dropdownContent {
   position: absolute;
-  background-color: #f1f1f1;
-  min-width: 160px;
+  background-color: white;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
 }
 
-.dropdownContent a {
+.dropdownContent button {
   color: black;
+  border: none;
   padding: 12px 16px;
   text-decoration: none;
+  width: 100%;
   display: block;
 }
 
-.arrowButton {
-  padding-left: 16px;
-  color: black;
+.btnClicked {
+  background-color: #efefef;
 }
 
-.printButton {
-  background-color: #c4c4c4;
-  border: none;
-  padding: 16px 32px;
-  text-align: center;
+.btnUnclicked {
+  background-color: white;
+}
+
+.arrowButton {
+  padding-left: 5px;
+  color: black;
 }

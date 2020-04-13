@@ -49,9 +49,7 @@ const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1
   },
-  header: {
-    backgroundColor: "#1594D0"
-  },
+
   menuButton: {
     marginRight: theme.spacing(2)
   },
@@ -73,13 +71,15 @@ const Header = props => {
   const [selected, setSelected] = React.useState(defaultSelected);
   const open = Boolean(anchorEl);
 
-  router && router.events && router.events.on("routeChangeComplete", url => {
-    const route = routes.find(rt => rt.link === url);
-    if (route) {
-      setSelected(route.name);
-    }
-    setAnchorEl(null);
-  });
+  router &&
+    router.events &&
+    router.events.on("routeChangeComplete", url => {
+      const route = routes.find(rt => rt.link === url);
+      if (route) {
+        setSelected(route.name);
+      }
+      setAnchorEl(null);
+    });
 
   const handleMenu = event => {
     setAnchorEl(event.currentTarget);
@@ -90,7 +90,8 @@ const Header = props => {
   };
 
   return (
-    router.pathname !== "/login" && (
+    router.pathname !== "/login" &&
+    !router.pathname.includes("/bus_checkin_roster/") && (
       <AppBar position="static" className={classes.header}>
         <Toolbar variant="dense">
           <IconButton

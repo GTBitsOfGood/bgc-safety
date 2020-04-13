@@ -7,17 +7,37 @@ export default async (req, res) => {
 
   const { method } = req;
 
-  if (method === "POST") {
+  if (method === "GET") {
+    getAllClubs(req, res);
+  } else if (method === "POST") {
     createClub(req, res);
   } else if (method === "PATCH") {
     updateClub(req, res);
   } else if (method === "DELETE") {
     deleteClub(req, res);
+  } else if (method === "GET" && req.query.ClubName) {
+    getSchoolsForClub(req, res);
   } else {
-    res.setHeader("Allow", ["POST", "PATCH", "DELETE"]);
+    res.setHeader("Allow", ["GET, POST", "PATCH", "DELETE"]);
     res.status(405).end(`Method ${method} Not Allowed`);
   }
 };
+
+function getAllClubs(req, res) {
+  Club.find()
+    .then(clubs => {
+      res.status(200).send({
+        success: true,
+        payload: clubs
+      });
+    })
+    .catch(err => {
+      res.status(400).send({
+        success: false,
+        message: err
+      });
+    });
+}
 
 function createClub(req, res) {
   const { clubName, schoolNames } = req.body;
@@ -79,4 +99,23 @@ function deleteClub(req, res) {
         message: err
       })
     );
+}
+
+function getSchoolsForClub(req, res) {
+  const { ClubName } = req.query;
+
+  Club.find({ClubName}, {SchoolNames : 1})
+  .then(SchoolNames =>
+    res.status(200).json({
+        success: true,
+        payload: SchoolNames
+    })
+  )
+  .catch(err =>
+    res.status(400).json({
+      success: false,
+      message: err
+    })
+  );
+
 }
