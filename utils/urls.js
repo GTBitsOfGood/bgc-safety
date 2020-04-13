@@ -14,6 +14,8 @@ export default {
     csv_upload: "/csv_upload",
     roster: "/roster",
     history: "/history",
+    route_selection: "/route_selection",
+    bus_checkin_roster: "/bus_checkin_roster",
     login: "/login"
   },
   api: {

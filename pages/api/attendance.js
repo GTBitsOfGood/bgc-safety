@@ -162,10 +162,10 @@ function getSchoolAttendanceTimeRange(req, res) {
 }
 
 function convertToDict(startDate, endDate, students) {
-  var dict = {};
+  const dict = {};
 
   try {
-    var student;
+    let student;
     for (student of students) {
       var date;
       for (date of student.checkInTimes) {

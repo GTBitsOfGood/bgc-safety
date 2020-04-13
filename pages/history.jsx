@@ -41,6 +41,7 @@ const getMonth = date => {
 
 const useStyles = makeStyles(theme => ({
   formControl: {
+    borderRadius: "20px",
     margin: theme.spacing(1),
     minWidth: 120
   },
@@ -247,6 +248,7 @@ function History({ students }) {
     new Date(2020, 0, 8)
   ];
 
+
   function filterStudents() {
     let filteredStudents = [...students];
     // filter grade and school
@@ -316,7 +318,6 @@ function History({ students }) {
       })
     );
   };
-
   const Filters = () => (
     <div className={styles.filters}>
       <h3>Filter By</h3>

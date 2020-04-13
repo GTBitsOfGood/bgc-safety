@@ -1,5 +1,4 @@
 import React from "react";
-// import fetch from "isomorphic-unfetch";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
@@ -10,7 +9,7 @@ import ModalComponent from "../client/components/modal";
 const fetch = require("node-fetch");
 
 const useStyles = makeStyles(theme => ({
-  content: {
+  ModalContent: {
     position: "absolute",
     width: "500px",
     height: " 300px",
@@ -24,7 +23,7 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexFlow: "column wrap",
     textAlign: "center",
-    justifyContent: "space-around"
+    justifyModalContent: "space-around"
   },
   button: {
     width: "100%",
@@ -34,7 +33,7 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    justifyModalContent: "center",
     "&:hover": {
       cursor: "pointer"
     }
