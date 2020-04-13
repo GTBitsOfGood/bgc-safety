@@ -1,7 +1,9 @@
 import App from "next/app";
 import React from "react";
 import Head from "next/head";
+import { ThemeProvider } from "@material-ui/core/styles";
 import Header from "../client/components/header";
+import theme from "../utils/theme";
 import "../public/static/App.css";
 import { ThemeProvider } from "@material-ui/styles";
 import { createMuiTheme } from "@material-ui/core/styles";
@@ -56,10 +58,12 @@ class MyApp extends App {
           />
         </Head>
         <div className="App">
-          <Header defaultSelected="Home" />
-          <div className="Content">
-            <Component {...pageProps} />
-          </div>
+          <ThemeProvider theme={theme}>
+            <Header defaultSelected="Home" />
+            <div className="Content">
+              <Component {...pageProps} />
+            </div>
+          </ThemeProvider>
         </div>
       </ThemeProvider>
     );

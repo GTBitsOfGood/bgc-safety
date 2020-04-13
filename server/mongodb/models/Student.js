@@ -34,6 +34,10 @@ const StudentSchema = new Schema({
   picture: {
     type: String
   },
+  onBus: {
+    type: Boolean,
+    default: true
+  },
   checkInTimes: {
     type: [
       {

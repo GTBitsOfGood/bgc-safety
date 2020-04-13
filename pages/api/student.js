@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define */
 import mongoDB from "../../server/mongodb/index";
-import Student from "../../server/mongodb/models/StudentSchema";
+import Student from "../../server/mongodb/models/Student";
 
 export default async (req, res) => {
   await mongoDB();
@@ -33,7 +33,7 @@ function createStudent(req, res) {
     Picture
   } = req.body;
 
-  const newStudent = new Student({
+  Student.create({
     firstName: FirstName,
     lastName: LastName,
     studentID: StudentID,
@@ -42,18 +42,15 @@ function createStudent(req, res) {
     clubName: ClubName,
     notes: Notes,
     picture: Picture
-  });
-
-  newStudent
-    .save()
+  })
     .then(student =>
-      res.status(201).json({
+      res.status(201).send({
         success: true,
         payload: student
       })
     )
     .catch(err =>
-      res.status(400).json({
+      res.status(400).send({
         success: false,
         message: err
       })
@@ -93,13 +90,13 @@ function updateStudent(req, res) {
     }
   )
     .then(student =>
-      res.status(200).json({
+      res.status(200).send({
         success: true,
         payload: student
       })
     )
     .catch(err =>
-      res.status(400).json({
+      res.status(400).send({
         success: false,
         message: err
       })
@@ -113,13 +110,13 @@ function deleteStudent(req, res) {
     studentID: id
   })
     .then(student =>
-      res.status(200).json({
+      res.status(200).send({
         success: true,
         payload: student
       })
     )
     .catch(err =>
-      res.status(400).json({
+      res.status(400).send({
         success: false,
         message: err
       })
@@ -129,13 +126,13 @@ function deleteStudent(req, res) {
 function getAllStudents(req, res) {
   Student.find()
     .then(students => {
-      res.status(200).json({
+      res.status(200).send({
         success: true,
         payload: students
       });
     })
     .catch(err => {
-      res.status(400).json({
+      res.status(400).send({
         success: false,
         message: err
       });

@@ -2,7 +2,7 @@ const prod = process.env.NODE_ENV === "production";
 
 export default {
   baseUrl: prod
-    ? "https://nextjs-starter-flax-sigma.now.sh"
+    ? "https://bgcsafety-dev.herokuapp.com"
     : "http://localhost:3000",
   dbUrl: prod
     ? process.env.MONGO_DB
@@ -13,7 +13,8 @@ export default {
     ssr: "/ssr",
     csv_upload: "/csv_upload",
     roster: "/roster",
-    history: "/history"
+    history: "/history",
+    login: "/login"
   },
   api: {
     example: "/api/example",
@@ -22,7 +23,9 @@ export default {
     club: "/api/club",
     school: "/api/school",
     attendance: "api/attendance",
-    checkIn: "/api/checkIn/",
-    uploadCsv: "/api/upload_csv"
+    checkIn: "/api/checkIn",
+    uploadCsv: "/api/upload_csv",
+    users: "/api/users",
+    login: "/api/login"
   }
 };

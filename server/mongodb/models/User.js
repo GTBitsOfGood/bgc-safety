@@ -3,19 +3,30 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const UserSchema = new Schema({
-  username: {
+  BGCMA_email: {
     type: String,
     required: true,
-    index: true,
-    unique: true
+    unique: true,
+    validate: {
+      validator(email) {
+        return /^[A-Za-z0-9._%+-]+@bgcma.org$/.test(email);
+      },
+      message: "Please enter a valid email."
+    }
   },
   password: {
     type: String,
     required: true
   },
-  isAdmin: {
-    type: Boolean,
-    default: false
+  type: {
+    type: String,
+    enum: ["Admin", "ClubDirector", "BusDriver"],
+    required: true
+  },
+  club: {
+    type: String,
+    required: true,
+    default: "All"
   }
 });
 

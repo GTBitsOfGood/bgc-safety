@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define */
 import mongoDB from "../../server/mongodb/index";
-import Student from "../../server/mongodb/models/StudentSchema";
+import Student from "../../server/mongodb/models/Student";
 import Club from "../../server/mongodb/models/Club";
 
 export default async (req, res) => {
@@ -32,13 +32,13 @@ function getSchoolInfo(req, res) {
     }
   )
     .then(schoolList => {
-      res.status(200).json({
+      res.status(200).send({
         success: true,
         payload: schoolList
       });
     })
     .catch(err => {
-      res.status(400).json({
+      res.status(400).send({
         success: false,
         error: err
       });
@@ -52,13 +52,13 @@ function getStudentInfo(req, res) {
     schoolName
   })
     .then(students => {
-      res.status(200).json({
+      res.status(200).send({
         success: true,
         payload: students
       });
     })
     .catch(err => {
-      res.status(400).json({
+      res.status(400).send({
         success: false,
         error: err
       });
@@ -68,13 +68,13 @@ function getStudentInfo(req, res) {
 function getAllSchools(req, res) {
   Club.find()
     .then(clubs => {
-      res.status(200).json({
+      res.status(200).send({
         success: true,
         payload: clubs.reduce((acc, club) => acc.concat(club.SchoolNames), [])
       });
     })
     .catch(err => {
-      res.status(400).json({
+      res.status(400).send({
         success: false,
         message: err
       });
