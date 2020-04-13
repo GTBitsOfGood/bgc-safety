@@ -13,7 +13,6 @@ export async function login(email, password) {
       .then(user => {
         if (user) {
           return bcrypt.compare(password, user.password).then(result => {
-            console.log(result);
             if (result) {
               return Promise.resolve(user);
             }
@@ -21,7 +20,6 @@ export async function login(email, password) {
               new Error("The password you entered is incorrect.")
             );
           });
-          return Promise.resolve(user);
         }
         return Promise.reject(new Error("That account does not exist."));
       })
@@ -38,7 +36,6 @@ export async function login(email, password) {
           },
           (error, token) => {
             if (token) {
-              console.log(token);
               return resolve(token);
             }
             return reject(new Error("The login attempt failed."));

@@ -3,7 +3,7 @@ import React from "react";
 import Head from "next/head";
 import { ThemeProvider } from "@material-ui/core/styles";
 import Header from "../client/components/header";
-import theme from "./theme";
+import theme from "../utils/theme";
 import "../public/static/App.css";
 
 class MyApp extends App {
