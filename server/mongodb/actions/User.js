@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import winston from "winston";
 import mongoDB from "../index";
 import User from "../models/User";
 
@@ -12,7 +13,7 @@ export async function login(email, password) {
     })
       .then(user => {
         if (user) {
-          console.log(password, user.password);
+          winston.log(password, user.password);
           return bcrypt.compare(password, user.password).then(result => {
             if (result) {
               return Promise.resolve(user);
