@@ -73,6 +73,7 @@ const Login = props => {
       })
         .then(res => res.json())
         .then(response => {
+          console.log(response);
           if (response.success) {
             sessionStorage.token = response.payload;
             Router.replace("/history");
