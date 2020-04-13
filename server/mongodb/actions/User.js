@@ -1,6 +1,5 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import winston from "winston";
 import mongoDB from "../index";
 import User from "../models/User";
 
@@ -13,7 +12,6 @@ export async function login(email, password) {
     })
       .then(user => {
         if (user) {
-          winston.log(password, user.password);
           return bcrypt.compare(password, user.password).then(result => {
             if (result) {
               return Promise.resolve(user);
@@ -38,10 +36,8 @@ export async function login(email, password) {
           },
           (error, token) => {
             if (token) {
-              winston.log("info", token);
               return resolve(token);
             }
-            winston.log("error", error);
             return reject(new Error("The login attempt failed."));
           }
         );
