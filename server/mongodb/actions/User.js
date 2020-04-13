@@ -8,7 +8,7 @@ export async function login(email, password) {
 
   return new Promise((resolve, reject) => {
     User.findOne({
-      BGCMA_email: email
+      username: email
     })
       .then(user => {
         if (user) {
@@ -26,7 +26,7 @@ export async function login(email, password) {
       .then(user => {
         return jwt.sign(
           {
-            email: user.BGCMA_email,
+            email: user.username,
             type: user.type,
             club: user.club
           },

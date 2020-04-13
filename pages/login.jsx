@@ -1,103 +1,143 @@
-
 import React from "react";
 import axios from "axios";
-import { Component } from 'react'
+import PropTypes from "prop-types";
+import Router from "next/router";
+import { Button, Typography, InputBase } from "@material-ui/core";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 
-class Login extends Component {
-
-
-  static getInitialProps ({ req }) {
-    const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http'
-
-    const apiUrl = process.browser
-      ? `${protocol}://${window.location.host}/api/login.js`
-      : `${protocol}://${req.headers.host}/api/login.js`
-
-    return { apiUrl }
+const useStyles = makeStyles({
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100%"
+  },
+  image: {
+    maxWidth: "25%",
+    height: "auto",
+    paddingBottom: "15px"
+  },
+  title: {
+    fontWeight: "bold",
+    padding: "10px"
+  },
+  input: {
+    padding: "8px",
+    minWidth: "40%"
+  },
+  button: {
+    backgroundColor: "#1C7DB4",
+    margin: "18px",
+    color: "white",
+    textTransform: "none",
+    fontWeight: "bold",
+    fontSize: "20px",
+    minWidth: "35%",
+    borderRadius: 25
+  },
+  error: {
+    color: "red"
   }
+});
 
-  constructor (props) {
-    super(props)
-
-    this.state = { username: '', error: '' }
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
+const LoginField = withStyles({
+  input: {
+    borderRadius: 20,
+    backgroundColor: "#e0e0e0",
+    padding: "8px 20px"
   }
+})(InputBase);
 
-  // constructor(props) {
-  //   super(props);
-  
-  //   this.state = {
-  //     showContent: false,
-  //     selected: props.defaultSelected
-  //   };
-  
-  //   this.toggleDropdown = this.toggleDropdown.bind(this);
-  
-  //   Router.events.on("routeChangeComplete", url => {
-  //     const route = routes.find(rt => rt.link === url);
-  //     if (route) {
-  //       this.setState({ selected: route.name });
-  //     }
-  //     this.setState({ showContent: false });
-  //   });
-  // }
-  
-  handleChange (event) {
-    this.setState({ username: event.target.value })
-  }
+const Login = props => {
+  const [error, setError] = React.useState(null);
+  const [username, setUsername] = React.useState(null);
+  const [password, setPassword] = React.useState(null);
+  const classes = useStyles();
 
-  async handleSubmit (event) {
-    event.preventDefault()
-    const username = this.state.username
-    const url = this.props.apiUrl
-  
+  async function handleSubmit(event) {
+    event.preventDefault();
+    const url = props.apiUrl;
+
     try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username })
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: username,
+          password
+        })
       })
-      if (response.ok) {
-        const { token } = await response.json()
-        login({ token })
-      } else {
-        console.log('Login failed.')
-        let error = new Error(response.statusText)
-        error.response = response
-        return Promise.reject(error)
-      }
-    } catch (error) {
+        .then(res => res.json())
+        .then(response => {
+          if (response.success) {
+            sessionStorage.token = response.payload;
+            Router.replace("/history");
+          } else {
+            setError(response.message);
+          }
+        })
+        .catch(err => {
+          setError(err);
+        });
+    } catch (err) {
       console.error(
-        'You have an error in your code or there are Network issues.',
-        error
-      )
-      throw new Error(error)
+        "You have an error in your code or there are Network issues.",
+        err
+      );
+      throw new Error(err);
     }
   }
+  return (
+    <div className={classes.container}>
+      <img className={classes.image} src="bgc-logo.png" alt="BGC Logo" />
+      <Typography className={classes.title} variant="h3">
+        BGCMA Bus Safety App
+      </Typography>
 
-  render () {
-    return (
-      <div className='login'>
-        <form onSubmit={this.handleSubmit}>
-          <label htmlFor='username'>GitHub username</label>
+      {error && <p className={classes.error}>{error}</p>}
 
-          <input
-            type='text'
-            id='username'
-            name='username'
-            value={this.state.username}
-            onChange={this.handleChange}
-          />
+      <LoginField
+        className={classes.input}
+        variant="filled"
+        placeholder="Username"
+        value={username}
+        onChange={e => setUsername(e.target.value)}
+      />
+      <LoginField
+        className={classes.input}
+        variant="filled"
+        placeholder="Password"
+        type="password"
+        value={password}
+        onChange={e => setPassword(e.target.value)}
+      />
 
-          <button type='submit'>Login</button>
+      <Button
+        className={classes.button}
+        variant="contained"
+        onClick={handleSubmit}
+      >
+        Log In
+      </Button>
+    </div>
+  );
+};
 
-          <p className={`error ${this.state.error && 'show'}`}>
-            {this.state.error && `Error: ${this.state.error}`}
-          </p>
-        </form>
-      </div>
-    )
-  }
-}
+Login.getInitialProps = ({ req }) => {
+  const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
+
+  const apiUrl = process.browser
+    ? `${protocol}://${window.location.host}/api/login`
+    : `${protocol}://${req.headers.host}/api/login`;
+
+  return { apiUrl };
+};
+
+Login.propTypes = {
+  apiUrl: PropTypes.string.isRequired
+};
+
 export default Login;

@@ -13,7 +13,8 @@ export default {
     ssr: "/ssr",
     csv_upload: "/csv_upload",
     roster: "/roster",
-    history: "/history"
+    history: "/history",
+    login: "/login"
   },
   api: {
     example: "/api/example",
