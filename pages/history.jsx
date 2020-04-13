@@ -57,25 +57,36 @@ const useStyles = makeStyles(theme => ({
   },
   table: {
     width: "100%",
-    borderSpacing: "2px",
+    borderSpacing: "5px",
     textAlign: "center",
-    overflow: "scroll"
+    borderCollapse: "collapse"
+  },
+  tbody: {
+    display: "block",
+    height: "450px",
+    overflowY: "auto",
+    overflowX: "hidden"
+  },
+  th: {
+    width: "calc( 100% - 1em )",
+    backgroundColor: "#E0E0E0",
+    padding: "10px",
+    border: "1px solid #BDBDBD",
+    borderCollapse: "collapse"
   },
   td: {
     textAlign: "center",
     width: "fill",
-    paddingTop: "2px",
-    paddingBottom: "2px"
+    padding: "5px",
+    borderLeft: "1px solid #BDBDBD",
+    borderRight: "1px solid #BDBDBD"
   },
   tr: {
+    display: "table",
+    width: "100%",
+    tableLayout: "fixed",
     "&:nth-child(even)": {
       backgroundColor: "#efefef"
-    }
-  },
-  firstTr: {
-    backgroundColor: "#E0E0E0",
-    "& td": {
-      padding: "10px"
     }
   },
   dot: {
@@ -115,7 +126,10 @@ const useStyles = makeStyles(theme => ({
   ModalComponentButton: {
     border: "none",
     backgroundColor: "rgb(0, 0, 0, 0)",
-    fontSize: 14
+    fontSize: 14,
+    "&:hover": {
+      pointer: "cursor"
+    }
   },
   info: {
     flex: 1,
@@ -175,6 +189,7 @@ async function updateStudents(date, students) {
         schoolName: student.schoolName,
         grade: student.grade,
         attendance: count / day_list.length,
+        datesAttended: d.payload.map(d => new Date(d)),
         studentID: student.studentID
       });
     }
@@ -184,8 +199,8 @@ async function updateStudents(date, students) {
 }
 
 const DateSelect = props => {
-  const classes = useStyles();
   const { date, setDate } = props;
+  const classes = useStyles();
 
   return (
     <div className={classes.dateSelect}>
@@ -214,15 +229,15 @@ function History({ students }) {
   const [filters, setFilters] = React.useState(["", "", ""]);
   const filterLabels = ["schoolName", "grade", "attendance"];
   const [filteredStudents, setFilteredStudents] = React.useState([]);
+  const sortingLabels = ["Alphabetical", "Grade", "Low Attendance"];
   const [sort, setSort] = React.useState("");
-  const sortingLabels = ['Alphabetical', 'Grade','Low Attendance']
   const [date, setDate] = React.useState(new Date(startDate));
 
   // fetching date data from api
   React.useEffect(
     () => async () => {
       students = await updateStudents(date, students);
-      setVisibleStudents(students);
+      filterStudents();
     },
     [date]
   );
@@ -232,6 +247,27 @@ function History({ students }) {
     new Date(2020, 0, 6),
     new Date(2020, 0, 8)
   ];
+
+
+  function filterStudents() {
+    let filteredStudents = [...students];
+    // filter grade and school
+    filters.slice(0, 2).forEach((filter, i) => {
+      if (filter != "") {
+        filteredStudents = filteredStudents.filter(
+          student => student[filterLabels[i]] == filter
+        );
+      }
+    });
+    // filter low attendance
+    if (filters[2] != "") {
+      filteredStudents = filteredStudents.filter(
+        student => student[filterLabels[2]] < 0.6
+      );
+    }
+    setFilteredStudents(filteredStudents);
+    setVisibleStudents(filteredStudents);
+  }
 
   // sorting
   React.useEffect(() => {
@@ -258,23 +294,7 @@ function History({ students }) {
 
   // filtering
   React.useEffect(() => {
-    let filteredStudents = [...students];
-    // filter grade and school
-    filters.slice(0, 2).forEach((filter, i) => {
-      if (filter != "") {
-        filteredStudents = filteredStudents.filter(
-          student => student[filterLabels[i]] == filter
-        );
-      }
-    });
-    // filter low attendance
-    if (filters[2] != "") {
-      filteredStudents = filteredStudents.filter(
-        student => student[filterLabels[2]] < 0.6
-      );
-    }
-    setFilteredStudents(filteredStudents);
-    setVisibleStudents(filteredStudents);
+    filterStudents();
   }, [filters]);
 
   const handleUpdateFilters = (newFilter, index) => {
@@ -298,173 +318,180 @@ function History({ students }) {
       })
     );
   };
+  const Filters = () => (
+    <div className={styles.filters}>
+      <h3>Filter By</h3>
+      <FormControl variant="outlined" className={classes.formControl}>
+        <InputLabel>School</InputLabel>
+        <Select
+          value={filters[0]}
+          onChange={e => handleUpdateFilters(e.target.value, 0)}
+          className={classes.selectButton}
+          label="School"
+        >
+          <MenuItem value="">
+            <em>None</em>
+          </MenuItem>
+          {[...new Set(students.map(students => students.schoolName))]
+            .sort()
+            .map(schoolName => {
+              return <MenuItem value={schoolName}>{schoolName}</MenuItem>;
+            })}
+        </Select>
+      </FormControl>
+      <FormControl variant="outlined" className={classes.formControl}>
+        <InputLabel>Grade</InputLabel>
+        <Select
+          value={filters[1]}
+          onChange={e => handleUpdateFilters(e.target.value, 1)}
+          className={classes.selectButton}
+          label="Grade"
+        >
+          <MenuItem value="">
+            <em>None</em>
+          </MenuItem>
+          {[...new Set(students.map(students => students.grade))]
+            .sort()
+            .map(grade => {
+              return <MenuItem value={grade}>{grade}</MenuItem>;
+            })}
+        </Select>
+      </FormControl>
+      <Button
+        className={classes.button}
+        color={filters[2] == "" ? "default" : "primary"}
+        variant="contained"
+        onClick={() => {
+          filters[2] == ""
+            ? handleUpdateFilters("Low Attendance", 2)
+            : handleDeleteFilters("Low Attendance");
+        }}
+      >
+        Low Attendance
+      </Button>
+    </div>
+  );
+
+  const Sorting = () => (
+    <div className={styles.sort}>
+      <h3>Sort By</h3>
+      {sortingLabels.map(name => {
+        return (
+          <Button
+            className={classes.button}
+            variant="contained"
+            color={name == sort ? "primary" : "default"}
+            onClick={() => {
+              sort != name ? setSort(name) : setSort("");
+            }}
+          >
+            {name}
+          </Button>
+        );
+      })}
+    </div>
+  );
 
   return (
     <div className={styles.container}>
-      <p style={{ fontSize: "200" }}>Bus Attendance Matrix</p>
-      <h1>{ClubName}
-{' '}
-2019-2020 Afterschool Registration
-</h1>
-      <div className={styles.filters}>
-        <h2>Filter By</h2>
-        <FormControl variant="outlined" className={classes.formControl}>
-          <InputLabel>School</InputLabel>
-          <Select
-            value={filters[0]}
-            onChange={e => handleUpdateFilters(e.target.value, 0)}
-            className={classes.selectButton}
-            label="School"
-          >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            {[...new Set(students.map(students => students.schoolName))]
-              .sort()
-              .map(schoolName => {
-                return <MenuItem value={schoolName}>{schoolName}</MenuItem>;
-              })}
-          </Select>
-        </FormControl>
-        <FormControl variant="outlined" className={classes.formControl}>
-          <InputLabel>Grade</InputLabel>
-          <Select
-            value={filters[1]}
-            onChange={e => handleUpdateFilters(e.target.value, 1)}
-            className={classes.selectButton}
-            label="Grade"
-          >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            {[...new Set(students.map(students => students.grade))]
-              .sort()
-              .map(grade => {
-                return <MenuItem value={grade}>{grade}</MenuItem>;
-              })}
-          </Select>
-        </FormControl>
-        <Button
-          className={classes.button}
-          color={filters[2] == "" ? "default" : "primary"}
-          variant="contained"
-          onClick={() => {
-            filters[2] == ""
-              ? handleUpdateFilters("Low Attendance", 2)
-              : handleDeleteFilters("Low Attendance");
-          }}
-        >
-          Low Attendance
-        </Button>
-      </div>
-
-      <div className={styles.sort}>
-        <h2>Sort By</h2>
-        {sortingLabels.map(name => {
-          return (
-            <Button
-              className={classes.button}
-              variant="contained"
-              color={name == sort ? "primary" : "default"}
-              onClick={() => {
-                sort != name ? setSort(name) : setSort("");
-              }}
-            >
-              {name}
-            </Button>
-          );
-        })}
-      </div>
+      <p style={{ fontSize: "200", margin: "0" }}>Bus Attendance Matrix</p>
+      <h2 style={{ marginTop: "5px", marginBottom: "20px" }}>
+        {`${ClubName} Boys and Girls Club `}
+        2019-2020 Afterschool Registration
+      </h2>
+      <Filters />
+      <Sorting />
 
       <DateSelect date={date} setDate={setDate} />
 
-      <div className={classes.tableWrapper}>
-        <table className={classes.table}>
-          <thead>
-            <tr className={classes.firstTr}>
-              <td>Student Name</td>
-              <td>Overall Attendance </td>
-              <td>Status </td>
-            </tr>
-          </thead>
+      <table className={classes.table}>
+        <thead
+          style={{ backgroundColor: "#E0E0E0", width: "calc( 100% - 1em )" }}
+        >
+          <tr className={classes.tr}>
+            <th className={classes.th} style={{ width: "25%" }}>
+              Student Name
+            </th>
+            <th className={classes.th}>Days Attended This Month </th>
+            <th className={classes.th} style={{ width: "25%" }}>
+              Status
+            </th>
+          </tr>
+        </thead>
 
-          <tbody className={classes.tbody}>
-            {visibleStudents.map(student => (
-              <tr className={classes.tr}>
-                <td
-                  className={classes.td}
-                  style={{
-                    backgroundColor:
-                      student.attendance < 0.6 ? lowAttendance : "",
-                    width: "300px"
-                  }}
+        <tbody className={classes.tbody}>
+          {visibleStudents.map(student => (
+            <tr className={classes.tr}>
+              <td
+                className={classes.td}
+                style={{
+                  backgroundColor:
+                    student.attendance < 0.6 ? lowAttendance : "",
+                  width: "25%"
+                }}
+              >
+                <ModalComponent
+                  button={<>{`${student.lastName}, ${student.firstName}`}</>}
+                  buttonStyle={classes.ModalComponentButton}
                 >
-                  <ModalComponent
-                    button={<>{`${student.lastName}, ${student.firstName}`}</>}
-                    buttonStyle={classes.ModalComponentButton}
-                  >
-                    <div className={classes.ModalComponent}>
-                      <div className={classes.content}>
-                        <div className={classes.info}>
-                          <h1>{`${student.firstName} ${student.lastName}`}</h1>
-                          <p>{`School: ${student.schoolName}`}</p>
-                          <p>{`Grade: ${student.grade}`}</p>
-                          <p>{`Status: ${student.status}`}</p>
-                          <p>{`Contact: ${student.contact}`}</p>
-                          <p>{`Emergency: ${student.emergency}`}</p>
-                        </div>
-                        <div className={classes.calendar}>
-                          <Calendar
-                            defaultMonth={date.getMonth()}
-                            defaultYear={date.getFullYear()}
-                            getDatesAttended={() => datesAttended}
-                          />
-                        </div>
+                  <div className={classes.ModalComponent}>
+                    <div className={classes.content}>
+                      <div className={classes.info}>
+                        <h1>{`${student.firstName} ${student.lastName}`}</h1>
+                        <p>{`School: ${student.schoolName}`}</p>
+                        <p>{`Grade: ${student.grade}`}</p>
+                        <p>{`Status: ${student.status}`}</p>
+                        <p>{`Contact: ${student.contact}`}</p>
+                        <p>{`Emergency: ${student.emergency}`}</p>
+                      </div>
+                      <div className={classes.calendar}>
+                        <Calendar
+                          defaultMonth={date.getMonth()}
+                          defaultYear={date.getFullYear()}
+                          getDatesAttended={() => student.datesAttended}
+                        />
                       </div>
                     </div>
-                  </ModalComponent>
-                </td>
-                <td className={classes.td}>
-                  <div style={{ display: "flex", flexDirection: "row" }}>
-                    <div
-                      style={{
-                        width: `${100 * student.attendance}%`,
-                        height: "20px",
-                        backgroundColor:
-                          student.attendance < 0.6
-                            ? lowAttendance
-                            : highAttendance
-                      }}
-                    />
-                    <p style={{ margin: "0px 0px 0px 3px" }}>
-                      {Math.round(student.attendance * daysInMonth)}
-                    </p>
                   </div>
-                </td>
-                <td className={classes.td} style={{ width: "300px" }}>
-                  <div className={styles.status}>
-                    <span
-                      className={classes.dot}
-                      style={{
-                        backgroundColor:
-                          student.attendance < 0.6
-                            ? lowAttendance
-                            : highAttendance
-                      }}
-                    />
+                </ModalComponent>
+              </td>
+              <td className={classes.td}>
+                <div style={{ display: "flex", flexDirection: "row" }}>
+                  <div
+                    style={{
+                      width: `${100 * student.attendance}%`,
+                      height: "20px"
+                    }}
+                    color={student.attendance < 0.6 ? "warning" : "success"}
+                  />
+                  <p style={{ margin: "0px 0px 0px 3px" }}>
+                    {Math.round(student.attendance * daysInMonth)}
+                  </p>
+                </div>
+              </td>
+              <td className={classes.td} style={{ width: "25%" }}>
+                <div className={styles.status}>
+                  <span
+                    className={classes.dot}
+                    style={{
+                      backgroundColor:
+                        student.attendance < 0.6
+                          ? lowAttendance
+                          : highAttendance
+                    }}
+                  />
 
-                    {student.attendance < 0.6 ? (
-                      <p style={{ margin: "5px" }}>Low Attendance</p>
-                    ) : (
-                      <p style={{ margin: "5px" }}>Active</p>
-                    )}
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                  {student.attendance < 0.6 ? (
+                    <p style={{ margin: "5px" }}>Low Attendance</p>
+                  ) : (
+                    <p style={{ margin: "5px" }}>Active</p>
+                  )}
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

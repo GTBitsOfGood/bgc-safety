@@ -3,8 +3,30 @@ import React from "react";
 import Head from "next/head";
 import { ThemeProvider } from "@material-ui/core/styles";
 import Header from "../client/components/header";
-import theme from "./theme";
+import theme from "../utils/theme";
 import "../public/static/App.css";
+import { ThemeProvider } from "@material-ui/styles";
+import { createMuiTheme } from "@material-ui/core/styles";
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: "#1594D0"
+    },
+    secondary: {
+      main: "#C4C4C4"
+    },
+    error: {
+      main: "#EB5757"
+    },
+    warning: {
+      main: "#F2C94C"
+    },
+    success: {
+      main: "#6FCF97"
+    }
+  }
+});
 
 class MyApp extends App {
   componentDidMount() {
@@ -19,7 +41,7 @@ class MyApp extends App {
     const { Component, pageProps } = this.props;
 
     return (
-      <>
+      <ThemeProvider theme={theme}>
         <Head>
           <title>Nextjs-Starter</title>
           <link
@@ -43,7 +65,7 @@ class MyApp extends App {
             </div>
           </ThemeProvider>
         </div>
-      </>
+      </ThemeProvider>
     );
   }
 }

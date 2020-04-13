@@ -1,5 +1,4 @@
 import React from "react";
-// import fetch from "isomorphic-unfetch";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
@@ -80,93 +79,87 @@ function Roster({ schools }) {
 
   return (
     <div id="main">
-      <h1>{ClubName}</h1>
+      <h1>{`${ClubName} Boys and Girls Club`}</h1>
       <div className={styles.roster}>
-        <table className={styles.bustable}>
-          <tr className={styles.tr}>
-            {schools.map(school => (
-              <th className={styles.busth}>
-                Bus A Cap
-                {getNumberCheckedIn(school)}
-              </th>
-            ))}
-          </tr>
-        </table>
         <div>
-          {schools.map((school, i) => (
+          {schools.map(school => (
             <table className={styles.table}>
-              <tr className={styles.tr}>
-                <th className={styles.th}>{school.name}</th>
-              </tr>
-              {school.students.map(student => (
-                <tr className={classes.tr} key={i}>
-                  <div className={classes.students}>
-                    <td
-                      className={styles.td}
-                      style={{
-                        backgroundColor: student.checkedIn
-                          ? "rgba(0, 128, 0, 0.562)"
-                          : " "
-                      }}
-                    >
-                      {student.name}
-                      {student.checkedIn && (
-                        <CheckCircleIcon
-                          style={{
-                            alignSelf: "flex-end",
-                            marginLeft: "auto",
-                            fill: "white"
-                          }}
-                        />
-                      )}
-                    </td>
-                  </div>
+              <thead>
+                <tr className={styles.tr}>
+                  <th className={styles.busth}>
+                    Bus A Cap
+                    {getNumberCheckedIn(school)}
+                  </th>
                 </tr>
-              ))}
-              <tr>
-                <ModalComponent
-                  setStudent={setStudent}
-                  button={
-                    <>
-                      Manually Add Entry
-                      <AddCircleIcon className={classes.icon} />
-                    </>
-                  }
-                  buttonStyle={classes.button}
-                >
-                  <form
-                    className={classes.ModalContent}
-                    onSubmit={handleSubmit}
+                <tr style={{ height: "10px" }} />
+                <tr className={styles.tr}>
+                  <th className={styles.th}>{school.name}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {school.students.map(student => (
+                  <tr className={classes.tr}>
+                    <div className={classes.students}>
+                      <td
+                        className={styles.td}
+                        color={student.checkedIn ? "success" : ""}
+                      >
+                        {student.name}
+                        {student.checkedIn && (
+                          <CheckCircleIcon
+                            style={{
+                              alignSelf: "flex-end",
+                              marginLeft: "auto",
+                              fill: "white"
+                            }}
+                          />
+                        )}
+                      </td>
+                    </div>
+                  </tr>
+                ))}
+                <tr>
+                  <ModalComponent
+                    setStudent={setStudent}
+                    button={
+                      <>
+                        Manually Add Entry
+                        <AddCircleIcon className={classes.icon} />
+                      </>
+                    }
+                    buttonStyle={classes.button}
                   >
-                    <h1>Manual Data Entry</h1>
-                    <input
-                      id="firstName"
-                      name="firstName"
-                      type="text"
-                      placeholder="First Name"
-                      value={firstName}
-                      onChange={e => setFirstName(e.target.value)}
-                    />
-                    <input
-                      id="lastName"
-                      type="text"
-                      placeholder="Last Name"
-                      value={lastName}
-                      onChange={e => setLastName(e.target.value)}
-                    />
-                    <input
-                      id="school"
-                      type="text"
-                      placeholder="School/Pickup Location"
-                      value={studentSchool}
-                      onChange={e => setStudentSchool(e.target.value)}
-                    />
-                    <button type="submit" className="btn btn-success">
-                      Add Student
-                    </button>
-                  </form>
-                </ModalComponent>
-              </tr>
+                    <form className={classes.content} onSubmit={handleSubmit}>
+                      <h1>Manual Data Entry</h1>
+                      <input
+                        id="firstName"
+                        name="firstName"
+                        type="text"
+                        placeholder="First Name"
+                        value={firstName}
+                        onChange={e => setFirstName(e.target.value)}
+                      />
+                      <input
+                        id="lastName"
+                        type="text"
+                        placeholder="Last Name"
+                        value={lastName}
+                        onChange={e => setLastName(e.target.value)}
+                      />
+                      <input
+                        id="school"
+                        type="text"
+                        placeholder="School/Pickup Location"
+                        value={studentSchool}
+                        onChange={e => setStudentSchool(e.target.value)}
+                      />
+                      <button type="submit" className="btn btn-success">
+                        Add Student
+                      </button>
+                    </form>
+                  </ModalComponent>
+                </tr>
+              </tbody>
             </table>
           ))}
         </div>

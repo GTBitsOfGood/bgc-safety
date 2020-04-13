@@ -2,7 +2,7 @@ const prod = process.env.NODE_ENV === "production";
 
 export default {
   baseUrl: prod
-    ? "https://nextjs-starter-flax-sigma.now.sh"
+    ? "https://bgcsafety-dev.herokuapp.com"
     : "http://localhost:3000",
   dbUrl: prod
     ? process.env.MONGO_DB

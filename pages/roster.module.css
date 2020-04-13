@@ -10,6 +10,7 @@
 .th {
   background-color: rgba(128, 128, 128, 0.39);
   width: 300px;
+  padding: 10px;
 }
 
 .td {
@@ -26,7 +27,7 @@
 
 .busth {
   width: 302px;
-  margin-left: 20px;
   background-color: rgba(0, 0, 255, 0.349);
   color: white;
+  padding: 10px;
 }

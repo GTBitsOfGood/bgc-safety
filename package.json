@@ -15,13 +15,15 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "eslint --fix --ext .jsx --ext .js ."
+    "start": "next start -p $PORT",
+    "lint": "eslint --fix --ext .jsx --ext .js .",
+    "heroku-postbuild": "npm run build"
   },
   "dependencies": {
     "@material-ui/core": "^4.9.8",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.47",
+    "@material-ui/styles": "^4.9.6",
     "axios": "^0.19.2",
     "bcryptjs": "^2.4.3",
     "dotenv": "^8.2.0",
