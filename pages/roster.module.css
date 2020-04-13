@@ -1,6 +1,6 @@
 .table {
   display: inline;
-  border-spacing: 2px;
+  border-spacing: 20px 2px;
 }
 
 .roster {
@@ -9,26 +9,25 @@
 
 .th {
   background-color: rgba(128, 128, 128, 0.39);
-  width: 200px;
+  width: 300px;
+  padding: 10px;
 }
 
 .td {
-  background-color: rgba(0, 128, 0, 0.562);
+  padding: 10px;
   width: fill;
-}
-
-.tdNotCheckedIn {
-  background-color: rgb(220, 220, 220);
-  width: fill;
+  display: flex;
+  align-items: center;
 }
 
 .bustable {
-  border-spacing: 2px;
-  margin-bottom: 0.5vh;
+  display: inline;
+  border-spacing: 20px 10px;
 }
 
 .busth {
-  width: 202px;
+  width: 302px;
   background-color: rgba(0, 0, 255, 0.349);
   color: white;
+  padding: 10px;
 }

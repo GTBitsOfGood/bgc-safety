@@ -7,7 +7,14 @@ export default async (req, res) => {
 
   const { method } = req;
 
-  if (method === "GET" && req.query.schoolName) {
+  if (
+    method === "GET" &&
+    req.query.schoolName !== undefined &&
+    req.query.startDate !== undefined &&
+    req.query.endDate !== undefined
+  ) {
+    getSchoolAttendanceTimeRange(req, res);
+  } else if (method === "GET" && req.query.schoolName !== undefined) {
     getBusAttendanceInfo(req, res);
   } else if (
     method === "GET" &&
@@ -18,16 +25,9 @@ export default async (req, res) => {
     getStudentAttendanceTimeRange(req, res);
   } else if (method === "GET" && req.query.studentID) {
     getAttendanceOfStudent(req, res);
-  } else if (
-    method === "GET" &&
-    req.query.schoolName &&
-    req.query.startDate &&
-    req.query.endDate
-  ) {
-    getSchoolAttendanceTimeRange(req, res);
-  } else {
-    res.setHeader("Allow", "GET");
-    res.status(405).end(`Method ${method} Not Allowed`);
+  } else  {
+    res.setHeader("Allow", ["GET"]);
+    res.status(405).end("Method ${method} Not Allowed");
   }
 };
 
@@ -39,6 +39,8 @@ function getBusAttendanceInfo(req, res) {
       schoolName
     },
     {
+      firstName: 1,
+      lastName: 1,
       checkInTimes: 1
     }
   )
@@ -84,6 +86,9 @@ function getAttendanceOfStudent(req, res) {
 function getStudentAttendanceTimeRange(req, res) {
   const { studentID, startDate, endDate } = req.query;
 
+  Student.find({ studentID }, { checkInTimes: 1 })
+    .then(student =>
+      res.status(200).json({
   Student.find(
     {
       studentID
@@ -98,7 +103,7 @@ function getStudentAttendanceTimeRange(req, res) {
         payload: filterTimes(
           Date.parse(startDate),
           Date.parse(endDate),
-          checkInTimes
+          student[0].checkInTimes
         )
       })
     )
@@ -114,7 +119,7 @@ function filterTimes(startDate, endDate, checkInTimes) {
   try {
     var filteredDates = [];
     let date;
-    for (date of checkInTimes[0].checkInTimes) {
+    for (date of checkInTimes) {
       if (Date.parse(date) >= startDate && Date.parse(date) <= endDate) {
         filteredDates.push(date);
       }
@@ -131,6 +136,12 @@ function getSchoolAttendanceTimeRange(req, res) {
 
   Student.find({
     schoolName
+  },
+  {
+    checkInTimes: 1,
+    firstName: 1,
+    lastName: 1,
+    studentID: 1
   })
     .then(students => {
       res.status(200).send({
@@ -158,7 +169,7 @@ function convertToDict(startDate, endDate, students) {
     for (student of students) {
       var date;
       for (date of student.checkInTimes) {
-        if (date >= startDate && date <= endDate) {
+        if (Date.parse(date) >= startDate && Date.parse(date) <= endDate) {
           if (dict[date] == undefined) {
             dict[date] = [];
           }
