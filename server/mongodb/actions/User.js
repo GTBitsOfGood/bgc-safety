@@ -16,10 +16,8 @@ export async function login(email, password) {
           winston.log(password, user.password);
           return bcrypt.compare(password, user.password).then(result => {
             if (result) {
-              winston.log('info', "success");
               return Promise.resolve(user);
             }
-            winston.log("info", "not success");
             return Promise.reject(
               new Error("The password you entered is incorrect.")
             );
@@ -40,6 +38,7 @@ export async function login(email, password) {
           },
           (error, token) => {
             if (token) {
+              winston.log("info", token);
               return resolve(token);
             }
             return reject(new Error("The login attempt failed."));

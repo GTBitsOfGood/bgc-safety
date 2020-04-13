@@ -1,4 +1,5 @@
 /* eslint-disable no-use-before-define */
+import winston from "winston";
 import mongoDB from "../../server/mongodb/index";
 import { login } from "../../server/mongodb/actions/User";
 
@@ -20,6 +21,7 @@ async function loginUser(req, res) {
 
   login(email, password)
     .then(token => {
+      winston.log("info", "success in api");
       res.status(200).send({
         success: true,
         payload: token
