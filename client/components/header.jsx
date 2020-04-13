@@ -1,5 +1,5 @@
 import React from "react";
-import Router from "next/router";
+import { withRouter } from "next/router";
 import Link from "next/link";
 import PropTypes from "prop-types";
 import {
@@ -49,9 +49,7 @@ const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1
   },
-  header: {
-    backgroundColor: "#1594D0"
-  },
+
   menuButton: {
     marginRight: theme.spacing(2)
   },
@@ -67,19 +65,21 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Header = props => {
-  const { defaultSelected } = props;
+  const { defaultSelected, router } = props;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selected, setSelected] = React.useState(defaultSelected);
   const open = Boolean(anchorEl);
 
-  Router.events.on("routeChangeComplete", url => {
-    const route = routes.find(rt => rt.link === url);
-    if (route) {
-      setSelected(route.name);
-    }
-    setAnchorEl(null);
-  });
+  router &&
+    router.events &&
+    router.events.on("routeChangeComplete", url => {
+      const route = routes.find(rt => rt.link === url);
+      if (route) {
+        setSelected(route.name);
+      }
+      setAnchorEl(null);
+    });
 
   const handleMenu = event => {
     setAnchorEl(event.currentTarget);
@@ -90,49 +90,56 @@ const Header = props => {
   };
 
   return (
-    <AppBar position="static" className={classes.header}>
-      <Toolbar variant="dense">
-        <IconButton
-          edge="start"
-          className={classes.menuButton}
-          color="inherit"
-          aria-label="menu"
-          onClick={handleMenu}
-        >
-          <MenuIcon />
-        </IconButton>
-        <Menu
-          id="menu-appbar"
-          anchorEl={anchorEl}
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "right"
-          }}
-          keepMounted
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "right"
-          }}
-          open={open}
-          onClose={handleClose}
-        >
-          {routes.map(route => (
-            <MenuItem onClick={handleClose}>
-              <Link href={route.link}>{route.name}</Link>
-            </MenuItem>
-          ))}
-          <MenuItem onClick={handleClose}>My account</MenuItem>
-        </Menu>
-        <Typography variant="h6" className={classes.title}>
-          {selected}
-        </Typography>
-      </Toolbar>
-    </AppBar>
+    router.pathname !== "/login" &&
+    !router.pathname.includes("/bus_checkin_roster/") && (
+      <AppBar position="static" className={classes.header}>
+        <Toolbar variant="dense">
+          <IconButton
+            edge="start"
+            className={classes.menuButton}
+            color="inherit"
+            aria-label="menu"
+            onClick={handleMenu}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Menu
+            id="menu-appbar"
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right"
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right"
+            }}
+            open={open}
+            onClose={handleClose}
+          >
+            {routes.map(route => (
+              <MenuItem onClick={handleClose}>
+                <Link href={route.link}>{route.name}</Link>
+              </MenuItem>
+            ))}
+            <MenuItem onClick={handleClose}>My account</MenuItem>
+          </Menu>
+          <Typography variant="h6" className={classes.title}>
+            {selected}
+          </Typography>
+        </Toolbar>
+      </AppBar>
+    )
   );
 };
 
 Header.propTypes = {
-  defaultSelected: PropTypes.string.isRequired
+  defaultSelected: PropTypes.string.isRequired,
+  router: PropTypes.shape({
+    event: PropTypes.shape,
+    pathname: PropTypes.string
+  }).isRequired
 };
 
-export default Header;
+export default withRouter(Header);

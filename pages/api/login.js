@@ -19,14 +19,14 @@ async function loginUser(req, res) {
   const { email, password } = req.body;
 
   login(email, password)
-    .then(token =>
+    .then(token => {
       res.status(200).send({
         success: true,
         payload: token
-      })
-    )
+      });
+    })
     .catch(error =>
-      res.status(400).send({
+      res.status(401).send({
         success: false,
         message: error
       })

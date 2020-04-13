@@ -2,10 +2,10 @@ const prod = process.env.NODE_ENV === "production";
 
 export default {
   baseUrl: prod
-    ? "https://nextjs-starter-flax-sigma.now.sh"
+    ? "https://bgcsafety-dev.herokuapp.com"
     : "http://localhost:3000",
   dbUrl: prod
-    ? "mongodb+srv://bgc-safety-dev:bgc-safety-123@cluster0-9lk2k.mongodb.net/bgc-safety-dev?retryWrites=true&w=majority"
+    ? process.env.MONGO_DB
     : process.env.MONGO_DEV_DB || "mongodb://localhost:27017",
   dbName: "bgc-safety-dev",
   pages: {
@@ -13,7 +13,10 @@ export default {
     ssr: "/ssr",
     csv_upload: "/csv_upload",
     roster: "/roster",
-    history: "/history"
+    history: "/history",
+    route_selection: "/route_selection",
+    bus_checkin_roster: "/bus_checkin_roster",
+    login: "/login"
   },
   api: {
     example: "/api/example",
