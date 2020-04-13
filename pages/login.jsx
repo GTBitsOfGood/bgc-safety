@@ -74,7 +74,7 @@ const Login = props => {
         .then(response => {
           if (response.success) {
             sessionStorage.token = response.payload;
-            Router.replace("/");
+            Router.replace("/history");
           } else {
             setError(response.message);
           }
