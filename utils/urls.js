@@ -2,7 +2,7 @@ const prod = process.env.NODE_ENV === "production";
 
 export default {
   baseUrl: prod
-    ? "https://nextjs-starter-flax-sigma.now.sh"
+    ? "https://bgcsafety-dev.herokuapp.com"
     : "http://localhost:3000",
   dbUrl: prod
     ? "mongodb+srv://bgc-safety-dev:bgc-safety-123@cluster0-9lk2k.mongodb.net/bgc-safety-dev?retryWrites=true&w=majority"
