@@ -13,6 +13,8 @@ export default async (req, res) => {
     updateStudent(req, res);
   } else if (method === "DELETE") {
     deleteStudent(req, res);
+  } else if (method === "GET" && req.query.school) {
+    getStudentsOnBus(req, res);
   } else if (method === "GET") {
     getAllStudents(req, res);
   } else {
@@ -125,6 +127,27 @@ function deleteStudent(req, res) {
 
 function getAllStudents(req, res) {
   Student.find()
+    .then(students => {
+      res.status(200).send({
+        success: true,
+        payload: students
+      });
+    })
+    .catch(err => {
+      res.status(400).send({
+        success: false,
+        message: err
+      });
+    });
+}
+
+function getStudentsOnBus(req, res) {
+  const { school } = req.query;
+
+  Student.find({
+    schoolName: school,
+    onBus: true
+  })
     .then(students => {
       res.status(200).send({
         success: true,
