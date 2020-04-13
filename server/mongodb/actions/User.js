@@ -41,6 +41,7 @@ export async function login(email, password) {
               winston.log("info", token);
               return resolve(token);
             }
+            winston.log("error", error);
             return reject(new Error("The login attempt failed."));
           }
         );
