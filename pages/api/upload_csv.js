@@ -2,6 +2,7 @@
 import mongoDB from "../../server/mongodb/index";
 import Student from "../../server/mongodb/models/Student";
 import Club from "../../server/mongodb/models/Club";
+import useCors from "./corsMiddleware";
 
 const neatCsv = require("neat-csv");
 // const fs = require("fs");
@@ -9,8 +10,10 @@ const neatCsv = require("neat-csv");
 export default async (req, res) => {
     await mongoDB();
 
+    await useCors(req, res);
+
     const { method } = req;
-  
+
     if (method === "POST") {
         // console.log(req)
         parseCsv(req, res, req.body)

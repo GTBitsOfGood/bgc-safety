@@ -2,9 +2,12 @@
 import mongoDB from "../../server/mongodb/index";
 import Student from "../../server/mongodb/models/Student";
 import Club from "../../server/mongodb/models/Club";
+import useCors from "./corsMiddleware";
 
 export default async (req, res) => {
   await mongoDB();
+
+  await useCors(req, res);
 
   const { method } = req;
 

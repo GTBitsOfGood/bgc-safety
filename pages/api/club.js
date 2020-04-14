@@ -1,13 +1,18 @@
 /* eslint-disable no-use-before-define */
 import mongoDB from "../../server/mongodb/index";
 import Club from "../../server/mongodb/models/Club";
+import useCors from "./corsMiddleware";
 
 export default async (req, res) => {
   await mongoDB();
 
+  await useCors(req, res);
+
   const { method } = req;
 
-  if (method === "GET") {
+  if (method === "GET" && req.query.ClubName) {
+    getSchoolsForClub(req, res);
+  } else if (method === "GET") {
     getAllClubs(req, res);
   } else if (method === "POST") {
     createClub(req, res);
@@ -15,8 +20,6 @@ export default async (req, res) => {
     updateClub(req, res);
   } else if (method === "DELETE") {
     deleteClub(req, res);
-  } else if (method === "GET" && req.query.ClubName) {
-    getSchoolsForClub(req, res);
   } else {
     res.setHeader("Allow", ["GET, POST", "PATCH", "DELETE"]);
     res.status(405).end(`Method ${method} Not Allowed`);

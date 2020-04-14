@@ -3,6 +3,7 @@ import axios from "axios";
 import Router from "next/router";
 import { Button, Typography, InputBase } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
+import urls from "../utils/urls";
 
 const useStyles = makeStyles({
   container: {
@@ -56,7 +57,7 @@ const Login = () => {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    const url = "/api/login";
+    const url =  `${urls.baseUrl}/api/login`;
 
     try {
       fetch(url, {

@@ -12,6 +12,7 @@ import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import Calendar from "../client/components/calendar";
 import ModalComponent from "../client/components/modal";
 import styles from "./history.module.css";
+import urls from "../utils/urls";
 
 const fetch = require("node-fetch");
 
@@ -171,7 +172,7 @@ async function updateStudents(date, students) {
 
   for (const student of students) {
     const res1 = await fetch(
-      `http://localhost:3000/api/attendance?studentID=${
+      `${urls.baseUrl}/api/attendance?studentID=${
         student.studentID
       }&startDate=${day_list[0]}&endDate=${day_list[day_list.length - 1]}`
     );
@@ -241,13 +242,6 @@ function History({ students }) {
     },
     [date]
   );
-
-  const datesAttended = [
-    new Date(2020, 0, 3),
-    new Date(2020, 0, 6),
-    new Date(2020, 0, 8)
-  ];
-
 
   function filterStudents() {
     let filteredStudents = [...students];
@@ -508,9 +502,10 @@ History.defaultProps = {
 
 History.getInitialProps = async () => {
   const res = await fetch(
-    `http://localhost:3000/api/club?ClubName=${ClubName}`
+    `${urls.baseUrl}/api/club?ClubName=${ClubName}`
   );
   const schools_data = await res.json();
+  console.log(schools_data);
 
   let schools = [];
   if (schools_data.success && schools_data.payload.length > 0) {
@@ -521,8 +516,9 @@ History.getInitialProps = async () => {
 
   let school;
   for (school of schools) {
+    console.log(school)
     const res2 = await fetch(
-      `http://localhost:3000/api/school?schoolName=${school}`
+      `${urls.baseUrl}/api/school?schoolName=${school}`
     );
     const students_data = await res2.json();
     if (students_data.success) {

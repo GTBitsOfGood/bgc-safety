@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 
+import urls from "../utils/urls";
 import FileUploader from "../client/components/file_uploader";
 
 class CSVUpload extends React.Component {
@@ -9,7 +10,7 @@ class CSVUpload extends React.Component {
 
     this.state = {
       uploadedFile: false,
-      selectedFile: "", 
+      selectedFile: "",
       sentFile: false
     };
 
@@ -29,7 +30,7 @@ class CSVUpload extends React.Component {
     console.log(data)
     var self = this;
     axios
-      .post("http://localhost:3000/api/upload_csv", data)
+      .post(`${urls.baseUrl}/api/upload_csv`, data)
       .then(function(response) {
         console.log("Uploaded file!! ... ")
         self.setState({ uploadedFile: false })

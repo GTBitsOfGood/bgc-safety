@@ -1,9 +1,12 @@
 /* eslint-disable no-use-before-define */
 import mongoDB from "../../server/mongodb/index";
 import { login } from "../../server/mongodb/actions/User";
+import useCors from "./corsMiddleware";
 
 export default async (req, res) => {
   await mongoDB();
+
+  await useCors(req, res);
 
   const { method } = req;
 
