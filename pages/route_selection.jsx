@@ -2,6 +2,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Link from "next/link";
 const fetch = require("node-fetch");
+import urls from "../utils/urls";
 
 const ClubName = "Harland"; // TODO: Allow user to select a club
 
@@ -73,7 +74,7 @@ const RouteSelection = ({ schools }) => {
 
 RouteSelection.getInitialProps = async () => {
   const res = await fetch(
-    `/api/club?ClubName=${ClubName}`
+    `${urls.baseUrl}/api/club?ClubName=${ClubName}`
   );
   const schools_data = await res.json();
   let schools_list = [];

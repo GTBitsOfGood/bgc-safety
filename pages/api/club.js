@@ -7,7 +7,9 @@ export default async (req, res) => {
 
   const { method } = req;
 
-  if (method === "GET") {
+  if (method === "GET" && req.query.ClubName) {
+    getSchoolsForClub(req, res);
+  } else if (method === "GET") {
     getAllClubs(req, res);
   } else if (method === "POST") {
     createClub(req, res);
@@ -15,8 +17,6 @@ export default async (req, res) => {
     updateClub(req, res);
   } else if (method === "DELETE") {
     deleteClub(req, res);
-  } else if (method === "GET" && req.query.ClubName) {
-    getSchoolsForClub(req, res);
   } else {
     res.setHeader("Allow", ["GET, POST", "PATCH", "DELETE"]);
     res.status(405).end(`Method ${method} Not Allowed`);
@@ -103,6 +103,8 @@ function deleteClub(req, res) {
 
 function getSchoolsForClub(req, res) {
   const { ClubName } = req.query;
+
+  console.log(ClubName);
 
   Club.find({ClubName}, {SchoolNames : 1})
   .then(SchoolNames =>

@@ -5,6 +5,7 @@ import AddCircleIcon from "@material-ui/icons/AddCircle";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import styles from "./roster.module.css";
 import ModalComponent from "../client/components/modal";
+import urls from "../utils/urls";
 
 const fetch = require("node-fetch");
 
@@ -180,7 +181,7 @@ Roster.defaultProps = {
 
 Roster.getInitialProps = async () => {
   const res = await fetch(
-    `/api/club?ClubName=${ClubName}`
+    `${urls.baseUrl}/api/club?ClubName=${ClubName}`
   );
   const schools_data = await res.json();
   let schools_list = [];
@@ -196,7 +197,7 @@ Roster.getInitialProps = async () => {
 
   for (const s of schools_list) {
     const res1 = await fetch(
-      `/api/attendance?schoolName=${s}`
+      `${urls.baseUrl}/api/attendance?schoolName=${s}`
     );
     const d = await res1.json();
 

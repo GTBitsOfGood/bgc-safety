@@ -7,6 +7,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import ModalComponent from "../../client/components/modal";
+import urls from "../../utils/urls";
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -129,7 +130,7 @@ const Roster = () => {
   const submitAttendance = async (index) => {
     // show modal
     const res = await fetch(
-      `/api/checkIn`, {
+      `${urls.baseUrl}/api/checkIn`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -309,7 +310,7 @@ const Roster = () => {
     let data = [];
 
     const res1 = await fetch(
-      `/api/school?schoolName=${schoolName}`
+      `${urls.baseUrl}/api/school?schoolName=${schoolName}`
     );
     const d = await res1.json();
 
