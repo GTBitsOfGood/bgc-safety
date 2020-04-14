@@ -315,11 +315,14 @@ const Roster = () => {
     const d = await res1.json();
 
     if (d.success) {
+      const dateObj = new Date();
+      const day = String(dateObj.getDate()).padStart(2, "0");
+      const today = `${dateObj.getMonth() + 1}/${day}/${dateObj.getFullYear()}`;
       for (const student of d.payload) {
         data.push({
           name: `${student.firstName} ${student.lastName}`,
           id: student.studentID,
-          checkedIn: student.onBus,
+          checkedIn: student.checkInTimes.includes(today),
           note: ""
         });
       }
