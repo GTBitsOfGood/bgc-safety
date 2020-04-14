@@ -1,8 +1,8 @@
 import Cors from "cors";
-import urls from "../../utils/urls";
+// import urls from "../../utils/urls";
 
 const cors = Cors({
-  origin: urls.baseUrl
+  origin: true
 });
 
 const useCors = (req, res) => {
