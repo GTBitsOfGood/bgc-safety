@@ -124,12 +124,12 @@ const Roster = () => {
   const classes = useStyles();
   const { route } = router.query;
   const [students, setStudents] = React.useState([]);
-  
+
 
   const submitAttendance = async (index) => {
     // show modal
     const res = await fetch(
-      `http://localhost:3000/api/checkIn`, {
+      `/api/checkIn`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -309,7 +309,7 @@ const Roster = () => {
     let data = [];
 
     const res1 = await fetch(
-      `http://localhost:3000/api/school?schoolName=${schoolName}`
+      `/api/school?schoolName=${schoolName}`
     );
     const d = await res1.json();
 

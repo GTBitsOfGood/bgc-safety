@@ -180,7 +180,7 @@ Roster.defaultProps = {
 
 Roster.getInitialProps = async () => {
   const res = await fetch(
-    `http://localhost:3000/api/club?ClubName=${ClubName}`
+    `/api/club?ClubName=${ClubName}`
   );
   const schools_data = await res.json();
   let schools_list = [];
@@ -196,7 +196,7 @@ Roster.getInitialProps = async () => {
 
   for (const s of schools_list) {
     const res1 = await fetch(
-      `http://localhost:3000/api/attendance?schoolName=${s}`
+      `/api/attendance?schoolName=${s}`
     );
     const d = await res1.json();
 

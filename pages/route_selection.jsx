@@ -73,7 +73,7 @@ const RouteSelection = ({ schools }) => {
 
 RouteSelection.getInitialProps = async () => {
   const res = await fetch(
-    `http://localhost:3000/api/club?ClubName=${ClubName}`
+    `/api/club?ClubName=${ClubName}`
   );
   const schools_data = await res.json();
   let schools_list = [];
