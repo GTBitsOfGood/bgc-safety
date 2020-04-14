@@ -107,8 +107,6 @@ function deleteClub(req, res) {
 function getSchoolsForClub(req, res) {
   const { ClubName } = req.query;
 
-  console.log(ClubName);
-
   Club.find({ClubName}, {SchoolNames : 1})
   .then(SchoolNames =>
     res.status(200).json({

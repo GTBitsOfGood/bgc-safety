@@ -2,9 +2,12 @@
 import bcrypt from "bcryptjs";
 import mongoDB from "../../server/mongodb/index";
 import User from "../../server/mongodb/models/User";
+import useCors from "./corsMiddleware";
 
 export default async (req, res) => {
   await mongoDB();
+
+  await useCors(req, res);
 
   const { method } = req;
 
