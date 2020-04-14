@@ -1,6 +1,5 @@
 import React from "react";
 import axios from "axios";
-import PropTypes from "prop-types";
 import Router from "next/router";
 import { Button, Typography, InputBase } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
@@ -49,7 +48,7 @@ const LoginField = withStyles({
   }
 })(InputBase);
 
-const Login = props => {
+const Login = () => {
   const [error, setError] = React.useState(null);
   const [username, setUsername] = React.useState(null);
   const [password, setPassword] = React.useState(null);
@@ -57,7 +56,7 @@ const Login = props => {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    const url = props.apiUrl;
+    const url = "/api/login";
 
     try {
       fetch(url, {
@@ -124,20 +123,6 @@ const Login = props => {
       </Button>
     </div>
   );
-};
-
-Login.getInitialProps = ({ req }) => {
-  const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
-
-  const apiUrl = process.browser
-    ? `${protocol}://${window.location.host}/api/login`
-    : `${protocol}://${req.headers.host}/api/login`;
-
-  return { apiUrl };
-};
-
-Login.propTypes = {
-  apiUrl: PropTypes.string.isRequired
 };
 
 export default Login;

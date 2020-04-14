@@ -6,7 +6,7 @@ export default async (req, res) => {
   await mongoDB();
 
   const { method } = req;
-  
+
   if (method === "GET" && req.query.club) {
     getStudentAttendanceTodayByClub(req, res);
   } else if (method === "GET" && req.query.school) {
@@ -125,9 +125,6 @@ function getStudentAttendanceTodayByClub(req, res) {
 function getStudentAttendanceTimeRange(req, res) {
   const { studentID, startDate, endDate } = req.query;
 
-  Student.find({ studentID }, { checkInTimes: 1 })
-    .then(student =>
-      res.status(200).json({
   Student.find(
     {
       studentID
@@ -136,7 +133,7 @@ function getStudentAttendanceTimeRange(req, res) {
       checkInTimes: 1
     }
   )
-    .then(checkInTimes =>
+    .then(student =>
       res.status(200).send({
         success: true,
         payload: filterTimes(
