@@ -1,7 +1,8 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Button, Typography, InputBase } from "@material-ui/core";
+import { Button, ButtonGroup, Fab, Typography, InputBase } from "@material-ui/core";
 import EditIcon from '@material-ui/icons/Edit';
+import AddIcon from '@material-ui/icons/Add';
 
 import Link from "next/link";
 import ModalComponent from "../client/components/modal";
@@ -90,6 +91,9 @@ const useStyles = makeStyles(() => ({
   input: {
     margin: "25px",
     padding: "10px"
+  },
+  routeTabs: {
+    display: "flex",
   }
 }));
 
@@ -97,39 +101,63 @@ const BusRoutes = () => {
   const classes = useStyles();
   let routeName = "Bus Route Example 1";
 
+  const [routes, setRoutes] = React.useState([
+    {
+        name: "route 1"
+    },
+    {
+        name: "route 2"
+    }
+  ]);
+  const [selectedRoute, setSelectedRoute] = React.useState(routes[0]);
+
+  const addRoute = () => {
+    setRoutes(routes => routes.concat({name: "New Route"}));
+  };
+
   return (
-    <div className={classes.container}>
-      <div className={classes.pagehead}>
-        <div className={classes.routeNameContainer}>
-          <div id="route-name" contentEditable="true">
-            Bus Route Example 1
+    <div>
+      <div className={classes.container}>
+        <div className={classes.pagehead}>
+          <div className={classes.routeNameContainer}>
+            <div id="route-name" contentEditable="true">
+              {selectedRoute.name}
+            </div>
+            <EditIcon className={classes.icon} />
           </div>
-          <EditIcon className={classes.icon} />
+
+          <div className={classes.btnContainer}>
+            <Button className={classes.btn}>Add New Student</Button>
+            <Button className={classes.btn}>Save Changes</Button>
+          </div>
         </div>
 
-        <div className={classes.btnContainer}>
-          <Button className={classes.btn}>Add New Student</Button>
-          <Button className={classes.btn}>Save Changes</Button>
-        </div>
+        <table className={classes.table}>
+          <thead
+            style={{ backgroundColor: "#E0E0E0", width: "calc( 100% - 1em )" }}
+          >
+            <tr className={classes.tr}>
+              <th className={classes.th}>Student Name</th>
+              <th className={classes.th}>School </th>
+              <th className={classes.th}>Grade </th>
+              <th className={classes.th}>Contact </th>
+              <th className={classes.th}>Emergency </th>
+            </tr>
+          </thead>
+
+          <tbody className={classes.tbody}>
+            {/* place holder to fill students in with map */}
+          </tbody>
+        </table>
       </div>
-
-      <table className={classes.table}>
-        <thead
-          style={{ backgroundColor: "#E0E0E0", width: "calc( 100% - 1em )" }}
-        >
-          <tr className={classes.tr}>
-            <th className={classes.th}>Student Name</th>
-            <th className={classes.th}>School </th>
-            <th className={classes.th}>Grade </th>
-            <th className={classes.th}>Contact </th>
-            <th className={classes.th}>Emergency </th>
-          </tr>
-        </thead>
-
-        <tbody className={classes.tbody}>
-          {/* place holder to fill students in with map */}
-        </tbody>
-      </table>
+      <div className={classes.routeTabs}>
+        <ButtonGroup size="large" variant="contained" color="primary" style={{margin: 10}}>
+            {routes.map(route => <Button onClick={() => setSelectedRoute(route)}>{route.name}</Button>)}
+        </ButtonGroup>
+        <Fab style={{margin: 10}} color="primary" aria-label="add" onClick={addRoute}>
+            <AddIcon />
+        </Fab>
+      </div>
     </div>
   );
 };

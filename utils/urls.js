@@ -16,8 +16,8 @@ export default {
     history: "/history",
     route_selection: "/route_selection",
     bus_checkin_roster: "/bus_checkin_roster",
-    bus_routes: "/bus_routes",
-    login: "/login"
+    login: "/login",
+    bus_routes: "/bus_routes"
   },
   api: {
     example: "/api/example",
