@@ -30,6 +30,10 @@ const routes = [
     link: urls.pages.bus_checkin_roster
   },
   {
+    name: "Bus Routes",
+    link: urls.pages.bus_routes
+  },
+  {
     name: "Login",
     link: urls.pages.login
   }
