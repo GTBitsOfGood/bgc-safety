@@ -1,12 +1,8 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Button, ButtonGroup, Fab, Typography, InputBase } from "@material-ui/core";
+import { Button, ButtonGroup, Fab, Dialog, DialogTitle, DialogContent, DialogActions } from "@material-ui/core";
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
-
-import Link from "next/link";
-import ModalComponent from "../client/components/modal";
-import urls from "../utils/urls";
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -74,26 +70,25 @@ const useStyles = makeStyles(() => ({
       backgroundColor: "#efefef"
     }
   },
-  ModalComponent: {
-    position: "absolute",
-    width: "500px",
-    height: "300px",
-    backgroundColor: "#fff",
-    left: "50%",
-    marginLeft: "-250px",
-    top: "50%",
-    marginTop: "-150px",
-    display: "flex",
-    flexFlow: "column wrap",
-    textAlign: "center",
-    justifyContent: "space-around"
-  },
   input: {
     margin: "25px",
     padding: "10px"
   },
   routeTabs: {
     display: "flex",
+  },
+  label: {
+    fontSize: "16px",
+    fontWeight: "bold",
+  },
+  textField: {
+    border: "none",
+    backgroundColor: "#efefef",
+    display: "inline-block",
+    minHeight: "24px",
+    padding: "2px 8px",
+    margin: "10px",
+    fontSize: "14px"
   }
 }));
 
@@ -110,9 +105,19 @@ const BusRoutes = () => {
     }
   ]);
   const [selectedRoute, setSelectedRoute] = React.useState(routes[0]);
+  const [modalOpen, setModalOpen] = React.useState(false);
 
   const addRoute = () => {
-    setRoutes(routes => routes.concat({name: "New Route"}));
+    setModalOpen(true);
+  };
+
+  const handleCreate = () => {
+    setRoutes(routes.concat({name: "New Route"}));
+    setModalOpen(false);
+  };
+
+  const handleClose = () => {
+    setModalOpen(false);
   };
 
   return (
@@ -152,11 +157,41 @@ const BusRoutes = () => {
       </div>
       <div className={classes.routeTabs}>
         <ButtonGroup size="large" variant="contained" color="primary" style={{margin: 10}}>
-            {routes.map(route => <Button onClick={() => setSelectedRoute(route)}>{route.name}</Button>)}
+          {routes.map(route => <Button onClick={() => setSelectedRoute(route)}>{route.name}</Button>)}
         </ButtonGroup>
-        <Fab style={{margin: 10}} color="primary" aria-label="add" onClick={addRoute}>
-            <AddIcon />
+        <Fab style={{margin: 10}} color="primary" onClick={addRoute}>
+          <AddIcon />
         </Fab>
+          <Dialog
+              style={{padding: 10, margin: 10, minWidth: 600}}
+              open={modalOpen}
+              onClose={handleClose}
+          >
+            <div style={{textAlign: "right", padding: 5, marginRight: 5}} onClick={handleClose}>x</div>
+            <DialogTitle style={{fontSize: 18}}>Creating New Bus Route</DialogTitle>
+            <DialogContent>
+              <div>
+                <label className={classes.label}>Bus Route Name:</label>
+                <input className={classes.textField} placeholder="Type name here..." />
+              </div>
+              <div>
+                <label className={classes.label}>Upload Student Data (.csv):</label>
+                <Button
+                  className={classes.textField}
+                  variant="contained"
+                  color="secondary"
+                  size="small"
+                >
+                  Select File
+                </Button>
+              </div>
+            </DialogContent>
+            <DialogActions>
+              <Button style={{margin: 5}} variant="contained" color="primary" size="large" onClick={handleCreate}>
+                Create
+              </Button>
+            </DialogActions>
+          </Dialog>
       </div>
     </div>
   );
