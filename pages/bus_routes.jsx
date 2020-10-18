@@ -1,8 +1,18 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Button, ButtonGroup, Fab, Dialog, DialogTitle, DialogContent, DialogActions } from "@material-ui/core";
-import EditIcon from '@material-ui/icons/Edit';
-import AddIcon from '@material-ui/icons/Add';
+import {
+  Button,
+  ButtonGroup,
+  Fab,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField
+} from "@material-ui/core";
+import EditIcon from "@material-ui/icons/Edit";
+import AddIcon from "@material-ui/icons/Add";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -17,9 +27,21 @@ const useStyles = makeStyles(() => ({
     alignItems: "center",
     justifyContent: "center"
   },
+  routeName: {
+    fontSize: "30px",
+    fontWeight: "bold",
+    color: "black"
+  },
   icon: {
     color: "#B3B8BA",
     padding: "0px 0px 0px 25px"
+  },
+  checkIcon: {
+    color: "#3fd95b",
+    padding: "0px 0px 0px 25px"
+  },
+  hideIcon: {
+    display: "none"
   },
   btn: {
     textDecoration: "none",
@@ -75,11 +97,11 @@ const useStyles = makeStyles(() => ({
     padding: "10px"
   },
   routeTabs: {
-    display: "flex",
+    display: "flex"
   },
   label: {
     fontSize: "16px",
-    fontWeight: "bold",
+    fontWeight: "bold"
   },
   textField: {
     border: "none",
@@ -94,17 +116,17 @@ const useStyles = makeStyles(() => ({
 
 const BusRoutes = () => {
   const classes = useStyles();
-  let routeName = "Bus Route Example 1";
-
   const [routes, setRoutes] = React.useState([
     {
-        name: "route 1"
+      name: "route 1"
     },
     {
-        name: "route 2"
+      name: "route 2"
     }
   ]);
   const [selectedRoute, setSelectedRoute] = React.useState(routes[0]);
+  const [tempRoute, setTempRoute] = React.useState(routes[0].name);
+  const [routeEditable, setEditable] = React.useState(false);
   const [modalOpen, setModalOpen] = React.useState(false);
 
   const addRoute = () => {
@@ -112,7 +134,7 @@ const BusRoutes = () => {
   };
 
   const handleCreate = () => {
-    setRoutes(routes.concat({name: "New Route"}));
+    setRoutes(routes.concat({ name: "New Route" }));
     setModalOpen(false);
   };
 
@@ -120,15 +142,46 @@ const BusRoutes = () => {
     setModalOpen(false);
   };
 
+  const handleNameChange = (event) => {
+    setTempRoute(event.target.value);
+  };
+
+  const updateName = (name) => {
+    setTempRoute(name);
+  };
+
+  const updateRouteName = (name) => {
+    selectedRoute.name = name;
+  }
+
   return (
     <div>
       <div className={classes.container}>
         <div className={classes.pagehead}>
           <div className={classes.routeNameContainer}>
-            <div id="route-name" contentEditable="true">
-              {selectedRoute.name}
-            </div>
-            <EditIcon className={classes.icon} />
+            <TextField
+              id="route-name"
+              value={tempRoute}
+              disabled={!routeEditable}
+              onChange={handleNameChange}
+              InputProps={{ className: classes.routeName }}
+            />
+            <EditIcon
+              className={routeEditable ? classes.hideIcon : classes.editIcon}
+              onClick={() => {
+                setEditable(true);
+                setTempRoute(selectedRoute.name);
+                document.getElementById("route-name").focus();
+                document.getElementById("route-name").select();
+              }}
+            />
+            <CheckCircleIcon
+              className={routeEditable ? classes.checkIcon : classes.hideIcon}
+              onClick={() => {
+                setEditable(false);
+                updateRouteName(tempRoute);
+              }}
+            />
           </div>
 
           <div className={classes.btnContainer}>
@@ -156,42 +209,73 @@ const BusRoutes = () => {
         </table>
       </div>
       <div className={classes.routeTabs}>
-        <ButtonGroup size="large" variant="contained" color="primary" style={{margin: 10}}>
-          {routes.map(route => <Button onClick={() => setSelectedRoute(route)}>{route.name}</Button>)}
+        <ButtonGroup
+          size="large"
+          variant="contained"
+          color="primary"
+          style={{ margin: 10 }}
+        >
+          {routes.map(route => (
+            <Button onClick={() => {
+              setSelectedRoute(route);
+              updateName(route.name);
+              }}
+            >
+              {route.name}
+            </Button>
+          ))}
         </ButtonGroup>
-        <Fab style={{margin: 10}} color="primary" onClick={addRoute}>
+        <Fab style={{ margin: 10 }} color="primary" onClick={addRoute}>
           <AddIcon />
         </Fab>
-          <Dialog
-              style={{padding: 10, margin: 10, minWidth: 600}}
-              open={modalOpen}
-              onClose={handleClose}
+        <Dialog
+          style={{ padding: 10, margin: 10, minWidth: 600 }}
+          open={modalOpen}
+          onClose={handleClose}
+        >
+          <div
+            style={{ textAlign: "right", padding: 5, marginRight: 5 }}
+            onClick={handleClose}
           >
-            <div style={{textAlign: "right", padding: 5, marginRight: 5}} onClick={handleClose}>x</div>
-            <DialogTitle style={{fontSize: 18}}>Creating New Bus Route</DialogTitle>
-            <DialogContent>
-              <div>
-                <label className={classes.label}>Bus Route Name:</label>
-                <input className={classes.textField} placeholder="Type name here..." />
-              </div>
-              <div>
-                <label className={classes.label}>Upload Student Data (.csv):</label>
-                <Button
-                  className={classes.textField}
-                  variant="contained"
-                  color="secondary"
-                  size="small"
-                >
-                  Select File
-                </Button>
-              </div>
-            </DialogContent>
-            <DialogActions>
-              <Button style={{margin: 5}} variant="contained" color="primary" size="large" onClick={handleCreate}>
-                Create
+            x
+          </div>
+          <DialogTitle style={{ fontSize: 18 }}>
+            Creating New Bus Route
+          </DialogTitle>
+          <DialogContent>
+            <div>
+              <label className={classes.label}>Bus Route Name:</label>
+              <input
+                className={classes.textField}
+                placeholder="Type name here..."
+              />
+            </div>
+            <div>
+              <label className={classes.label}>
+                Upload Student Data (.csv):
+              </label>
+              <Button
+                className={classes.textField}
+                variant="contained"
+                color="secondary"
+                size="small"
+              >
+                Select File
               </Button>
-            </DialogActions>
-          </Dialog>
+            </div>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              style={{ margin: 5 }}
+              variant="contained"
+              color="primary"
+              size="large"
+              onClick={handleCreate}
+            >
+              Create
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     </div>
   );
