@@ -1,6 +1,7 @@
 /* eslint-disable no-use-before-define */
 import mongoDB from "../../server/mongodb/index";
 import Student from "../../server/mongodb/models/Student";
+import { getStudentsByRoute } from "../../server/mongodb/actions/Student";
 import useCors from "./corsMiddleware";
 
 export default async (req, res) => {
@@ -18,6 +19,8 @@ export default async (req, res) => {
     deleteStudent(req, res);
   } else if (method === "GET" && req.query.school) {
     getStudentsOnBus(req, res);
+  } else if (method === "GET" && req.query.route) {
+    getStudentsForRoute(req, res);
   } else if (method === "GET") {
     getAllStudents(req, res);
   } else {
@@ -163,4 +166,20 @@ function getStudentsOnBus(req, res) {
         message: err
       });
     });
+}
+
+function getStudentsForRoute(req, res) {
+  const { route } = req.query;
+
+  getStudentsByRoute(route).then(students => {
+    res.status(200).send({
+        success: true,
+        payload: students
+    });
+  }).catch(err => {
+    res.status(400).send({
+        success: false,
+        message: err.message
+    });
+  });
 }

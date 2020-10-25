@@ -20,6 +20,11 @@ const StudentSchema = new Schema({
     type: String,
     required: true
   },
+  route: {
+    type: Schema.Types.ObjectID,
+    ref: 'Route',
+    required: false
+  },
   grade: {
     type: String,
     required: true
