@@ -1,7 +1,7 @@
 /* eslint-disable no-use-before-define */
 import mongoDB from "../../server/mongodb/index";
 import Student from "../../server/mongodb/models/Student";
-import { getStudentsByRoute } from "../../server/mongodb/actions/Student";
+import { updateStudentRoute, getStudentsByRoute } from "../../server/mongodb/actions/Student";
 import useCors from "./corsMiddleware";
 
 export default async (req, res) => {
@@ -13,6 +13,8 @@ export default async (req, res) => {
 
   if (method === "POST") {
     createStudent(req, res);
+  } else if (method === "PATCH" && req.query.route) {
+    changeStudentRoute(req, res);
   } else if (method === "PATCH") {
     updateStudent(req, res);
   } else if (method === "DELETE") {
@@ -111,6 +113,22 @@ function updateStudent(req, res) {
         message: err
       })
     );
+}
+
+function changeStudentRoute(req, res) {
+  const { id, route } = req.query;
+
+  updateStudentRoute(id, route).then(student => {
+    res.status(200).send({
+        success: true,
+        payload: student
+    });
+  }).catch(err => {
+    res.status(400).send({
+        success: false,
+        payload: err.message
+    });
+  });
 }
 
 function deleteStudent(req, res) {
