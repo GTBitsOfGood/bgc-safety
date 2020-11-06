@@ -133,8 +133,8 @@ const BusRoutes = () => {
     setModalOpen(true);
   };
 
-  const handleCreate = () => {
-    setRoutes(routes.concat({ name: "New Route" }));
+  const handleCreate = (routeName) => {
+    setRoutes(routes.concat({ name: routeName }));
     setModalOpen(false);
   };
 
@@ -153,6 +153,8 @@ const BusRoutes = () => {
   const updateRouteName = (name) => {
     selectedRoute.name = name;
   }
+
+  let modalName = "";
 
   return (
     <div>
@@ -246,6 +248,7 @@ const BusRoutes = () => {
             <div>
               <label className={classes.label}>Bus Route Name:</label>
               <input
+                id="ModalName"
                 className={classes.textField}
                 placeholder="Type name here..."
               />
@@ -270,7 +273,10 @@ const BusRoutes = () => {
               variant="contained"
               color="primary"
               size="large"
-              onClick={handleCreate}
+              onClick={() => {
+                modalName = document.getElementById("ModalName").value;
+                handleCreate(modalName);
+              }}
             >
               Create
             </Button>
