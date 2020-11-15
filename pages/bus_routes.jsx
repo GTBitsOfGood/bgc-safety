@@ -13,6 +13,9 @@ import {
 import EditIcon from "@material-ui/icons/Edit";
 import AddIcon from "@material-ui/icons/Add";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import urls from "../utils/urls";
+
+const fetch = require("node-fetch");
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -111,48 +114,88 @@ const useStyles = makeStyles(() => ({
     padding: "2px 8px",
     margin: "10px",
     fontSize: "14px"
+  },
+  error: {
+    fontSize: "12px",
+    color: "red"
   }
 }));
 
-const BusRoutes = () => {
+const BusRoutes = ({ savedRoutes }) => {
   const classes = useStyles();
-  const [routes, setRoutes] = React.useState([
-    {
-      name: "route 1"
-    },
-    {
-      name: "route 2"
-    }
-  ]);
+  const [routes, setRoutes] = React.useState(savedRoutes);
   const [selectedRoute, setSelectedRoute] = React.useState(routes[0]);
-  const [tempRoute, setTempRoute] = React.useState(routes[0].name);
+  const [editedRoute, setEditedRoute] = React.useState(routes[0].name);
   const [routeEditable, setEditable] = React.useState(false);
   const [modalOpen, setModalOpen] = React.useState(false);
+
+  const [routeNameError, setRouteNameError] = React.useState(false);
+  const [newRouteError, setNewRouteError] = React.useState(false);
+  const [editNameError, setEditNameError] = React.useState(false);
 
   const addRoute = () => {
     setModalOpen(true);
   };
 
-  const handleCreate = (routeName) => {
-    setRoutes(routes.concat({ name: routeName }));
-    setModalOpen(false);
+  const handleCreate = async (name) => {
+    if (name === "") {
+      setRouteNameError(true);
+    } else {
+      setRouteNameError(false);
+      const body = { name };
+      const res = await fetch(`${urls.baseUrl}/api/routes`, {
+        method: "post",
+        body: JSON.stringify(body),
+        headers: {'Content-Type': 'application/json'}
+      });
+      // console.log(res);
+      const routes_data = await res.json();
+      if (routes_data.success && routes_data.payload) {
+        setRoutes(routes.concat(routes_data.payload));
+        setModalOpen(false);
+      } else {
+        setNewRouteError(true)
+      }
+    }
   };
 
   const handleClose = () => {
+    setNewRouteError(false);
+    setRouteNameError(false);
     setModalOpen(false);
   };
 
   const handleNameChange = (event) => {
-    setTempRoute(event.target.value);
+    setEditedRoute(event.target.value);
   };
 
   const updateName = (name) => {
-    setTempRoute(name);
+      setEditedRoute(name);
   };
 
-  const updateRouteName = (name) => {
-    selectedRoute.name = name;
-  }
+  const updateRouteName = async (name) => {
+    const body = {
+      id: selectedRoute._id,
+      name,
+    };
+
+    const res = await fetch(`${urls.baseUrl}/api/routes`, {
+      method: "put",
+      body: JSON.stringify(body),
+      headers: {'Content-Type': 'application/json'}
+    });
+
+    const route_data = await res.json();
+    console.log(route_data);
+    if (route_data.success) {
+      setEditNameError(false);
+      setSelectedRoute(route_data.payload);
+      // update the routes list without making another API call
+      setRoutes(routes.map(route => route._id === body.id ? route_data.payload : route));
+    } else {
+      setEditNameError(true);
+    }
+  };
 
   let modalName = "";
 
@@ -161,18 +204,21 @@ const BusRoutes = () => {
       <div className={classes.container}>
         <div className={classes.pagehead}>
           <div className={classes.routeNameContainer}>
-            <TextField
-              id="route-name"
-              value={tempRoute}
-              disabled={!routeEditable}
-              onChange={handleNameChange}
-              InputProps={{ className: classes.routeName }}
-            />
+            <div>
+              <TextField
+                id="route-name"
+                value={editedRoute}
+                disabled={!routeEditable}
+                onChange={handleNameChange}
+                InputProps={{ className: classes.routeName }}
+              />
+              <div hidden={!editNameError} className={classes.error}>Sorry, an error occurred. Couldn't update route name.</div>
+            </div>
             <EditIcon
               className={routeEditable ? classes.hideIcon : classes.editIcon}
               onClick={() => {
                 setEditable(true);
-                setTempRoute(selectedRoute.name);
+                setEditedRoute(selectedRoute.name);
                 document.getElementById("route-name").focus();
                 document.getElementById("route-name").select();
               }}
@@ -181,7 +227,7 @@ const BusRoutes = () => {
               className={routeEditable ? classes.checkIcon : classes.hideIcon}
               onClick={() => {
                 setEditable(false);
-                updateRouteName(tempRoute);
+                updateRouteName(editedRoute);
               }}
             />
           </div>
@@ -236,7 +282,7 @@ const BusRoutes = () => {
           onClose={handleClose}
         >
           <div
-            style={{ textAlign: "right", padding: 5, marginRight: 5 }}
+            style={{ textAlign: "right", padding: 5, marginRight: 5, cursor: "pointer" }}
             onClick={handleClose}
           >
             x
@@ -251,7 +297,9 @@ const BusRoutes = () => {
                 id="ModalName"
                 className={classes.textField}
                 placeholder="Type name here..."
+                required
               />
+              <div hidden={!routeNameError} className={classes.error}>Name cannot be blank.</div>
             </div>
             <div>
               <label className={classes.label}>
@@ -267,6 +315,7 @@ const BusRoutes = () => {
               </Button>
             </div>
           </DialogContent>
+          <div hidden={!newRouteError} className={classes.error}>Sorry, an error occurred. Cannot create new route.</div>
           <DialogActions>
             <Button
               style={{ margin: 5 }}
@@ -285,6 +334,18 @@ const BusRoutes = () => {
       </div>
     </div>
   );
+};
+
+BusRoutes.getInitialProps = async () => {
+    const res = await fetch(
+        `${urls.baseUrl}/api/routes`
+    );
+    let routes_data = await res.json();
+    if (routes_data.success) {
+      return {savedRoutes: routes_data.payload};
+    } else {
+      return {savedRoutes: []};
+    }
 };
 
 export default BusRoutes;
