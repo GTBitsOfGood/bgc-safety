@@ -131,32 +131,47 @@ function Roster({ schools }) {
                     buttonStyle={classes.button}
                   >
                     <form className={classes.content} onSubmit={handleSubmit}>
-                      <h1>Manual Data Entry</h1>
-                      <input
-                        id="firstName"
-                        name="firstName"
-                        type="text"
-                        placeholder="First Name"
-                        value={firstName}
-                        onChange={e => setFirstName(e.target.value)}
-                      />
-                      <input
-                        id="lastName"
-                        type="text"
-                        placeholder="Last Name"
-                        value={lastName}
-                        onChange={e => setLastName(e.target.value)}
-                      />
-                      <input
-                        id="school"
-                        type="text"
-                        placeholder="School/Pickup Location"
-                        value={studentSchool}
-                        onChange={e => setStudentSchool(e.target.value)}
-                      />
-                      <button type="submit" className="btn btn-success">
-                        Add Student
-                      </button>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          backgroundColor: "white",
+                          maxWidth: "300px",
+                          position: "fixed",
+                          top: "50%",
+                          left: "50%",
+                          transform: "translate(-50%, -50%)",
+                          padding: "5%",
+                          justifyContent: "flex-start"
+                        }}
+                      >
+                        <h1>Manual Data Entry</h1>
+                        <input
+                          id="firstName"
+                          name="firstName"
+                          type="text"
+                          placeholder="First Name"
+                          value={firstName}
+                          onChange={e => setFirstName(e.target.value)}
+                        />
+                        <input
+                          id="lastName"
+                          type="text"
+                          placeholder="Last Name"
+                          value={lastName}
+                          onChange={e => setLastName(e.target.value)}
+                        />
+                        <input
+                          id="school"
+                          type="text"
+                          placeholder="School/Pickup Location"
+                          value={studentSchool}
+                          onChange={e => setStudentSchool(e.target.value)}
+                        />
+                        <button type="submit" className="btn btn-success">
+                          Add Student
+                        </button>
+                      </div>
                     </form>
                   </ModalComponent>
                 </tr>
