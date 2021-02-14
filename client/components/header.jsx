@@ -14,8 +14,11 @@ import MenuIcon from "@material-ui/icons/Menu";
 import { makeStyles } from "@material-ui/core/styles";
 
 import routes from "../../utils/routes";
+import Axios from "axios";
+import { Route } from 'react-router-dom';
 
-const getDate = () => {
+const getDate = () => 
+{
   const today = new Date();
   const months = [
     "January",
@@ -71,6 +74,9 @@ const Header = props => {
   const [selected, setSelected] = React.useState(defaultSelected);
   const open = Boolean(anchorEl);
 
+  const [currentUser, setCurrentUser] = React.useState(null);
+
+
   router &&
     router.events &&
     router.events.on("routeChangeComplete", url => {
@@ -88,6 +94,20 @@ const Header = props => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  // get endpoint here
+  const useEffect = () => {
+    setCurrentUser(Axios.get('/api/user'))
+
+    if(currentUser.type == "Admin"){
+      routes.filter(type == "Admin" && type == "All")
+    } else if (currentUser.type == "BusDriver"){
+      routes.filter(type == "BusDriver" && type == "All")
+    } else if (currentUser.type == "ClubDirector"){
+      routes.filter(type == "ClubDirector" && type == "All")
+    } 
+  }
+
 
   return (
     router.pathname !== "/login" &&
@@ -118,11 +138,16 @@ const Header = props => {
             open={open}
             onClose={handleClose}
           >
+            
+            
+            
             {routes.map(route => (
               <MenuItem onClick={handleClose}>
                 <Link href={route.link}>{route.name}</Link>
-              </MenuItem>
+              </MenuItem>  
             ))}
+
+
             <MenuItem onClick={handleClose}>My account</MenuItem>
           </Menu>
           <Typography variant="h6" className={classes.title}>
@@ -133,6 +158,8 @@ const Header = props => {
     )
   );
 };
+
+
 
 Header.propTypes = {
   defaultSelected: PropTypes.string.isRequired,

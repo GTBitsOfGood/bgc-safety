@@ -46,6 +46,17 @@ function createUser(req, res) {
     );
 }
 
+function getUser(req, res) {
+  const reqUser = req.user
+  
+  const user = await User.findById(reqUser._id)
+
+
+  return res.send(user)
+    
+
+}
+
 function deleteUser(req, res) {
   const { email } = req.params;
 
