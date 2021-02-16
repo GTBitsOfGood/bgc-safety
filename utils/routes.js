@@ -36,6 +36,10 @@ const routes = [
   {
     name: "Login",
     link: urls.pages.login
+  },
+  {
+    name: "Account Creation",
+    link: urls.pages.account_creation
   }
 ];
 
