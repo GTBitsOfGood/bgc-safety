@@ -4,7 +4,6 @@ const routes = [
   {
     name: "Home",
     link: urls.pages.index, 
-    page: '/',
     type: "All" 
   },
   {
