@@ -6,6 +6,11 @@ import User from "../models/User";
 export async function login(email, password) {
   await mongoDB();
 
+  bcrpyt.hash(password, 10, function(err, hash) {
+    console.log(password,hash)
+  }); 
+
+
   return new Promise((resolve, reject) => {
     User.findOne({
       username: email

@@ -5,7 +5,7 @@ const routes = [
     name: "Home",
     link: urls.pages.index, 
     page: '/',
-    type: "all" 
+    type: "All" 
   },
   {
     name: "SSR",
@@ -15,37 +15,37 @@ const routes = [
   {
     name: "Upload CSV",
     link: urls.pages.csv_upload,
-    type: "admin"
+    type: "Admin"
   },
   {
     name: "Roster",
     link: urls.pages.roster,
-    type: "clubDirector"
+    type: "ClubDirector"
   },
   {
     name: "History",
     link: urls.pages.history,
-    type: "clubDirector"
+    type: "ClubDirector"
   },
   {
     name: "Route Selection",
     link: urls.pages.route_selection,
-    type: "busDriver"
+    type: "BusDriver"
   },
   {
     name: "Bus Checkin",
     link: urls.pages.bus_checkin_roster,
-    type: "busDriver"
+    type: "BusDriver"
   },
   {
     name: "Bus Routes",
     link: urls.pages.bus_routes,
-    type: "clubDirector"
+    type: "ClubDirector"
   },
   {
     name: "Login",
     link: urls.pages.login,
-    type: "all"
+    type: "All"
   }
 ];
 
