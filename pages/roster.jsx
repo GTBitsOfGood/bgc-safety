@@ -3,9 +3,12 @@ import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import modalStyles from "../client/components/Modal.module.css";
+import TextField from '@material-ui/core/TextField';
 import styles from "./roster.module.css";
 import ModalComponent from "../client/components/modal";
 import urls from "../utils/urls";
+
 
 const fetch = require("node-fetch");
 
@@ -53,6 +56,28 @@ const useStyles = makeStyles(theme => ({
   students: {
     height: "45px",
     overflow: "hidden"
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    backgroundColor: "white",
+    width: "25%",
+    position: "fixed",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    padding: "2%",
+    justifyContent: "center"
+  },
+  formHeading: {
+    textAlign: "center",
+    paddingBottom: "20px"
+  },
+  formButton: {
+    height: "3em"
+  },
+  formInput: {
+    paddingBottom: "10px"
   }
 }));
 
@@ -74,7 +99,7 @@ function Roster({ schools }) {
   const [studentSchool, setStudentSchool] = React.useState("");
 
   const handleSubmit = () => {
-    setStudent({ firstName, lastName, school });
+    setStudent({ firstName, lastName, studentSchool });
     // add to database
   };
 
@@ -122,56 +147,52 @@ function Roster({ schools }) {
                 <tr>
                   <ModalComponent
                     setStudent={setStudent}
-                    button={
+                    button={(
                       <>
                         Manually Add Entry
                         <AddCircleIcon className={classes.icon} />
                       </>
-                    }
+                    )}
                     buttonStyle={classes.button}
                   >
-                    <form className={classes.content} onSubmit={handleSubmit}>
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          backgroundColor: "white",
-                          maxWidth: "300px",
-                          position: "fixed",
-                          top: "50%",
-                          left: "50%",
-                          transform: "translate(-50%, -50%)",
-                          padding: "5%",
-                          justifyContent: "flex-start"
-                        }}
+                    <form className={classes.form} onSubmit={handleSubmit}>
+                      <h1 className={classes.formHeading}>
+                        Manually Add Entry
+                      </h1>
+                      <TextField
+                        className={classes.formInput}
+                        id="firstName"
+                        name="firstName"
+                        type="text"
+                        label="First Name"
+                        value={firstName}
+                        variant="filled"
+                        onChange={e => setFirstName(e.target.value)}
+                      />
+                      <TextField
+                        className={classes.formInput}
+                        id="lastName"
+                        type="text"
+                        label="Last Name"
+                        value={lastName}
+                        variant="filled"
+                        onChange={e => setLastName(e.target.value)}
+                      />
+                      <TextField
+                        className={classes.formInput}
+                        id="school"
+                        type="text"
+                        label="School/Pickup Location"
+                        value={studentSchool}
+                        variant="filled"
+                        onChange={e => setStudentSchool(e.target.value)}
+                      />
+                      <button
+                        type="submit"
+                        className={`btn btn-success ${classes.formButton}`}
                       >
-                        <h1>Manual Data Entry</h1>
-                        <input
-                          id="firstName"
-                          name="firstName"
-                          type="text"
-                          placeholder="First Name"
-                          value={firstName}
-                          onChange={e => setFirstName(e.target.value)}
-                        />
-                        <input
-                          id="lastName"
-                          type="text"
-                          placeholder="Last Name"
-                          value={lastName}
-                          onChange={e => setLastName(e.target.value)}
-                        />
-                        <input
-                          id="school"
-                          type="text"
-                          placeholder="School/Pickup Location"
-                          value={studentSchool}
-                          onChange={e => setStudentSchool(e.target.value)}
-                        />
-                        <button type="submit" className="btn btn-success">
-                          Add Student
-                        </button>
-                      </div>
+                        Add Student
+                      </button>
                     </form>
                   </ModalComponent>
                 </tr>
