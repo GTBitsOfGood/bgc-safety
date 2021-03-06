@@ -24,13 +24,13 @@ const HomePage = () => {
 
     // Testing to see current user
     // const getUser = async () => {
-    //   // const currentUser = await Axios.get('/api/user')
-    //   const currentUser = {
-    //     BGCMA_email: "sahya",
-    //     password: '$2a$10$/NYjx/SvECs8YZEYfS4HMOkfZvrYcO5hqERWOyYAEka5vTsgQOZgS',
-    //     type: "BusDriver",
-    //     club: "All"
-    //   }
+    //   const currentUser = await Axios.get('/api/user')
+    //   // const currentUser = {
+    //   //   BGCMA_email: "sahya",
+    //   //   password: '$2a$10$/NYjx/SvECs8YZEYfS4HMOkfZvrYcO5hqERWOyYAEka5vTsgQOZgS',
+    //   //   type: "BusDriver",
+    //   //   club: "All"
+    //   // }
     //   console.log(currentUser)
     // }
     // getUser();

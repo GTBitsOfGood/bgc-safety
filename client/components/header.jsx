@@ -73,13 +73,16 @@ const Header = props => {
   const [selected, setSelected] = React.useState(defaultSelected);
   const open = Boolean(anchorEl);
   // const [currentUser, setCurrentUser] = React.useState(null);
-  const currentUser = {
-        BGCMA_email: "sahya",
-        password: '$2a$10$/NYjx/SvECs8YZEYfS4HMOkfZvrYcO5hqERWOyYAEka5vTsgQOZgS',
-        type: "BusDriver",
-        club: "All"
-      };
 
+  // Hard coded user test worked
+  // const currentUser = {
+  //       BGCMA_email: "sahya",
+  //       password: '$2a$10$/NYjx/SvECs8YZEYfS4HMOkfZvrYcO5hqERWOyYAEka5vTsgQOZgS',
+  //       type: "BusDriver",
+  //       club: "All"
+  //     };
+  
+  const currentUser = Axios.get('/api/user') //this is the call to the backend
   // console.log(currentUser);
   let filteredRoutes = [];
   // const [filteredRoutes, setFilteredRoutes] = React.useState([]);
@@ -111,7 +114,7 @@ const Header = props => {
     } else if (currentUser.type == "BusDriver"){
       filteredRoutes = routes.filter(item => item.type == "BusDriver" || item.type == "All")
     } else if (currentUser.type == "ClubDirector"){
-      console.log("here")
+      // console.log("here")
       filteredRoutes = routes.filter(item => item.type == "ClubDirectorAttendanceClerk" || item.type == "All")
       // filteredRoutes = setFilteredRoutes(routes.filter(item => item.type == "ClubDirectorAttendanceClerk" || item.type == "All"))
       // console.log(routes.filter(item => item.type == "ClubDirectorAttendanceClerk" || item.type == "All"))
@@ -122,7 +125,7 @@ const Header = props => {
       filteredRoutes = routes.filter(item => item.type == "All")
     }
 
-    console.log(filteredRoutes)
+    // console.log(filteredRoutes)
 
     // setFilteredRoutes(filteredRoutes)
 
@@ -183,40 +186,5 @@ Header.propTypes = {
     pathname: PropTypes.string
   }).isRequired
 };
-
-// get endpoint here
-// This function gets called at build time
-// export async function getStaticPaths() {
-
-//   console.log("here")
-
-//   // const currentUser = await Axios.get('/api/user')
-
-//   const currentUser = {
-//     BGCMA_email: "sahya",
-//     password: '$2a$10$/NYjx/SvECs8YZEYfS4HMOkfZvrYcO5hqERWOyYAEka5vTsgQOZgS',
-//     type: "ClubDirector",
-//     club: "All"
-//   }
-
-
-//   if(currentUser.type == "Admin"){
-//     newRoutes = routes.filter(item => item.type == "Admin" && item.type == "All")
-//   } else if (currentUser.type == "BusDriver"){
-//     newRoutes = routes.filter(item => item.type == "BusDriver" && item.type == "All")
-//   } else if (currentUser.type == "ClubDirector"){
-//     console.log("here")
-//     newRoutes = routes.filter(item => item.type == "ClubDirectorAttendanceClerk" && item.type == "All")
-//   } else if (currentUser.type == "AttendanceClerk") {
-//     newRoutes = routes.filter(item => item.type == "ClubDirectorAttendanceClerk" && item.type == "All")
-//   } else {
-//     newRoutes = routes.filter(item => item.type == "All")
-//   }
-
-//   console.log(newRoutes)
-
-//   return {filteredRoutes: newRoutes}
-
-// }
 
 export default withRouter(Header);
