@@ -76,7 +76,7 @@ const Header = props => {
   const currentUser = {
         BGCMA_email: "sahya",
         password: '$2a$10$/NYjx/SvECs8YZEYfS4HMOkfZvrYcO5hqERWOyYAEka5vTsgQOZgS',
-        type: "ClubDirector",
+        type: "BusDriver",
         club: "All"
       };
 
@@ -122,7 +122,7 @@ const Header = props => {
       filteredRoutes = routes.filter(item => item.type == "All")
     }
 
-    // console.log(filteredRoutes)
+    console.log(filteredRoutes)
 
     // setFilteredRoutes(filteredRoutes)
 
