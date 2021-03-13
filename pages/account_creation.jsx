@@ -1,5 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import { spacing } from "@material-ui/system";
+import Box from "@material-ui/core/Box";
 import {
   Button,
   TextField,
@@ -17,6 +19,9 @@ import urls from "../utils/urls";
 const fetch = require("node-fetch");
 
 const useStyles = makeStyles(theme => ({
+  pageTitle: {
+    padding: "15px"
+  },
   container: {
     display: "flex",
     flexDirection: "column",
@@ -26,7 +31,8 @@ const useStyles = makeStyles(theme => ({
   userTypes: {
     display: "flex",
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
+    padding: "10px"
   },
   Button: {
     padding: "10px"
@@ -54,6 +60,7 @@ const AccountCreation = () => {
   const [location, setLocation] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [selectText, setSelectText] = React.useState("Assigned Bus Routes");
 
   const handleOpen = () => {
     setOpen(true);
@@ -81,37 +88,58 @@ const AccountCreation = () => {
 
   return (
     <div className={classes.container}>
-      <h1>Create an account</h1>
+      <h1 className={classes.pageTitle}>Create an account</h1>
       <p>Select account type for user*</p>
       <div className={classes.userTypes}>
-        <Button
-          variant={type !== "Administrator" ? "outlined" : "contained"}
-          color="primary"
-          onClick={() => setType("Administrator")}
-        >
-          Administrator
-        </Button>
-        <Button
-          variant={type !== "Bus Driver" ? "outlined" : "contained"}
-          color="primary"
-          onClick={() => setType("Bus Driver")}
-        >
-          Bus Driver
-        </Button>
-        <Button
-          variant={type !== "Executive Director" ? "outlined" : "contained"}
-          color="primary"
-          onClick={() => setType("Executive Director")}
-        >
-          Executive Director
-        </Button>
-        <Button
-          variant={type !== "Regional Director" ? "outlined" : "contained"}
-          color="primary"
-          onClick={() => setType("Regional Director")}
-        >
-          Regional Director
-        </Button>
+        <Box m={1}>
+          <Button
+            variant={type !== "Administrator" ? "outlined" : "contained"}
+            color="primary"
+            onClick={() => {
+              setType("Administrator");
+              setSelectText("Assigned Bus Routes");
+            }}
+            p={10}
+          >
+            Administrator
+          </Button>
+        </Box>
+        <Box m={1}>
+          <Button
+            variant={type !== "Bus Driver" ? "outlined" : "contained"}
+            color="primary"
+            onClick={() => {
+              setType("Bus Driver");
+              setSelectText("Assigned Bus Routes");
+            }}
+          >
+            Bus Driver
+          </Button>
+        </Box>
+        <Box m={1}>
+          <Button
+            variant={type !== "Executive Director" ? "outlined" : "contained"}
+            color="primary"
+            onClick={() => {
+              setType("Executive Director");
+              setSelectText("Club");
+            }}
+          >
+            Executive Director
+          </Button>
+        </Box>
+        <Box m={1}>
+          <Button
+            variant={type !== "Regional Director" ? "outlined" : "contained"}
+            color="primary"
+            onClick={() => {
+              setType("Regional Director");
+              setSelectText("Region");
+            }}
+          >
+            Regional Director
+          </Button>
+        </Box>
       </div>
       <div className={classes.textFields}>
         <div className={classes.row1}>
@@ -121,6 +149,7 @@ const AccountCreation = () => {
             label="First name"
             defaultValue=" "
             onChange={handleFirstNameChange}
+            style={{ margin: 10 }}
           />
           <TextField
             required
@@ -128,6 +157,7 @@ const AccountCreation = () => {
             label="Last name"
             defaultValue=" "
             onChange={handleLastNameChange}
+            style={{ margin: 10 }}
           />
         </div>
         <TextField
@@ -136,6 +166,7 @@ const AccountCreation = () => {
           label="Location"
           defaultValue=" "
           onChange={handleLocationChange}
+          style={{ margin: 10, width: 300 }}
         />
         <div className={classes.row3}>
           <TextField
@@ -144,6 +175,7 @@ const AccountCreation = () => {
             label="Email address"
             defaultValue=" "
             onChange={handleEmailChange}
+            style={{ margin: 10 }}
           />
           <TextField
             required
@@ -151,9 +183,12 @@ const AccountCreation = () => {
             label="Password"
             defaultValue=" "
             onChange={handlePasswordChange}
+            style={{ margin: 10 }}
           />
-          <InputLabel shrink>Assigned Bus Routes</InputLabel>
-          <Select>
+          <InputLabel shrink style={{ margin: 10 }}>
+            {selectText}
+          </InputLabel>
+          <Select style={{ margin: 10 }}>
             <MenuItem>Bus Route 1</MenuItem>
             <MenuItem>Bus Route 2</MenuItem>
             <MenuItem>Bus Route 3</MenuItem>
@@ -161,9 +196,11 @@ const AccountCreation = () => {
         </div>
       </div>
       <div>
-        <Button onClick={handleOpen} variant="contained" color="primary">
-          Create Account
-        </Button>
+        <Box m={1}>
+          <Button onClick={handleOpen} variant="contained" color="primary">
+            Create Account
+          </Button>
+        </Box>
 
         <Modal
           aria-labelledby="transition-modal-title"
