@@ -14,6 +14,8 @@ import MenuIcon from "@material-ui/icons/Menu";
 import { makeStyles } from "@material-ui/core/styles";
 
 import routes from "../../utils/routes";
+import Axios from "axios";
+// import { Route } from 'react-router-dom';
 
 const getDate = () => {
   const today = new Date();
@@ -70,6 +72,22 @@ const Header = props => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selected, setSelected] = React.useState(defaultSelected);
   const open = Boolean(anchorEl);
+  // const [currentUser, setCurrentUser] = React.useState(null);
+
+  // Hard coded user test worked
+  // const currentUser = {
+  //       BGCMA_email: "sahya",
+  //       password: '$2a$10$/NYjx/SvECs8YZEYfS4HMOkfZvrYcO5hqERWOyYAEka5vTsgQOZgS',
+  //       type: "BusDriver",
+  //       club: "All"
+  //     };
+  
+  const currentUser = Axios.get('/api/user') //this is the call to the backend
+  // console.log(currentUser);
+  let filteredRoutes = [];
+  // const [filteredRoutes, setFilteredRoutes] = React.useState([]);
+
+
 
   router &&
     router.events &&
@@ -88,6 +106,30 @@ const Header = props => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const filterRoutes = (currentUser) => {
+    // console.log("here")
+    if(currentUser.type == "Admin"){
+      filteredRoutes = routes.filter(item => item.type == "Admin" || item.type == "All")
+    } else if (currentUser.type == "BusDriver"){
+      filteredRoutes = routes.filter(item => item.type == "BusDriver" || item.type == "All")
+    } else if (currentUser.type == "ClubDirector"){
+      // console.log("here")
+      filteredRoutes = routes.filter(item => item.type == "ClubDirectorAttendanceClerk" || item.type == "All")
+      // filteredRoutes = setFilteredRoutes(routes.filter(item => item.type == "ClubDirectorAttendanceClerk" || item.type == "All"))
+      // console.log(routes.filter(item => item.type == "ClubDirectorAttendanceClerk" || item.type == "All"))
+      // filteredRoutes = routes.filter(item => item.type == "ClubDirectorAttendanceClerk" && item.type == "All")
+    } else if (currentUser.type == "AttendanceClerk") {
+      filteredRoutes = routes.filter(item => item.type == "ClubDirectorAttendanceClerk"|| item.type == "All")
+    } else {
+      filteredRoutes = routes.filter(item => item.type == "All")
+    }
+
+    // console.log(filteredRoutes)
+
+    // setFilteredRoutes(filteredRoutes)
+
+  }
 
   return (
     router.pathname !== "/login" &&
@@ -118,11 +160,14 @@ const Header = props => {
             open={open}
             onClose={handleClose}
           >
-            {routes.map(route => (
-              <MenuItem onClick={handleClose}>
+            {filterRoutes(currentUser)}
+            {/* {console.log(filteredRoutes)} */}
+            {filteredRoutes.map((route, index) => (
+              <MenuItem onClick={handleClose} key={index}>
                 <Link href={route.link}>{route.name}</Link>
               </MenuItem>
             ))}
+
             <MenuItem onClick={handleClose}>My account</MenuItem>
           </Menu>
           <Typography variant="h6" className={classes.title}>

@@ -15,6 +15,8 @@ export default async (req, res) => {
     createUser(req, res);
   } else if (method === "DELETE") {
     deleteUser(req, res);
+  } else if (method === "GET") {
+    getUser(req, res);
   } else {
     res.setHeader("Allow", "POST");
     res.status(405).end(`Method ${method} Not Allowed`);
@@ -44,6 +46,14 @@ function createUser(req, res) {
         message: error
       })
     );
+}
+
+function getUser(req, res) {
+  console.log(req)
+  // const reqUser = req.user
+  // console.log(reqUser)
+  // const user = await User.findById(reqUser._id)
+  // return res.send(user)
 }
 
 function deleteUser(req, res) {
