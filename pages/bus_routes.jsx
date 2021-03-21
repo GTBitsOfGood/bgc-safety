@@ -126,7 +126,7 @@ const BusRoutes = ({ savedRoutes }) => {
   const classes = useStyles();
   const [routes, setRoutes] = React.useState(savedRoutes);
   const [selectedRoute, setSelectedRoute] = React.useState(routes[0]);
-  const [editedRoute, setEditedRoute] = React.useState(routes[0].name);
+  const [editedRoute, setEditedRoute] = React.useState(routes.length > 0 ? routes[0].name : "");
   const [routeEditable, setEditable] = React.useState(false);
   const [modalOpen, setModalOpen] = React.useState(false);
 
@@ -240,7 +240,7 @@ const BusRoutes = ({ savedRoutes }) => {
 
           <div className={classes.btnContainer}>
             <Button className={classes.btn} onClick={addStudent}>Add New Student</Button>
-            <Button className={classes.btn} onClick={changeStudentRoute()}>Save Changes</Button>
+            <Button className={classes.btn} >Save Changes</Button>
           </div>
         </div>
 
@@ -346,7 +346,12 @@ BusRoutes.getInitialProps = async () => {
     const res = await fetch(
         `${urls.baseUrl}/api/routes`
     );
-    let routes_data = await res.json();
+    console.log(res)
+    let routes_data = {};
+    if(res){
+      let routes_data = res;
+    }
+    
     if (routes_data.success) {
       return {savedRoutes: routes_data.payload};
     } else {
