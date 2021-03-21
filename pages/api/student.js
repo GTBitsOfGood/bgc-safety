@@ -167,6 +167,27 @@ function getAllStudents(req, res) {
     });
 }
 
+function getStudentsByName(req, res) {
+  const { first, last } = req.query;
+
+  Student.findOne({
+    firstName: first,
+    lastName: last
+  })
+    .then(students => {
+      res.status(200).send({
+        success: true,
+        payload: students
+      });
+    })
+    .catch(err => {
+      res.status(400).send({
+        success: false,
+        message: err
+      });
+    });
+}
+
 function getStudentsOnBus(req, res) {
   const { school } = req.query;
 

@@ -156,6 +156,7 @@ function Roster({ schools }) {
                       />
                       <button type="submit" className="btn btn-success">
                         Add Student
+
                       </button>
                     </form>
                   </ModalComponent>

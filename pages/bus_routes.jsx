@@ -14,6 +14,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import AddIcon from "@material-ui/icons/Add";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import urls from "../utils/urls";
+// import {getStudentsByName, changeStudentRoute} from "../pages/api/student";
 
 const fetch = require("node-fetch");
 
@@ -137,6 +138,11 @@ const BusRoutes = ({ savedRoutes }) => {
     setModalOpen(true);
   };
 
+  const addStudent = () => {
+    setModalOpen(true);
+  };
+
+
   const handleCreate = async (name) => {
     if (name === "") {
       setRouteNameError(true);
@@ -233,8 +239,8 @@ const BusRoutes = ({ savedRoutes }) => {
           </div>
 
           <div className={classes.btnContainer}>
-            <Button className={classes.btn}>Add New Student</Button>
-            <Button className={classes.btn}>Save Changes</Button>
+            <Button className={classes.btn} onClick={addStudent}>Add New Student</Button>
+            <Button className={classes.btn} onClick={changeStudentRoute()}>Save Changes</Button>
           </div>
         </div>
 
