@@ -34,7 +34,7 @@ const StudentSchema = new Schema({
     required: true
   },
   notes: {
-    type: String
+    type: []
   },
   picture: {
     type: String

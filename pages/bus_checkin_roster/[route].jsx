@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import ModalComponent from "../../client/components/modal";
 import urls from "../../utils/urls";
+const axios = require("axios");
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -144,11 +145,16 @@ const Roster = () => {
     const d = await res.json();
   };
 
-  const submitNote = (index, note) => {
+  const submitNote = (index, StudentNote) => {
     setStudents(
       students.map((student, i) => {
-        if (index == i) {
-          return { name: student.name, id: student.id, checkedIn: true, note };
+        if (index === i) {
+          return {
+            name: student.name,
+            id: student.id,
+            checkedIn: true,
+            note: StudentNote
+          };
         }
         return student;
       })
@@ -159,7 +165,12 @@ const Roster = () => {
     setStudents(
       students.map((student, i) => {
         if (index == i) {
-          return { name: student.name, id: student.id, checkedIn: true, note: "" };
+          return {
+            name: student.name,
+            id: student.id,
+            checkedIn: true,
+            note: student.note
+          };
         }
         return student;
       })
@@ -233,7 +244,7 @@ const Roster = () => {
         className={classes.ModalContent}
         onSubmit={() => {
           submitNote(props.index, studentNote);
-          setStudentNote("");
+          // setStudentNote("");
         }}
       >
         <h1 style={{ margin: "0" }}>Add/Edit Note</h1>
@@ -323,7 +334,7 @@ const Roster = () => {
           name: `${student.firstName} ${student.lastName}`,
           id: student.studentID,
           checkedIn: student.checkInTimes.includes(today),
-          note: ""
+          note: student.notes
         });
       }
     }

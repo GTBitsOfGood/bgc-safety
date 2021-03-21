@@ -56,14 +56,15 @@ function checkInStudentsToday(req, res) {
 
 function checkInStudent(req, res) {
   const { id } = req.query;
-  const { time } = req.body;
+  const { time } = req.body.time;
+  const { note } = req.body.note;
 
   Student.findOneAndUpdate(
     {
       studentID: id
     },
     {
-      $push: { checkInTimes: time }
+      $push: { checkInTimes: time, notes: note }
     },
     {
       new: true
