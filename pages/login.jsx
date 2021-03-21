@@ -4,6 +4,8 @@ import Router from "next/router";
 import { Button, Typography, InputBase } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import urls from "../utils/urls";
+import {signIn, signOut, useSession} from "next-auth/client";
+
 
 const useStyles = makeStyles({
   container: {
@@ -53,6 +55,8 @@ const Login = () => {
   const [error, setError] = React.useState(null);
   const [username, setUsername] = React.useState(null);
   const [password, setPassword] = React.useState(null);
+  const [session, loading] = useSession();
+  
   const classes = useStyles();
 
   async function handleSubmit(event) {
@@ -98,7 +102,7 @@ const Login = () => {
       </Typography>
 
       {error && <p className={classes.error}>{error}</p>}
-
+{/* 
       <LoginField
         className={classes.input}
         variant="filled"
@@ -121,7 +125,19 @@ const Login = () => {
         onClick={handleSubmit}
       >
         Log In
-      </Button>
+      </Button> */}
+      {!session && (
+        <>
+        Not signed in <br/>
+        <Button onClick={signIn} className={classes.button} variant="contained">Click to Sign In</Button>
+        </>
+      )}
+      {session && (
+        <>
+        Signed in as {session.user.email} <br/>
+        <Button onClick = {signOut} className={classes.button} variant="contained">Click to Sign Out</Button>
+        </>
+      )}
     </div>
   );
 };

@@ -49,11 +49,11 @@ function createUser(req, res) {
 }
 
 function getUser(req, res) {
-  console.log(req)
+  // console.log(req.query)
   // const reqUser = req.user
   // console.log(reqUser)
   // const user = await User.findById(reqUser._id)
-  // return res.send(user)
+  // return res.send(req) 
 }
 
 function deleteUser(req, res) {

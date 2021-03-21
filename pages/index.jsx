@@ -1,11 +1,12 @@
 // import React from "react";
 import { helloWorld } from "../client/actions/api";
-import Axios from "axios";
+import axios from "axios";
 // import { Login } from '../pages/login.jsx';
 import React, { useEffect } from "react";
 import Router from 'next/router'
 import Link from "next/link";
 import {signIn, signOut, useSession} from "next-auth/client";
+import urls from "../utils/urls";
 
 
 const HomePage = () => {
@@ -18,23 +19,38 @@ const HomePage = () => {
     // });
     const {pathname} = Router
     if(pathname == '/' ){
-       Router.push('/login')
+      // Router.push('/login')
     }
 
 
 
 
     // Testing to see current user
-    // const getUser = async () => {
-    //   const currentUser = await Axios.get('/api/user')
-    //   // const currentUser = {
-    //   //   BGCMA_email: "sahya",
-    //   //   password: '$2a$10$/NYjx/SvECs8YZEYfS4HMOkfZvrYcO5hqERWOyYAEka5vTsgQOZgS',
-    //   //   type: "BusDriver",
-    //   //   club: "All"
-    //   // }
-    //   console.log(currentUser)
-    // }
+    const getUser = async () => {
+      const url =  `/api/user`;
+      if (session) {
+        console.log(session)
+        const currentUser = await fetch(
+          `${urls.baseUrl}/api/user?email=${
+            session.user.email
+          }`
+        );
+        console.log(currentUser)
+
+      }
+
+      
+
+
+    }
+
+    const currentUser = {
+      BGCMA_email: "sahya",
+      password: '$2a$10$/NYjx/SvECs8YZEYfS4HMOkfZvrYcO5hqERWOyYAEka5vTsgQOZgS',
+      type: "BusDriver",
+      club: "All"
+    }
+    
     // getUser();
 
 
