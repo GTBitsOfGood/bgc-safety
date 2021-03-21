@@ -40,6 +40,10 @@ const routes = [
   {
     name: "Account Creation",
     link: urls.pages.account_creation
+  },
+  {
+    name: "Created Accounts",
+    link: urls.pages.created_accounts
   }
 ];
 

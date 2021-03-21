@@ -18,7 +18,8 @@ export default {
     bus_checkin_roster: "/bus_checkin_roster",
     login: "/login",
     bus_routes: "/bus_routes",
-    account_creation: "/account_creation"
+    account_creation: "/account_creation",
+    created_accounts: "/created_accounts"
   },
   api: {
     example: "/api/example",
