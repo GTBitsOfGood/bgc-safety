@@ -135,6 +135,7 @@ const BusRoutes = ({ savedRoutes }) => {
   const [routeNameError, setRouteNameError] = React.useState(false);
   const [newRouteError, setNewRouteError] = React.useState(false);
   const [editNameError, setEditNameError] = React.useState(false);
+  const[studentList, setStudentList] = [];
 
   const addRoute = () => {
     setModalOpen(true);
@@ -167,25 +168,14 @@ const BusRoutes = ({ savedRoutes }) => {
     }
   };
 
-  const handleCreate2 = async (name) => {
-    if (name === "") {
+  const handleCreate2 = async (studentFirstName, studentLastName, studentSchool, studentGrade) => {
+    if (studentFirstName === "") {
       setRouteNameError(true);
     } else {
       setRouteNameError(false);
-      const body = { name };
-      const res = await fetch(`${urls.baseUrl}/api/student`, {
-        method: "patch",
-        body: JSON.stringify(body),
-        headers: {'Content-Type': 'application/json'}
-      });
-      // console.log(res);
-      const student_route = await res.json();
-      if (student_route.success && student_route.payload) {
-        changeStudentRoute(student_route.payload);
-        setModalOpen2(false);
-      } else {
-        setNewRouteError(true)
-      }
+      const body = { studentFirstName, studentLastName, studentSchool, studentGrade };
+      studentList.append(body)
+      setModalOpen2(false);
     }
   };
 
@@ -303,6 +293,57 @@ const BusRoutes = ({ savedRoutes }) => {
                   />
                   <div hidden={!routeNameError} className={classes.error}>Name cannot be blank.</div>
                 </div>
+                <div>
+                  <label className={classes.label}>Student ID:</label>
+                  <input
+                    id="studentID"
+                    className={classes.textField}
+                    placeholder="Type name here..."
+                    required
+                  />
+                  <div hidden={!routeNameError} className={classes.error}>Name cannot be blank.</div>
+                </div>
+                <div>
+                  <label className={classes.label}>School Name:</label>
+                  <input
+                    id="schoolName"
+                    className={classes.textField}
+                    placeholder="Type name here..."
+                    required
+                  />
+                  <div hidden={!routeNameError} className={classes.error}>Name cannot be blank.</div>
+                </div>
+                <div>
+                  <label className={classes.label}>Grade:</label>
+                  <input
+                    id="grade"
+                    className={classes.textField}
+                    placeholder="Type name here..."
+                    required
+                  />
+                  <div hidden={!routeNameError} className={classes.error}>Name cannot be blank.</div>
+                </div>
+                <div>
+                  <label className={classes.label}>Club Name:</label>
+                  <input
+                    id="clubName"
+                    className={classes.textField}
+                    placeholder="Type name here..."
+                    required
+                  />
+                  <div hidden={!routeNameError} className={classes.error}>Name cannot be blank.</div>
+                </div>
+                <div>
+                  <label className={classes.label}>Notes:</label>
+                  <input
+                    id="notes"
+                    className={classes.textField}
+                    placeholder="Type name here..."
+                    required
+                  />
+                  <div hidden={!routeNameError} className={classes.error}>Name cannot be blank.</div>
+                </div>
+               
               </DialogContent>
               <div hidden={!newRouteError} className={classes.error}>Sorry, an error occurred. Cannot create new student in route.</div>
               <DialogActions>
@@ -340,7 +381,12 @@ const BusRoutes = ({ savedRoutes }) => {
           </thead>
 
           <tbody className={classes.tbody}>
-            {/* place holder to fill students in with map */}
+            <tr>
+              <td scope="Student Name">Donuts</td>
+            </tr>
+            <tr>
+              <td scope="School">Donuts</td>
+            </tr>
           </tbody>
         </table>
       </div>
