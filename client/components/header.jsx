@@ -15,6 +15,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import routes from "../../utils/routes";
 import Axios from "axios";
+import {getSession, useSession} from "next-auth/client";
 // import { Route } from 'react-router-dom';
 
 const getDate = () => {
@@ -67,10 +68,68 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Header = props => {
-  const { defaultSelected, router } = props;
+  console.log(props)
+  const { defaultSelected, router, filteredRoutes } = props;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selected, setSelected] = React.useState(defaultSelected);
+  // const [filteredRoutes, setFilteredRoutes] = React.useState([]);
+  const [session, loading] = useSession()
+
+  if (loading || !session) {
+    return null;
+  }
+  
+
+  const filterRoutes = (currentUser) => {
+    fRoutes = []
+    console.log("here", currentUser)
+    if(currentUser.type == "Admin"){
+      fRoutes = routes.filter(item => item.type == "Admin" || item.type == "All")
+    } else if (currentUser.type == "BusDriver"){
+      fRoutes = routes.filter(item => item.type == "BusDriver" || item.type == "All")
+    } else if (currentUser.type == "ClubDirector"){
+      // console.log("here")
+      fRoutes = routes.filter(item => item.type == "ClubDirectorAttendanceClerk" || item.type == "All")
+      // filteredRoutes = setFilteredRoutes(routes.filter(item => item.type == "ClubDirectorAttendanceClerk" || item.type == "All"))
+      // console.log(routes.filter(item => item.type == "ClubDirectorAttendanceClerk" || item.type == "All"))
+      // filteredRoutes = routes.filter(item => item.type == "ClubDirectorAttendanceClerk" && item.type == "All")
+    } else if (currentUser.type == "AttendanceClerk") {
+      fRoutes = routes.filter(item => item.type == "ClubDirectorAttendanceClerk"|| item.type == "All")
+    } else {
+      fRoutes = routes.filter(item => item.type == "All")
+    }
+
+    console.log(fRoutes)
+    return fRoutes
+
+  }  
+  const queryUser = async () => {
+    // Axios.get('/api/user', {params: {
+    //   email: session.user.email
+    // }})
+    // .then(response => {
+    //   currentUser = response.data
+    //   console.log(currentUser);
+    //   // return filterRoutes(currentUser)
+    //   return currentUser
+    // })
+    // .catch(function (error) {
+    //   console.log(error);
+    // })  
+    const res = await fetch(
+      `/api/user?email=${session.user.email}`
+    );
+    return schools_data = await res.json();
+
+  }
+  React.useEffect(() => async () => {
+    console.log("getting here")
+    currentUser = await queryUser()
+    filteredRoutes = filterRoutes(currentUser)
+  })
+  
+
   const open = Boolean(anchorEl);
   // const [currentUser, setCurrentUser] = React.useState(null);
 
@@ -81,12 +140,15 @@ const Header = props => {
   //       type: "BusDriver",
   //       club: "All"
   //     };
+  // const session = getSession()
   
-  const currentUser = Axios.get('/api/user') //this is the call to the backend
-  // console.log(currentUser);
-  let filteredRoutes = [];
-  // const [filteredRoutes, setFilteredRoutes] = React.useState([]);
+  // console.log(session.user.email)
+  // let filteredRoutes = [];
+  
 
+  
+  
+  
 
 
   router &&
@@ -107,29 +169,7 @@ const Header = props => {
     setAnchorEl(null);
   };
 
-  const filterRoutes = (currentUser) => {
-    // console.log("here")
-    if(currentUser.type == "Admin"){
-      filteredRoutes = routes.filter(item => item.type == "Admin" || item.type == "All")
-    } else if (currentUser.type == "BusDriver"){
-      filteredRoutes = routes.filter(item => item.type == "BusDriver" || item.type == "All")
-    } else if (currentUser.type == "ClubDirector"){
-      // console.log("here")
-      filteredRoutes = routes.filter(item => item.type == "ClubDirectorAttendanceClerk" || item.type == "All")
-      // filteredRoutes = setFilteredRoutes(routes.filter(item => item.type == "ClubDirectorAttendanceClerk" || item.type == "All"))
-      // console.log(routes.filter(item => item.type == "ClubDirectorAttendanceClerk" || item.type == "All"))
-      // filteredRoutes = routes.filter(item => item.type == "ClubDirectorAttendanceClerk" && item.type == "All")
-    } else if (currentUser.type == "AttendanceClerk") {
-      filteredRoutes = routes.filter(item => item.type == "ClubDirectorAttendanceClerk"|| item.type == "All")
-    } else {
-      filteredRoutes = routes.filter(item => item.type == "All")
-    }
-
-    // console.log(filteredRoutes)
-
-    // setFilteredRoutes(filteredRoutes)
-
-  }
+  
 
   return (
     router.pathname !== "/login" &&
@@ -160,13 +200,13 @@ const Header = props => {
             open={open}
             onClose={handleClose}
           >
-            {filterRoutes(currentUser)}
-            {/* {console.log(filteredRoutes)} */}
-            {filteredRoutes.map((route, index) => (
+            
+            {console.log("filtered routes when rendered:", filteredRoutes)}
+            {filteredRoutes ? filteredRoutes.map((route, index) => (
               <MenuItem onClick={handleClose} key={index}>
                 <Link href={route.link}>{route.name}</Link>
               </MenuItem>
-            ))}
+            )) : <div/>}
 
             <MenuItem onClick={handleClose}>My account</MenuItem>
           </Menu>
@@ -182,9 +222,31 @@ const Header = props => {
 Header.propTypes = {
   defaultSelected: PropTypes.string.isRequired,
   router: PropTypes.shape({
-    event: PropTypes.shape,
+    event: PropTypes.object,
     pathname: PropTypes.string
-  }).isRequired
+  }).isRequired,
+  // filteredRoutes: PropTypes.arrayOf(PropTypes.object)
 };
+
+Header.defaultProps = {
+  defaultSelected: null,
+  router: null,
+  // filteredRoutes: []
+};
+
+// Header.getInitialProps = async () => {
+//   // let currentUser = {}
+//   // const filteredRoutes = []
+//   console.log("hereeee")
+
+
+//   return {props: {
+//     ...props,
+//     filteredRoutes,
+//   }}
+//   // return {filteredRoutes}
+    
+// };
+
 
 export default withRouter(Header);

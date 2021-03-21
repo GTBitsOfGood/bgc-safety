@@ -56,9 +56,12 @@ const Login = () => {
   const [username, setUsername] = React.useState(null);
   const [password, setPassword] = React.useState(null);
   const [session, loading] = useSession();
-  
-  const classes = useStyles();
 
+  const classes = useStyles();
+  function gotoLanding() {
+    Router.replace("/history");
+  }
+  
   async function handleSubmit(event) {
     event.preventDefault();
     const url =  `${urls.baseUrl}/api/login`;
@@ -136,6 +139,7 @@ const Login = () => {
         <>
         Signed in as {session.user.email} <br/>
         <Button onClick = {signOut} className={classes.button} variant="contained">Click to Sign Out</Button>
+        <Button onClick = {gotoLanding} className={classes.button} variant="contained">Go to Landing page (to happen automatically)</Button>
         </>
       )}
     </div>
