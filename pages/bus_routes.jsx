@@ -129,6 +129,8 @@ const BusRoutes = ({ savedRoutes }) => {
   const [editedRoute, setEditedRoute] = React.useState(routes.length > 0 ? routes[0].name : "");
   const [routeEditable, setEditable] = React.useState(false);
   const [modalOpen, setModalOpen] = React.useState(false);
+  const [modalOpen2, setModalOpen2] = React.useState(false);
+
 
   const [routeNameError, setRouteNameError] = React.useState(false);
   const [newRouteError, setNewRouteError] = React.useState(false);
@@ -139,7 +141,7 @@ const BusRoutes = ({ savedRoutes }) => {
   };
 
   const addStudent = () => {
-    setModalOpen(true);
+    setModalOpen2(true);
   };
 
 
@@ -165,10 +167,36 @@ const BusRoutes = ({ savedRoutes }) => {
     }
   };
 
+  const handleCreate2 = async (name) => {
+    if (name === "") {
+      setRouteNameError(true);
+    } else {
+      setRouteNameError(false);
+      const body = { name };
+      const res = await fetch(`${urls.baseUrl}/api/student`, {
+        method: "patch",
+        body: JSON.stringify(body),
+        headers: {'Content-Type': 'application/json'}
+      });
+      // console.log(res);
+      const student_route = await res.json();
+      if (student_route.success && student_route.payload) {
+        changeStudentRoute(student_route.payload);
+        setModalOpen2(false);
+      } else {
+        setNewRouteError(true)
+      }
+    }
+  };
+
   const handleClose = () => {
     setNewRouteError(false);
     setRouteNameError(false);
     setModalOpen(false);
+  };
+
+  const handleClose2 = () => {
+    setModalOpen2(false);
   };
 
   const handleNameChange = (event) => {
@@ -240,6 +268,60 @@ const BusRoutes = ({ savedRoutes }) => {
 
           <div className={classes.btnContainer}>
             <Button className={classes.btn} onClick={addStudent}>Add New Student</Button>
+            <Dialog
+              style={{ padding: 10, margin: 10, minWidth: 600 }}
+              open={modalOpen2}
+              onClose={handleClose2}
+            >
+              <div
+                style={{ textAlign: "right", padding: 5, marginRight: 5, cursor: "pointer" }}
+                onClick={handleClose}
+              >
+                x
+              </div>
+              <DialogTitle style={{ fontSize: 18 }}>
+                Adding New Student to the Route
+              </DialogTitle>
+              <DialogContent>
+                <div>
+                  <label className={classes.label}>Student First Name:</label>
+                  <input
+                    id="FirstName"
+                    className={classes.textField}
+                    placeholder="Type name here..."
+                    required
+                  />
+                  <div hidden={!routeNameError} className={classes.error}>Name cannot be blank.</div>
+                </div>
+                <div>
+                  <label className={classes.label}>Student Last Name:</label>
+                  <input
+                    id="LastName"
+                    className={classes.textField}
+                    placeholder="Type name here..."
+                    required
+                  />
+                  <div hidden={!routeNameError} className={classes.error}>Name cannot be blank.</div>
+                </div>
+              </DialogContent>
+              <div hidden={!newRouteError} className={classes.error}>Sorry, an error occurred. Cannot create new student in route.</div>
+              <DialogActions>
+                <Button
+                  style={{ margin: 5 }}
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  onClick={() => {
+                    let studentName= document.getElementById("FirstName").value;
+                    handleCreate2(studentName);
+                  }}
+                >
+                  Create
+                </Button>
+              </DialogActions>
+            </Dialog>
+
+
             <Button className={classes.btn} >Save Changes</Button>
           </div>
         </div>

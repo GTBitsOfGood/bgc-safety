@@ -117,7 +117,7 @@ function updateStudent(req, res) {
 
 function changeStudentRoute(req, res) {
   const { id, route } = req.query;
-
+  console.log("here")
   updateStudentRoute(id, route).then(student => {
     res.status(200).send({
         success: true,
