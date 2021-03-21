@@ -135,7 +135,8 @@ const BusRoutes = ({ savedRoutes }) => {
   const [routeNameError, setRouteNameError] = React.useState(false);
   const [newRouteError, setNewRouteError] = React.useState(false);
   const [editNameError, setEditNameError] = React.useState(false);
-  const[studentList, setStudentList] = [];
+  
+  const [studentList, setStudentList] = React.useState([]);
 
   const addRoute = () => {
     setModalOpen(true);
@@ -173,8 +174,10 @@ const BusRoutes = ({ savedRoutes }) => {
       setRouteNameError(true);
     } else {
       setRouteNameError(false);
-      const body = { studentFirstName, studentLastName, studentSchool, studentGrade };
-      studentList.append(body)
+      console.log("here")
+      const body = { firstName: studentFirstName, lastName: studentLastName, school: studentSchool, grade: studentGrade };
+      setStudentList([...studentList, body]);
+      console.log(studentList);
       setModalOpen2(false);
     }
   };
@@ -210,7 +213,7 @@ const BusRoutes = ({ savedRoutes }) => {
     });
 
     const route_data = await res.json();
-    console.log(route_data);
+    
     if (route_data.success) {
       setEditNameError(false);
       setSelectedRoute(route_data.payload);
@@ -353,8 +356,15 @@ const BusRoutes = ({ savedRoutes }) => {
                   color="primary"
                   size="large"
                   onClick={() => {
-                    let studentName= document.getElementById("FirstName").value;
-                    handleCreate2(studentName);
+                    let studentFirstName= document.getElementById("FirstName").value;
+                    let studentLastName= document.getElementById("LastName").value;
+                    let studentId = document.getElementById("studentID").value;
+                    let grade = document.getElementById("grade").value;
+                    let school = document.getElementById("schoolName").value;
+                    let club = document.getElementById("clubName").value;
+                    let notes = document.getElementById("notes").value;
+
+                    handleCreate2(studentFirstName, studentLastName, school, grade);
                   }}
                 >
                   Create
@@ -366,7 +376,8 @@ const BusRoutes = ({ savedRoutes }) => {
             <Button className={classes.btn} >Save Changes</Button>
           </div>
         </div>
-
+        
+        
         <table className={classes.table}>
           <thead
             style={{ backgroundColor: "#E0E0E0", width: "calc( 100% - 1em )" }}
@@ -381,12 +392,16 @@ const BusRoutes = ({ savedRoutes }) => {
           </thead>
 
           <tbody className={classes.tbody}>
-            <tr>
-              <td scope="Student Name">Donuts</td>
+          
+            <tr className={classes.tr}>
+              <td scope="col">Donuts</td>
+              <td scope="col">Dheeraj</td>
+              <td scope="col">Donuts</td>
+              <td scope="col">Dheeraj</td>
+              <td scope="col">Donuts</td>
             </tr>
-            <tr>
-              <td scope="School">Donuts</td>
-            </tr>
+
+
           </tbody>
         </table>
       </div>
