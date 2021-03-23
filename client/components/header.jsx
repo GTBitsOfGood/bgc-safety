@@ -68,7 +68,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Header = props => {
-  console.log(props)
+  console.log("rendering")
+  // console.log(props)
   const { defaultSelected, router, filteredRoutes } = props;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -76,14 +77,10 @@ const Header = props => {
   // const [filteredRoutes, setFilteredRoutes] = React.useState([]);
   const [session, loading] = useSession()
 
-  if (loading || !session) {
-    return null;
-  }
-  
 
   const filterRoutes = (currentUser) => {
     fRoutes = []
-    console.log("here", currentUser)
+    // console.log("here", currentUser)
     if(currentUser.type == "Admin"){
       fRoutes = routes.filter(item => item.type == "Admin" || item.type == "All")
     } else if (currentUser.type == "BusDriver"){
@@ -100,34 +97,18 @@ const Header = props => {
       fRoutes = routes.filter(item => item.type == "All")
     }
 
-    console.log(fRoutes)
+    // console.log(fRoutes)
     return fRoutes
 
   }  
   const queryUser = async () => {
-    // Axios.get('/api/user', {params: {
-    //   email: session.user.email
-    // }})
-    // .then(response => {
-    //   currentUser = response.data
-    //   console.log(currentUser);
-    //   // return filterRoutes(currentUser)
-    //   return currentUser
-    // })
-    // .catch(function (error) {
-    //   console.log(error);
-    // })  
     const res = await fetch(
       `/api/user?email=${session.user.email}`
     );
     return schools_data = await res.json();
-
   }
-  React.useEffect(() => async () => {
-    console.log("getting here")
-    currentUser = await queryUser()
-    filteredRoutes = filterRoutes(currentUser)
-  })
+  
+  
   
 
   const open = Boolean(anchorEl);
@@ -144,12 +125,6 @@ const Header = props => {
   
   // console.log(session.user.email)
   // let filteredRoutes = [];
-  
-
-  
-  
-  
-
 
   router &&
     router.events &&
@@ -169,7 +144,19 @@ const Header = props => {
     setAnchorEl(null);
   };
 
+  React.useEffect(() => async () => {
+    if (!loading && session) {
+      console.log("getting here")
+      currentUser = await queryUser()
+      filteredRoutes = filterRoutes(currentUser)
+    }
+  })
   
+  if (loading || !session) {
+    console.log(loading)
+    console.log(session)
+    return null;
+  }
 
   return (
     router.pathname !== "/login" &&
