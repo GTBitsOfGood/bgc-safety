@@ -159,7 +159,8 @@ const BusRoutes = ({ savedRoutes }) => {
         headers: {'Content-Type': 'application/json'}
       });
       // console.log(res);
-      const routes_data = await res.json();
+      const routes_data = await res.json;
+      
       if (routes_data.success && routes_data.payload) {
         setRoutes(routes.concat(routes_data.payload));
         setModalOpen(false);
@@ -176,11 +177,47 @@ const BusRoutes = ({ savedRoutes }) => {
       setRouteNameError(false);
       console.log("here")
       const body = { firstName: studentFirstName, lastName: studentLastName, school: studentSchool, grade: studentGrade };
+      console.log(body);
       setStudentList([...studentList, body]);
       console.log(studentList);
       setModalOpen2(false);
     }
   };
+
+  const handleCreate3 = async (studentID) => {
+    if (studentID === "") {
+      setRouteNameError(true);
+    } else {
+      setRouteNameError(false);
+      console.log("here")
+      changeStudentRoute(studentID, selectedRoute._id)
+    }
+  };
+
+
+  // function TableCreate(props) {
+  //   const tableDisplay = (  
+  //       {props.entries.map((entry) =>
+  //         <tr className={classes.tr}>
+  //           <td scope="col">{entry.firstName + entry.lastName}</td>
+  //           <td scope="col">{entry.school}</td>
+  //           <td scope="col">{entry.grade}</td>
+  //           <td scope="col">None</td>
+  //           <td scope="col">None</td>
+  //         </tr>
+  //       )}
+  //   );
+    
+  //   render() {
+  //     return (
+  //       <tbody className={classes.tbody}>
+  //         {tableDisplay}
+  //       </tbody>
+  
+  //     )
+  //   };
+    
+  // }
 
   const handleClose = () => {
     setNewRouteError(false);
@@ -373,7 +410,12 @@ const BusRoutes = ({ savedRoutes }) => {
             </Dialog>
 
 
-            <Button className={classes.btn} >Save Changes</Button>
+            <Button className={classes.btn}
+                    onClick={() => {
+                      let studentId = document.getElementById("studentID").value;
+                      handleCreate3(studentId);}}>
+                        Save Changes
+            </Button>
           </div>
         </div>
         
@@ -390,9 +432,10 @@ const BusRoutes = ({ savedRoutes }) => {
               <th className={classes.th}>Emergency </th>
             </tr>
           </thead>
-
-          <tbody className={classes.tbody}>
           
+          
+          {/* <tbody className={classes.tbody}>
+                                
             <tr className={classes.tr}>
               <td scope="col">Donuts</td>
               <td scope="col">Dheeraj</td>
@@ -402,7 +445,7 @@ const BusRoutes = ({ savedRoutes }) => {
             </tr>
 
 
-          </tbody>
+          </tbody> */}
         </table>
       </div>
       <div className={classes.routeTabs}>
