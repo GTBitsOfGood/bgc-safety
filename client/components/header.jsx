@@ -69,35 +69,28 @@ const useStyles = makeStyles(theme => ({
 
 const Header = props => {
   console.log("rendering")
-  // console.log(props)
-  const { defaultSelected, router, filteredRoutes } = props;
+  const { defaultSelected, router } = props;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selected, setSelected] = React.useState(defaultSelected);
-  // const [filteredRoutes, setFilteredRoutes] = React.useState([]);
+  const [filteredRoutes, setFilteredRoutes] = React.useState([]);
   const [session, loading] = useSession()
 
 
   const filterRoutes = (currentUser) => {
-    fRoutes = []
-    // console.log("here", currentUser)
+    let fRoutes = []
     if(currentUser.type == "Admin"){
       fRoutes = routes.filter(item => item.type == "Admin" || item.type == "All")
     } else if (currentUser.type == "BusDriver"){
       fRoutes = routes.filter(item => item.type == "BusDriver" || item.type == "All")
     } else if (currentUser.type == "ClubDirector"){
-      // console.log("here")
       fRoutes = routes.filter(item => item.type == "ClubDirectorAttendanceClerk" || item.type == "All")
-      // filteredRoutes = setFilteredRoutes(routes.filter(item => item.type == "ClubDirectorAttendanceClerk" || item.type == "All"))
-      // console.log(routes.filter(item => item.type == "ClubDirectorAttendanceClerk" || item.type == "All"))
-      // filteredRoutes = routes.filter(item => item.type == "ClubDirectorAttendanceClerk" && item.type == "All")
     } else if (currentUser.type == "AttendanceClerk") {
       fRoutes = routes.filter(item => item.type == "ClubDirectorAttendanceClerk"|| item.type == "All")
     } else {
       fRoutes = routes.filter(item => item.type == "All")
     }
 
-    // console.log(fRoutes)
     return fRoutes
 
   }  
@@ -105,26 +98,14 @@ const Header = props => {
     const res = await fetch(
       `/api/user?email=${session.user.email}`
     );
-    return schools_data = await res.json();
+    return await res.json();
   }
   
   
   
 
   const open = Boolean(anchorEl);
-  // const [currentUser, setCurrentUser] = React.useState(null);
-
-  // Hard coded user test worked
-  // const currentUser = {
-  //       BGCMA_email: "sahya",
-  //       password: '$2a$10$/NYjx/SvECs8YZEYfS4HMOkfZvrYcO5hqERWOyYAEka5vTsgQOZgS',
-  //       type: "BusDriver",
-  //       club: "All"
-  //     };
-  // const session = getSession()
   
-  // console.log(session.user.email)
-  // let filteredRoutes = [];
 
   router &&
     router.events &&
@@ -145,16 +126,15 @@ const Header = props => {
   };
 
   React.useEffect(() => async () => {
-    if (!loading && session) {
-      console.log("getting here")
-      currentUser = await queryUser()
-      filteredRoutes = filterRoutes(currentUser)
+    if (!loading && session && filteredRoutes.length == 0) {
+      let currentUser = await queryUser()
+      setFilteredRoutes(filterRoutes(currentUser))
     }
   })
   
   if (loading || !session) {
-    console.log(loading)
-    console.log(session)
+    // console.log(loading)
+    // console.log(session)
     return null;
   }
 
@@ -188,7 +168,6 @@ const Header = props => {
             onClose={handleClose}
           >
             
-            {console.log("filtered routes when rendered:", filteredRoutes)}
             {filteredRoutes ? filteredRoutes.map((route, index) => (
               <MenuItem onClick={handleClose} key={index}>
                 <Link href={route.link}>{route.name}</Link>
@@ -212,28 +191,11 @@ Header.propTypes = {
     event: PropTypes.object,
     pathname: PropTypes.string
   }).isRequired,
-  // filteredRoutes: PropTypes.arrayOf(PropTypes.object)
 };
 
 Header.defaultProps = {
   defaultSelected: null,
   router: null,
-  // filteredRoutes: []
 };
-
-// Header.getInitialProps = async () => {
-//   // let currentUser = {}
-//   // const filteredRoutes = []
-//   console.log("hereeee")
-
-
-//   return {props: {
-//     ...props,
-//     filteredRoutes,
-//   }}
-//   // return {filteredRoutes}
-    
-// };
-
 
 export default withRouter(Header);
