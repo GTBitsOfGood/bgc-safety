@@ -19,7 +19,7 @@ const HomePage = () => {
     // });
     const {pathname} = Router
     if(pathname == '/' ){
-      // Router.push('/login')
+      Router.push('/login')
     }
 
 
