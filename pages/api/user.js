@@ -10,7 +10,6 @@ export default async (req, res) => {
   await useCors(req, res);
 
   const { method } = req;
-
   if (method === "POST") {
     createUser(req, res);
   } else if (method === "DELETE") {
@@ -18,7 +17,7 @@ export default async (req, res) => {
   } else if (method === "GET") {
     getUser(req, res);
   } else {
-    res.setHeader("Allow", "POST");
+    res.setHeader("Allow", ["GET, POST", "PATCH", "DELETE"]);
     res.status(405).end(`Method ${method} Not Allowed`);
   }
 };
