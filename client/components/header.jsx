@@ -8,7 +8,8 @@ import {
   MenuItem,
   IconButton,
   Menu,
-  Typography
+  Typography,
+  SwipeableDrawer
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import { makeStyles } from "@material-ui/core/styles";
@@ -50,6 +51,25 @@ const getDate = () => {
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1
+  },
+
+  menu: {
+    width: 250,
+    flexShrink: 0,
+  },
+
+  menuItems: {
+    width: 250,
+    textDecoration: "none"
+  },
+
+  menuFont: {
+    fontFamily: "Raleway",
+    fontStyle: "normal",
+    fontWeight: "bold",
+    fontSize: "20px",
+    lineHeight: "23px",
+    color: "black",
   },
 
   menuButton: {
@@ -142,8 +162,11 @@ const Header = props => {
           >
             <MenuIcon />
           </IconButton>
-          <Menu
+          <SwipeableDrawer
+            elevation
             id="menu-appbar"
+            className= "menu"
+            classes={{paper: classes.menuItems}}
             anchorEl={anchorEl}
             anchorOrigin={{
               vertical: "top",
@@ -160,13 +183,13 @@ const Header = props => {
             {filterRoutes(currentUser)}
             {/* {console.log(filteredRoutes)} */}
             {filteredRoutes.map((route, index) => (
-              <MenuItem onClick={handleClose} key={index}>
-                <Link href={route.link}>{route.name}</Link>
+              <MenuItem className={classes.menuFont} onClick={handleClose} key={index}>
+                <Link href={route.link}><a style={{textDecoration: "none", color: "black"}}>{route.name}</a></Link>
               </MenuItem>
             ))}
 
-            <MenuItem onClick={handleClose}>My account</MenuItem>
-          </Menu>
+            <MenuItem className={classes.menuFont} onClick={handleClose}>My account</MenuItem>
+          </SwipeableDrawer>
           <Typography variant="h6" className={classes.title}>
             {selected}
           </Typography>
