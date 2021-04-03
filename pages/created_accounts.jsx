@@ -2,6 +2,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { spacing } from "@material-ui/system";
 import Box from "@material-ui/core/Box";
+import {Collapse} from 'react-collapse';
 import {
   Button,
   TextField,
@@ -47,12 +48,65 @@ const useStyles = makeStyles(theme => ({
     padding: "10px",
     borderCollapse: "collapse",
     color: "white"
-  }
+  },
+  tbody: {
+    display: "block",
+    height: "450px",
+    //overflowY: "auto",
+    //overflowX: "hidden"
+  },
+  tcell: {
+    color: "#1594D0",
+    fontFamily: "raleway",
+    fontSize: "18px",
+    fontWeight: "bold",
+  },
+  modal: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    border: "2px solid #000",
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3)
+  },
+  Button: {
+    padding: "10px"
+  },
 }));
+
+
+
+const createTable = async(setindex, setName, setType, setEmail, setCreatedBy, setLocation, setPassword) => {
+  const items = {index: setindex, name: setName, type: setType, email: setEmail, createdBy: setCreatedBy, location: setLocation, password: setPassword};
+  setDataItems([...dataItems, items]);
+
+};
+
+
 
 const createdAccounts = () => {
   const classes = useStyles();
   const [filterType, setType] = React.useState("All");
+  const [dataItems, setDataItems] = React.useState([]);
+  const [expanded, setExpanded] = React.useState(false);
+  const [isEditable, setEditable] = React.useState("");
+
+  const handleExpansion = () => {
+    setExpanded(true);
+    console.log("handleExpansion func!");
+  };
+  
+  const closeExpansion = () => {
+    setExpanded(false);
+  };
+
+  const tableEditable = () => {
+    setEditable("true");
+    setExpanded(false);
+  };
 
   return (
     <div>
@@ -149,13 +203,74 @@ const createdAccounts = () => {
         <thead
           style={{ backgroundColor: "#E0E0E0", width: "calc( 100% - 1em )" }}
         >
-          <tr className={classes.tr}>
-            <th className={classes.th}> Name </th>
-            <th className={classes.th}> Account Type</th>
-            <th className={classes.th}> Email </th>
-            <th className={classes.th}> Created by </th>
+          <tr>
+            <th scope = "col" className = {classes.th}> Number</th>
+            <th scope = "col" className={classes.th}> Name </th>
+            <th scope = "col"  className={classes.th}> Account Type</th>
+            <th scope = "col"  className={classes.th}> Email </th>
+            <th scope = "col"  className={classes.th}> Created by </th>
           </tr>
         </thead>
+        <tbody>
+          {dataItems.map((data, index) => 
+          <tr key = {index} onClick = {handleExpansion}>
+            <td contenteditable = {isEditable} className = {classes.tcell} scope = "row"> {data.index} </td>
+            <td contenteditable = {isEditable} className = {classes.tcell} > {data.name} </td>
+            <td contenteditable = {isEditable} className = {classes.tcell} > {data.type} </td>
+            <td contenteditable = {isEditable} className = {classes.tcell} > {data.email} </td>
+            <td contenteditable = {isEditable} className = {classes.tcell} > {data.createdBy} </td>
+            <Modal aria-labelledby="transition-modal-title"
+            aria-describedby="transition-modal-description"
+            className={classes.modal}
+            open={expanded}
+            onClose={closeExpansion}
+            closeAfterTransition
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+             timeout: 500
+            }}>
+            <div className = {classes.paper}>
+            <h1> Name: {data.name} </h1>
+            <h1> Account Type: {data.type} </h1>
+            <h1> Email: {data.email} </h1>
+            <h1> Location: {data.location} </h1> 
+            <h1> Password: {data.password} </h1>
+            <Box m = {1}>
+               <Button onClick = {tableEditable} variant = "contained" color = "primary">Edit</Button>
+            </Box> 
+            </div>
+            </Modal>
+          </tr>
+          )}
+        </tbody>
+        {/* <tr onClick = {handleExpansion}>
+            <td className = {classes.tcell}  scope = "row"> 1 </td>
+            <td contenteditable = {isEditable} className = {classes.tcell} > Test Person </td>
+            <td contenteditable = {isEditable} className = {classes.tcell} > Test Type </td>
+            <td contenteditable = {isEditable} className = {classes.tcell} > test000@gmail.com </td>
+            <td contenteditable = {isEditable} className = {classes.tcell} > CreatedbyTest </td> 
+          </tr>
+          <Modal aria-labelledby="transition-modal-title"
+            aria-describedby="transition-modal-description"
+            className={classes.modal}
+            open={expanded}
+            onClose={closeExpansion}
+            closeAfterTransition
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+             timeout: 500
+            }}>
+            <div className = {classes.paper}>
+            <p> Name:  </p>
+            <p> Account Type:  </p>
+            <p> Email:  </p>
+            <p> Location:  </p> 
+            <p> Password:  </p>
+            <Box m = {1}>
+               <Button onClick = {tableEditable} variant = "contained" color = "primary">Edit</Button>
+            </Box> 
+            </div>
+            </Modal> */}
       </table>
     </div>
   );
