@@ -9,13 +9,15 @@ import {
   IconButton,
   Menu,
   Typography,
-  SwipeableDrawer
+  SwipeableDrawer,
+  Drawer
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import { makeStyles } from "@material-ui/core/styles";
 
 import routes from "../../utils/routes";
 import Axios from "axios";
+import { lightgray } from "color-name";
 // import { Route } from 'react-router-dom';
 
 const getDate = () => {
@@ -56,11 +58,13 @@ const useStyles = makeStyles(theme => ({
   menu: {
     width: 250,
     flexShrink: 0,
+    color: lightgray
   },
 
   menuItems: {
     width: 250,
-    textDecoration: "none"
+    textDecoration: "none",
+    color: lightgray
   },
 
   menuFont: {
@@ -70,6 +74,8 @@ const useStyles = makeStyles(theme => ({
     fontSize: "20px",
     lineHeight: "23px",
     color: "black",
+    left: 32,
+    top: 40
   },
 
   menuButton: {
