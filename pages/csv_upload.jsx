@@ -18,21 +18,28 @@ class CSVUpload extends React.Component {
     // do this if upload function is going to change the state
   }
 
+
   handleUpload = (files) => {
-    this.setState({selectedFile: files[0]})
-    this.setState({ uploadedFile: true })
+    let fileName = files[0].name;
+    fileName = fileName.split(".");
+    if (fileName[fileName.length - 1] == "csv") {
+      this.setState({selectedFile: files[0]})
+      this.setState({ uploadedFile: true })
+    } else {
+      alert("You must upload a CSV file!");
+    }
   }
 
   sendCsv = () => {
     console.log("Uploading...")
     const data = new FormData();
     data.append("file", this.state.selectedFile);
-    console.log(data)
+    console.log(this.state.selectedFile)
     var self = this;
     axios
       .post(`${urls.baseUrl}/api/upload_csv`, data)
       .then(function(response) {
-        console.log("Uploaded file!! ... ")
+        console.log("Uploaded file!! ... ", response)
         self.setState({ uploadedFile: false })
         self.setState({ sentFile: true })
       })
