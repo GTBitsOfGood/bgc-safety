@@ -192,6 +192,7 @@ function Roster({ schools }) {
                         className={`btn btn-success ${classes.formButton}`}
                       >
                         Add Student
+
                       </button>
                     </form>
                   </ModalComponent>
