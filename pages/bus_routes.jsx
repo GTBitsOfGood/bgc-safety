@@ -1,5 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import CancelIcon from "@material-ui/icons/Cancel";
 import {
   Button,
   ButtonGroup,
@@ -8,7 +9,8 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  TextField
+  TextField,
+  IconButton
 } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import AddIcon from "@material-ui/icons/Add";
@@ -54,6 +56,9 @@ const useStyles = makeStyles(() => ({
     margin: "10px",
     padding: "10px",
     background: "#BDBDBD"
+  },
+  rightBtn: {
+    alignSelf: "flex-end"
   },
   pagehead: {
     width: "95%",
@@ -126,28 +131,28 @@ const BusRoutes = ({ savedRoutes }) => {
   const classes = useStyles();
   const [routes, setRoutes] = React.useState(savedRoutes);
   const [selectedRoute, setSelectedRoute] = React.useState(routes[0]);
-  const [editedRoute, setEditedRoute] = React.useState(routes.length > 0 ? routes[0].name : "");
+  const [editedRoute, setEditedRoute] = React.useState(
+    routes.length > 0 ? routes[0].name : ""
+  );
   const [routeEditable, setEditable] = React.useState(false);
   const [modalOpen, setModalOpen] = React.useState(false);
   const [modalOpen2, setModalOpen2] = React.useState(false);
 
-
   const [routeNameError, setRouteNameError] = React.useState(false);
   const [newRouteError, setNewRouteError] = React.useState(false);
   const [editNameError, setEditNameError] = React.useState(false);
-  
+
   const [studentList, setStudentList] = React.useState([]);
 
   const addRoute = () => {
     setModalOpen(true);
   };
 
-  const addStudent = () => {
+  const addStudentDialog = () => {
     setModalOpen2(true);
   };
 
-
-  const handleCreate = async (name) => {
+  const createBusRoute = async name => {
     if (name === "") {
       setRouteNameError(true);
     } else {
@@ -156,66 +161,76 @@ const BusRoutes = ({ savedRoutes }) => {
       const res = await fetch(`${urls.baseUrl}/api/routes`, {
         method: "post",
         body: JSON.stringify(body),
-        headers: {'Content-Type': 'application/json'}
+        headers: { "Content-Type": "application/json" }
       });
       // console.log(res);
       const routes_data = await res.json;
-      
+
       if (routes_data.success && routes_data.payload) {
         setRoutes(routes.concat(routes_data.payload));
         setModalOpen(false);
       } else {
-        setNewRouteError(true)
+        setNewRouteError(true);
       }
     }
   };
 
-  const handleCreate2 = async (studentFirstName, studentLastName, studentSchool, studentGrade) => {
+  const addToStudentList = async (
+    //TODO: Make sure Notes array handled well
+    studentFirstName,
+    studentLastName,
+    studentSchool,
+    studentGrade,
+    studentId,
+    studentClub,
+    studentNotes
+  ) => {
     if (studentFirstName === "") {
       setRouteNameError(true);
     } else {
       setRouteNameError(false);
-      console.log("here")
-      const body = { firstName: studentFirstName, lastName: studentLastName, school: studentSchool, grade: studentGrade };
-      console.log(body);
+      // console.log("here")
+      const body = {
+        firstName: studentFirstName,
+        lastName: studentLastName,
+        schoolName: studentSchool,
+        grade: studentGrade,
+        studentID: studentId,
+        clubName: studentClub,
+        notes: studentNotes
+      };
+      // console.log(body);
       setStudentList([...studentList, body]);
-      console.log(studentList);
+      // console.log(studentList);
       setModalOpen2(false);
     }
   };
 
-  const handleCreate3 = async (studentID) => {
-    if (studentID === "") {
-      setRouteNameError(true);
-    } else {
-      setRouteNameError(false);
-      console.log("here")
-      changeStudentRoute(studentID, selectedRoute._id)
-    }
-  };
+  const saveChangesDB = async () => {
+    console.log("Saving these students to the database:");
+    // console.log(studentList);
+    studentList.forEach(function(student) {
+      console.log(student);
+    });
 
+    //  function TableCreate(props) {
+    //    const tableDisplay = (
+    //        {studentList.map((entry, index) =>
+    //          <tr key={index} className={classes.tr}>
+    //            <td scope="col">{entry.firstName + entry.lastName}</td>
+    //            <td scope="col">{entry.school}</td>
+    //            <td scope="col">{entry.grade}</td>
+    //            <td scope="col">None</td>
+    //            <td scope="col">None</td>
+    //          </tr>
+    //        )}
+    //    );
+    //   }
 
-  //  function TableCreate(props) {
-  //    const tableDisplay = (  
-  //        {studentList.map((entry, index) =>
-  //          <tr key={index} className={classes.tr}>
-  //            <td scope="col">{entry.firstName + entry.lastName}</td>
-  //            <td scope="col">{entry.school}</td>
-  //            <td scope="col">{entry.grade}</td>
-  //            <td scope="col">None</td>
-  //            <td scope="col">None</td>
-  //          </tr>
-  //        )}
-  //    );
-  //   }
-    
     // render() {
     //    return (
-         
-  
     //    )
-    // };
-    
+  };
 
   const handleClose = () => {
     setNewRouteError(false);
@@ -224,36 +239,41 @@ const BusRoutes = ({ savedRoutes }) => {
   };
 
   const handleClose2 = () => {
+    console.log("closing addStudent modal");
     setModalOpen2(false);
   };
 
-  const handleNameChange = (event) => {
+  const handleNameChange = event => {
     setEditedRoute(event.target.value);
   };
 
-  const updateName = (name) => {
-      setEditedRoute(name);
+  const updateName = name => {
+    setEditedRoute(name);
   };
 
-  const updateRouteName = async (name) => {
+  const updateRouteName = async name => {
     const body = {
       id: selectedRoute._id,
-      name,
+      name
     };
 
     const res = await fetch(`${urls.baseUrl}/api/routes`, {
       method: "put",
       body: JSON.stringify(body),
-      headers: {'Content-Type': 'application/json'}
+      headers: { "Content-Type": "application/json" }
     });
 
     const route_data = await res.json();
-    
+
     if (route_data.success) {
       setEditNameError(false);
       setSelectedRoute(route_data.payload);
       // update the routes list without making another API call
-      setRoutes(routes.map(route => route._id === body.id ? route_data.payload : route));
+      setRoutes(
+        routes.map(route =>
+          route._id === body.id ? route_data.payload : route
+        )
+      );
     } else {
       setEditNameError(true);
     }
@@ -274,7 +294,9 @@ const BusRoutes = ({ savedRoutes }) => {
                 onChange={handleNameChange}
                 InputProps={{ className: classes.routeName }}
               />
-              <div hidden={!editNameError} className={classes.error}>Sorry, an error occurred. Couldn't update route name.</div>
+              <div hidden={!editNameError} className={classes.error}>
+                Sorry, an error occurred. Couldn't update route name.
+              </div>
             </div>
             <EditIcon
               className={routeEditable ? classes.hideIcon : classes.editIcon}
@@ -295,20 +317,20 @@ const BusRoutes = ({ savedRoutes }) => {
           </div>
 
           <div className={classes.btnContainer}>
-            <Button className={classes.btn} onClick={addStudent}>Add New Student</Button>
+            <Button className={classes.btn} onClick={addStudentDialog}>
+              Add New Student
+            </Button>
             <Dialog
               style={{ padding: 10, margin: 10, minWidth: 600 }}
               open={modalOpen2}
               onClose={handleClose2}
             >
-              <div
-                style={{ textAlign: "right", padding: 5, marginRight: 5, cursor: "pointer" }}
-                onClick={handleClose}
-              >
-                x
-              </div>
+              <IconButton className={classes.rightBtn} onClick={handleClose2}>
+                <CancelIcon />
+              </IconButton>
+
               <DialogTitle style={{ fontSize: 18 }}>
-                Adding New Student to the Route
+                Adding New Student to Route
               </DialogTitle>
               <DialogContent>
                 <div>
@@ -319,7 +341,9 @@ const BusRoutes = ({ savedRoutes }) => {
                     placeholder="Type name here..."
                     required
                   />
-                  <div hidden={!routeNameError} className={classes.error}>Name cannot be blank.</div>
+                  <div hidden={!routeNameError} className={classes.error}>
+                    Name cannot be blank.
+                  </div>
                 </div>
                 <div>
                   <label className={classes.label}>Student Last Name:</label>
@@ -329,7 +353,9 @@ const BusRoutes = ({ savedRoutes }) => {
                     placeholder="Type name here..."
                     required
                   />
-                  <div hidden={!routeNameError} className={classes.error}>Name cannot be blank.</div>
+                  <div hidden={!routeNameError} className={classes.error}>
+                    Name cannot be blank.
+                  </div>
                 </div>
                 <div>
                   <label className={classes.label}>Student ID:</label>
@@ -339,7 +365,9 @@ const BusRoutes = ({ savedRoutes }) => {
                     placeholder="Type name here..."
                     required
                   />
-                  <div hidden={!routeNameError} className={classes.error}>Name cannot be blank.</div>
+                  <div hidden={!routeNameError} className={classes.error}>
+                    Name cannot be blank.
+                  </div>
                 </div>
                 <div>
                   <label className={classes.label}>School Name:</label>
@@ -349,7 +377,9 @@ const BusRoutes = ({ savedRoutes }) => {
                     placeholder="Type name here..."
                     required
                   />
-                  <div hidden={!routeNameError} className={classes.error}>Name cannot be blank.</div>
+                  <div hidden={!routeNameError} className={classes.error}>
+                    Name cannot be blank.
+                  </div>
                 </div>
                 <div>
                   <label className={classes.label}>Grade:</label>
@@ -359,7 +389,9 @@ const BusRoutes = ({ savedRoutes }) => {
                     placeholder="Type name here..."
                     required
                   />
-                  <div hidden={!routeNameError} className={classes.error}>Name cannot be blank.</div>
+                  <div hidden={!routeNameError} className={classes.error}>
+                    Name cannot be blank.
+                  </div>
                 </div>
                 <div>
                   <label className={classes.label}>Club Name:</label>
@@ -369,7 +401,9 @@ const BusRoutes = ({ savedRoutes }) => {
                     placeholder="Type name here..."
                     required
                   />
-                  <div hidden={!routeNameError} className={classes.error}>Name cannot be blank.</div>
+                  <div hidden={!routeNameError} className={classes.error}>
+                    Name cannot be blank.
+                  </div>
                 </div>
                 <div>
                   <label className={classes.label}>Notes:</label>
@@ -379,11 +413,14 @@ const BusRoutes = ({ savedRoutes }) => {
                     placeholder="Type name here..."
                     required
                   />
-                  <div hidden={!routeNameError} className={classes.error}>Name cannot be blank.</div>
+                  <div hidden={!routeNameError} className={classes.error}>
+                    Name cannot be blank.
+                  </div>
                 </div>
-               
               </DialogContent>
-              <div hidden={!newRouteError} className={classes.error}>Sorry, an error occurred. Cannot create new student in route.</div>
+              <div hidden={!newRouteError} className={classes.error}>
+                Sorry, an error occurred. Cannot create new student in route.
+              </div>
               <DialogActions>
                 <Button
                   style={{ margin: 5 }}
@@ -391,33 +428,46 @@ const BusRoutes = ({ savedRoutes }) => {
                   color="primary"
                   size="large"
                   onClick={() => {
-                    let studentFirstName= document.getElementById("FirstName").value;
-                    let studentLastName= document.getElementById("LastName").value;
-                    let studentId = document.getElementById("studentID").value;
-                    let grade = document.getElementById("grade").value;
-                    let school = document.getElementById("schoolName").value;
-                    let club = document.getElementById("clubName").value;
-                    let notes = document.getElementById("notes").value;
+                    const studentFirstName = document.getElementById(
+                      "FirstName"
+                    ).value;
+                    const studentLastName = document.getElementById("LastName")
+                      .value;
+                    const studentId = document.getElementById("studentID")
+                      .value;
+                    const grade = document.getElementById("grade").value;
+                    const school = document.getElementById("schoolName").value;
+                    const club = document.getElementById("clubName").value;
+                    const notes = document.getElementById("notes").value;
 
-                    handleCreate2(studentFirstName, studentLastName, school, grade);
+                    addToStudentList(
+                      studentFirstName,
+                      studentLastName,
+                      school,
+                      grade,
+                      studentId,
+                      club,
+                      notes
+                    );
                   }}
                 >
-                  Create
+                  Add Student
                 </Button>
               </DialogActions>
             </Dialog>
 
-
-            <Button className={classes.btn}
-                    onClick={() => {
-                      let studentId = document.getElementById("studentID").value;
-                      handleCreate3(studentId);}}>
-                        Save Changes
+            <Button
+              className={classes.btn}
+              onClick={() => {
+                // let studentId = document.getElementById("studentID").value;
+                saveChangesDB();
+              }}
+            >
+              Save Changes
             </Button>
           </div>
         </div>
-        
-        
+
         <table className={classes.table}>
           <thead
             style={{ backgroundColor: "#E0E0E0", width: "calc( 100% - 1em )" }}
@@ -430,18 +480,18 @@ const BusRoutes = ({ savedRoutes }) => {
               <th className={classes.th}>Emergency </th>
             </tr>
           </thead>
-          
+
           <tbody className={classes.tbody}>
-              {studentList.map((entry, index) =>
+            {studentList.map((entry, index) => (
               <tr key={index} className={classes.tr}>
-                <td scope="col">{entry.firstName + entry.lastName}</td>
-                <td scope="col">{entry.school}</td>
+                <td scope="col">{entry.firstName + " " + entry.lastName}</td>
+                <td scope="col">{entry.schoolName}</td>
                 <td scope="col">{entry.grade}</td>
                 <td scope="col">None</td>
                 <td scope="col">None</td>
               </tr>
-            )}
-         </tbody>
+            ))}
+          </tbody>
           {/* <tbody className={classes.tbody}>
                                 
             <tr className={classes.tr}>
@@ -464,9 +514,10 @@ const BusRoutes = ({ savedRoutes }) => {
           style={{ margin: 10 }}
         >
           {routes.map(route => (
-            <Button onClick={() => {
-              setSelectedRoute(route);
-              updateName(route.name);
+            <Button
+              onClick={() => {
+                setSelectedRoute(route);
+                updateName(route.name);
               }}
             >
               {route.name}
@@ -481,12 +532,23 @@ const BusRoutes = ({ savedRoutes }) => {
           open={modalOpen}
           onClose={handleClose}
         >
-          <div
-            style={{ textAlign: "right", padding: 5, marginRight: 5, cursor: "pointer" }}
+          {/* <div
+            style={{
+              textAlign: "right",
+              padding: 5,
+              marginRight: 5,
+              cursor: "pointer"
+            }}
             onClick={handleClose}
           >
             x
-          </div>
+          </div> */}
+          {/* old cancel "x" button replaced with materialUI */}
+
+          <IconButton className={classes.rightBtn} onClick={handleClose}>
+            <CancelIcon />
+          </IconButton>
+
           <DialogTitle style={{ fontSize: 18 }}>
             Creating New Bus Route
           </DialogTitle>
@@ -499,7 +561,9 @@ const BusRoutes = ({ savedRoutes }) => {
                 placeholder="Type name here..."
                 required
               />
-              <div hidden={!routeNameError} className={classes.error}>Name cannot be blank.</div>
+              <div hidden={!routeNameError} className={classes.error}>
+                Name cannot be blank.
+              </div>
             </div>
             <div>
               <label className={classes.label}>
@@ -515,7 +579,9 @@ const BusRoutes = ({ savedRoutes }) => {
               </Button>
             </div>
           </DialogContent>
-          <div hidden={!newRouteError} className={classes.error}>Sorry, an error occurred. Cannot create new route.</div>
+          <div hidden={!newRouteError} className={classes.error}>
+            Sorry, an error occurred. Cannot create new route.
+          </div>
           <DialogActions>
             <Button
               style={{ margin: 5 }}
@@ -524,7 +590,7 @@ const BusRoutes = ({ savedRoutes }) => {
               size="large"
               onClick={() => {
                 modalName = document.getElementById("ModalName").value;
-                handleCreate(modalName);
+                createBusRoute(modalName);
               }}
             >
               Create
@@ -537,20 +603,18 @@ const BusRoutes = ({ savedRoutes }) => {
 };
 
 BusRoutes.getInitialProps = async () => {
-    const res = await fetch(
-        `${urls.baseUrl}/api/routes`
-    );
-    console.log(res)
-    let routes_data = {};
-    if(res){
-      let routes_data = res;
-    }
-    
-    if (routes_data.success) {
-      return {savedRoutes: routes_data.payload};
-    } else {
-      return {savedRoutes: []};
-    }
+  const res = await fetch(`${urls.baseUrl}/api/routes`);
+  console.log(res);
+  let routes_data = {};
+  if (res) {
+    let routes_data = res;
+  }
+
+  if (routes_data.success) {
+    return { savedRoutes: routes_data.payload };
+  } else {
+    return { savedRoutes: [] };
+  }
 };
 
 export default BusRoutes;
