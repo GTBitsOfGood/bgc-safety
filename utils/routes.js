@@ -51,7 +51,7 @@ const routes = [
   },
   {
     name: "Created Accounts",
-    link: urls.pages.created_accounts
+    link: urls.pages.created_accounts,
     type: "All"
   }
 ];

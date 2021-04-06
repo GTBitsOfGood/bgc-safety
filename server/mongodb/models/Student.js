@@ -1,4 +1,6 @@
-import mongoose from "mongoose";
+// import mongoose from "mongoose";
+
+const mongoose = require("mongoose");
 
 const { Schema } = mongoose;
 
@@ -22,7 +24,7 @@ const StudentSchema = new Schema({
   },
   route: {
     type: Schema.Types.ObjectID,
-    ref: 'Route',
+    ref: "Route",
     required: false
   },
   grade: {
@@ -53,5 +55,5 @@ const StudentSchema = new Schema({
   }
 });
 
-export default mongoose.models.Student ||
-  mongoose.model("Student", StudentSchema);
+export default mongoose.models.Student || mongoose.model("Student", StudentSchema);
+// module.exports = mongoose.model("Student", StudentSchema)

@@ -18,6 +18,9 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import urls from "../utils/urls";
 // import {getStudentsByName, changeStudentRoute} from "../pages/api/student";
 
+import Student from "../server/mongodb/models/Student";
+import Route from "../server/mongodb/models/Route";
+
 const fetch = require("node-fetch");
 
 const useStyles = makeStyles(() => ({
@@ -211,6 +214,29 @@ const BusRoutes = ({ savedRoutes }) => {
     // console.log(studentList);
     studentList.forEach(function(student) {
       console.log(student);
+      // const newRoute = new Route({ name: "selectedRoute" });
+      // const newStudent = new Student({
+      //   firstName: student.firstName,
+      //   lastName: student.lastName,
+      //   studentID: student.studentID,
+      //   schoolName: student.schoolName,
+      //   grade: student.grade,
+      //   clubName: student.clubName,
+      //   notes: student.notes,
+      //   route: newRoute
+      // });
+      // console.log("newStudent", newStudent);
+      // newStudent
+      //   .save()
+      //   .then(student => {
+      //     console.log("Saved ");
+      //     console.log(student);
+      //   })
+      //   .catch(err => {
+      //     console.log(newStudent);
+      //     console.log("Error");
+      //     console.log(err);
+      //   });
     });
 
     //  function TableCreate(props) {
@@ -604,6 +630,7 @@ const BusRoutes = ({ savedRoutes }) => {
 
 BusRoutes.getInitialProps = async () => {
   const res = await fetch(`${urls.baseUrl}/api/routes`);
+  console.log("initial props");
   console.log(res);
   let routes_data = {};
   if (res) {
@@ -613,7 +640,7 @@ BusRoutes.getInitialProps = async () => {
   if (routes_data.success) {
     return { savedRoutes: routes_data.payload };
   } else {
-    return { savedRoutes: [] };
+  return { savedRoutes: [] };
   }
 };
 
