@@ -8,6 +8,7 @@ import TextField from '@material-ui/core/TextField';
 import styles from "./roster.module.css";
 import ModalComponent from "../client/components/modal";
 import urls from "../utils/urls";
+import {useSession} from "next-auth/client";
 
 
 const fetch = require("node-fetch");
@@ -97,11 +98,13 @@ function Roster({ schools }) {
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
   const [studentSchool, setStudentSchool] = React.useState("");
+  const [session, loading] = useSession();
 
   const handleSubmit = () => {
     setStudent({ firstName, lastName, studentSchool });
     // add to database
   };
+  console.log("session", session)
 
   return (
     <div id="main">

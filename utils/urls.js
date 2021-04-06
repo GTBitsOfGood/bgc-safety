@@ -17,7 +17,9 @@ export default {
     route_selection: "/route_selection",
     bus_checkin_roster: "/bus_checkin_roster",
     login: "/login",
-    bus_routes: "/bus_routes"
+    bus_routes: "/bus_routes",
+    account_creation: "/account_creation",
+    created_accounts: "/created_accounts"
   },
   api: {
     example: "/api/example",
@@ -28,7 +30,7 @@ export default {
     attendance: "api/attendance",
     checkIn: "/api/checkIn",
     uploadCsv: "/api/upload_csv",
-    users: "/api/users",
+    user: "/api/user",
     login: "/api/login"
   }
 };

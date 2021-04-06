@@ -43,11 +43,11 @@ function getAllClubs(req, res) {
 }
 
 function createClub(req, res) {
-  const { clubName, schoolNames } = req.body;
+  const { ClubName, SchoolNames } = req.body;
 
   Club.create({
-    ClubName: clubName,
-    SchoolNames: schoolNames
+    ClubName: ClubName,
+    SchoolNames: SchoolNames
   })
     .then(club =>
       res.status(201).send({
