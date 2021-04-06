@@ -236,7 +236,7 @@ const createdAccounts = () => {
           </tr>
           )}
         </tbody>
-        {/* <tr>
+        <tr>
             <td scope = "row"><IconButton className = {classes.tcell} onClick = {handleExpansion}> {expanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />} 1 </IconButton></td>
             <td contenteditable = {isEditable} className = {classes.tcell} > Test Person </td>
             <td contenteditable = {isEditable} className = {classes.tcell} > Test Type </td>
@@ -254,7 +254,7 @@ const createdAccounts = () => {
                <Button onClick = {tableEditable} variant = "contained" color = "primary">Edit</Button>
             </Box>
             </div>
-            </Collapse> */}
+            </Collapse>
       </table>
     </div>
   );
