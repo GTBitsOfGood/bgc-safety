@@ -117,7 +117,7 @@ function updateStudent(req, res) {
 
 function changeStudentRoute(req, res) {
   const { id, route } = req.query;
-
+  console.log("here")
   updateStudentRoute(id, route).then(student => {
     res.status(200).send({
         success: true,
@@ -153,6 +153,27 @@ function deleteStudent(req, res) {
 
 function getAllStudents(req, res) {
   Student.find()
+    .then(students => {
+      res.status(200).send({
+        success: true,
+        payload: students
+      });
+    })
+    .catch(err => {
+      res.status(400).send({
+        success: false,
+        message: err
+      });
+    });
+}
+
+function getStudentsByName(req, res) {
+  const { first, last } = req.query;
+
+  Student.findOne({
+    firstName: first,
+    lastName: last
+  })
     .then(students => {
       res.status(200).send({
         success: true,
