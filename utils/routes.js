@@ -47,11 +47,12 @@ const routes = [
   },
   {
     name: "Account Creation",
-    link: urls.pages.account_creation
+    link: urls.pages.account_creation,
+    type: "Admin"
   },
   {
     name: "Created Accounts",
-    link: urls.pages.created_accounts
+    link: urls.pages.created_accounts,
     type: "All"
   }
 ];
