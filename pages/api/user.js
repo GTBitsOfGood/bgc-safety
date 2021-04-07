@@ -10,7 +10,6 @@ export default async (req, res) => {
   await useCors(req, res);
 
   const { method } = req;
-
   if (method === "POST") {
     createUser(req, res);
   } else if (method === "DELETE") {
@@ -18,7 +17,7 @@ export default async (req, res) => {
   } else if (method === "GET") {
     getUser(req, res);
   } else {
-    res.setHeader("Allow", "POST");
+    res.setHeader("Allow", ["GET, POST", "PATCH", "DELETE"]);
     res.status(405).end(`Method ${method} Not Allowed`);
   }
 };
@@ -49,11 +48,17 @@ function createUser(req, res) {
 }
 
 function getUser(req, res) {
-  console.log(req)
+  console.log(req.query)
+  console.log(req.params)
   // const reqUser = req.user
   // console.log(reqUser)
-  // const user = await User.findById(reqUser._id)
-  // return res.send(user)
+  User.findOne({username: req.query.email}).then(user => {
+    console.log(user)
+    res.send(user)
+  }).catch(err => console.log(err))
+
+  // console.log(user)
+  // return res.send(user) 
 }
 
 function deleteUser(req, res) {

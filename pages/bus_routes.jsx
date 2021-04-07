@@ -195,29 +195,27 @@ const BusRoutes = ({ savedRoutes }) => {
   };
 
 
-  // function TableCreate(props) {
-  //   const tableDisplay = (  
-  //       {props.entries.map((entry) =>
-  //         <tr className={classes.tr}>
-  //           <td scope="col">{entry.firstName + entry.lastName}</td>
-  //           <td scope="col">{entry.school}</td>
-  //           <td scope="col">{entry.grade}</td>
-  //           <td scope="col">None</td>
-  //           <td scope="col">None</td>
-  //         </tr>
-  //       )}
-  //   );
+  //  function TableCreate(props) {
+  //    const tableDisplay = (  
+  //        {studentList.map((entry, index) =>
+  //          <tr key={index} className={classes.tr}>
+  //            <td scope="col">{entry.firstName + entry.lastName}</td>
+  //            <td scope="col">{entry.school}</td>
+  //            <td scope="col">{entry.grade}</td>
+  //            <td scope="col">None</td>
+  //            <td scope="col">None</td>
+  //          </tr>
+  //        )}
+  //    );
+  //   }
     
-  //   render() {
-  //     return (
-  //       <tbody className={classes.tbody}>
-  //         {tableDisplay}
-  //       </tbody>
+    // render() {
+    //    return (
+         
   
-  //     )
-  //   };
+    //    )
+    // };
     
-  // }
 
   const handleClose = () => {
     setNewRouteError(false);
@@ -433,7 +431,17 @@ const BusRoutes = ({ savedRoutes }) => {
             </tr>
           </thead>
           
-          
+          <tbody className={classes.tbody}>
+              {studentList.map((entry, index) =>
+              <tr key={index} className={classes.tr}>
+                <td scope="col">{entry.firstName + entry.lastName}</td>
+                <td scope="col">{entry.school}</td>
+                <td scope="col">{entry.grade}</td>
+                <td scope="col">None</td>
+                <td scope="col">None</td>
+              </tr>
+            )}
+         </tbody>
           {/* <tbody className={classes.tbody}>
                                 
             <tr className={classes.tr}>
