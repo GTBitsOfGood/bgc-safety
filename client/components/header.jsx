@@ -95,8 +95,10 @@ const Header = props => {
 
   }  
   const queryUser = async () => {
+    console.log("QUERY USER", session.user.email)
     const res = await fetch(
-      `/api/user?email=${session.user.email}`
+      
+      `/api/user?email=${session.user}`
     );
     return await res.json();
   }

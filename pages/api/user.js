@@ -48,12 +48,12 @@ function createUser(req, res) {
 }
 
 function getUser(req, res) {
-  console.log(req.query)
-  console.log(req.params)
+  console.log("QUERY", req.query)
   // const reqUser = req.user
   // console.log(reqUser)
-  User.findOne({username: req.query.email}).then(user => {
-    console.log(user)
+  User.find({username: req.query.email}).then(user => {
+    console.log("TEST", req.query.email)
+    console.log("USER", user)
     res.send(user)
   }).catch(err => console.log(err))
 

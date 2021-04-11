@@ -29,13 +29,13 @@ const HomePage = () => {
     const getUser = async () => {
       const url =  `/api/user`;
       if (session) {
-        console.log(session)
+        console.log("SESSION", session)
         const currentUser = await fetch(
           `${urls.baseUrl}/api/user?email=${
             session.user.email
           }`
         );
-        console.log(currentUser)
+        console.log("CURRENT USER", currentUser)
 
       }
 
@@ -44,14 +44,14 @@ const HomePage = () => {
 
     }
 
-    const currentUser = {
-      BGCMA_email: "sahya",
-      password: '$2a$10$/NYjx/SvECs8YZEYfS4HMOkfZvrYcO5hqERWOyYAEka5vTsgQOZgS',
-      type: "BusDriver",
-      club: "All"
-    }
+    // const currentUser = {
+    //   BGCMA_email: "sahya",
+    //   password: '$2a$10$/NYjx/SvECs8YZEYfS4HMOkfZvrYcO5hqERWOyYAEka5vTsgQOZgS',
+    //   type: "BusDriver",
+    //   club: "All"
+    // }
     
-    // getUser();
+    getUser(); 
 
 
 
