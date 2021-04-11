@@ -57,7 +57,7 @@ const useStyles = makeStyles(theme => ({
 
 const AccountCreation = () => {
   const classes = useStyles();
-  const [type, setType] = React.useState("Administrator");
+  const [type, setType] = React.useState("Admin");
   const [open, setOpen] = React.useState(false);
   const [confirm, setConfirm] = React.useState(false);
 
@@ -72,7 +72,23 @@ const AccountCreation = () => {
     setOpen(true);
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
+    console.log(first)
+    var body = 
+    {
+      "email" : email,
+      "password" : password,
+      "role" : type,
+      "clubName" : location
+    }
+
+  const res = await fetch(`${urls.baseUrl}/api/user`, {
+    method: "POST",
+    body: JSON.stringify(body),
+    headers: {'Content-Type': 'application/json'}
+  });
+  
+
     setConfirm(true);
     setOpen(false);
   };
@@ -109,10 +125,10 @@ const AccountCreation = () => {
       <div className={classes.userTypes}>
         <Box m={1}>
           <Button
-            variant={type !== "Administrator" ? "outlined" : "contained"}
+            variant={type !== "Admin" ? "outlined" : "contained"}
             color="primary"
             onClick={() => {
-              setType("Administrator");
+              setType("Admin");
               setSelectText("Assigned Bus Routes");
             }}
             p={10}
@@ -214,7 +230,7 @@ const AccountCreation = () => {
       <div>
         <Box m={1}>
           <Button onClick={handleOpen} variant="contained" color="primary">
-            Create Account
+            Create Account 
           </Button>
         </Box>
 

@@ -24,25 +24,29 @@ export default async (req, res) => {
 
 function createUser(req, res) {
   const { email, password, role, clubName } = req.body;
-
+  console.log(req.body)  
   const hashedPassword = bcrypt.hashSync(password, 10);
 
   User.create({
     BGCMA_email: email,
     password: hashedPassword,
     type: role,
-    club: clubName
+    club: clubName,
+    username: email
   })
-    .then(user =>
+    .then(user => {
+      console.log(user)
       res.status(201).send({
         success: true,
         payload: user
-      })
+      })}
     )
     .catch(error =>
-      res.status(400).send({
+      // console.log(error)
+        res.status(400).send({
         success: false,
         message: error
+        
       })
     );
 }
