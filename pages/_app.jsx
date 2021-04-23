@@ -5,8 +5,11 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import Header from "../client/components/header";
 import theme from "../utils/theme";
 import "../public/static/App.css";
+import {Provider} from "next-auth/client";
+
 
 class MyApp extends App {
+
   componentDidMount() {
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector("#jss-server-side");
@@ -17,8 +20,11 @@ class MyApp extends App {
 
   render() {
     const { Component, pageProps } = this.props;
-
+      
+    
+    
     return (
+      <Provider session={pageProps.session}>
       <ThemeProvider theme={theme}>
         <Head>
           <title>Nextjs-Starter</title>
@@ -44,6 +50,7 @@ class MyApp extends App {
           </ThemeProvider>
         </div>
       </ThemeProvider>
+      </Provider>
     );
   }
 }

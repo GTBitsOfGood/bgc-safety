@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+ 
 const { Schema } = mongoose;
 
 const UserSchema = new Schema({
@@ -14,8 +14,7 @@ const UserSchema = new Schema({
       message: "Please enter a valid email."
     }
   },
-
-    //test  
+// test
   password: {
     type: String,
     required: true

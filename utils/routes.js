@@ -43,7 +43,16 @@ const routes = [
   },
   {
     name: "Login",
-    link: urls.pages.login,
+    link: urls.pages.login
+  },
+  {
+    name: "Account Creation",
+    link: urls.pages.account_creation,
+    type: "Admin"
+  },
+  {
+    name: "Created Accounts",
+    link: urls.pages.created_accounts,
     type: "All"
   }
 ];
