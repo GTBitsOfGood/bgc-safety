@@ -14,6 +14,8 @@ const UserSchema = new Schema({
       message: "Please enter a valid email."
     }
   },
+
+    //test  
   password: {
     type: String,
     required: true
