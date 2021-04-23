@@ -18,11 +18,8 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import routes from "../../utils/routes";
 import Axios from "axios";
-<<<<<<< HEAD
 import { lightgray } from "color-name";
-=======
 import {getSession, useSession} from "next-auth/client";
->>>>>>> origin/master
 // import { Route } from 'react-router-dom';
 
 const getDate = () => {
