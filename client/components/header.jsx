@@ -126,7 +126,7 @@ const Header = props => {
     `
 
   // console.log(currentUser);
-  let filteredRoutes = [];
+  // let filteredRoutes = [];
   // const [filteredRoutes, setFilteredRoutes] = React.useState([]);
 
   const filterRoutes = (currentUser) => {
