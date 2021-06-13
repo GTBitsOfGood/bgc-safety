@@ -7,17 +7,17 @@ assignees: ''
 
 ---
 
-- [ ] Can successfully retrieve metadata from the API and pass as props to `component.tsx`
-
 ### Description
 Retrieve video metadata to display on component `component1.tsx`. 
 
-(Optional: include a statement like `As a user/admin/developer, I want to do X`)
+(Optional: include a statement like "As a user/admin/developer, I want to do X")
 
 ### Future Sprint
 * [Issue name](https://github.com)
 
 ### Acceptance Criteria
+- [ ] Can successfully retrieve metadata from the API and pass as props to `component.tsx`
+- [ ] Style the component
 
 
 ### Notes
