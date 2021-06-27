@@ -44,18 +44,20 @@ function getBusAttendanceInfo(req, res) {
       checkInTimes: 1
     }
   )
-    .then(checkInTimes =>
+    .then(checkInTimes =>{
       res.status(200).send({
         success: true,
         payload: checkInTimes
       })
-    )
-    .catch(err =>
+      resolve();
+    })
+    .catch(err =>{
       res.status(400).send({
         success: false,
         message: err
       })
-    );
+      return resolve();
+    });
 }
 
 function getAttendanceOfStudent(req, res) {
