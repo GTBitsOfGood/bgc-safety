@@ -1,7 +1,6 @@
 import React from "react";
 import { withRouter } from "next/router";
 import Link from "next/link";
-import styled from 'styled-components'
 import PropTypes from "prop-types";
 import {
   AppBar,
@@ -9,16 +8,13 @@ import {
   MenuItem,
   IconButton,
   Menu,
-  Typography,
-  SwipeableDrawer,
-  Drawer
+  Typography
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import { makeStyles } from "@material-ui/core/styles";
 
 import routes from "../../utils/routes";
 import Axios from "axios";
-import { lightgray } from "color-name";
 import {getSession, useSession} from "next-auth/client";
 // import { Route } from 'react-router-dom';
 
@@ -57,34 +53,6 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1
   },
 
-  menu: {
-    width: 250,
-    flexShrink: 0,
-    color: lightgray,
-    // backgroundColor: 'black'
-  },
-
-  menuItems: {
-    width: 250,
-    textDecoration: "none",
-    lineHeight: "25px",
-    fontSize: "20px",
-    color: lightgray
-  },
-
-  menuFont: {
-    fontFamily: "Raleway",
-    textDecoration: "none",
-    fontStyle: "normal",
-    fontWeight: "bold",
-    fontSize: "20px",
-    lineHeight: "25px",
-    color: '#000000 25%',
-    left: 32,
-    top: 40
-  },
-
-
   menuButton: {
     marginRight: theme.spacing(2)
   },
@@ -112,9 +80,6 @@ const NavLink = styled.a`
         ;
       }
     `
-
-
-
 const Header = props => {
   const { defaultSelected, router } = props;
   const classes = useStyles();
@@ -122,12 +87,6 @@ const Header = props => {
   const [selected, setSelected] = React.useState(defaultSelected);
   const [filteredRoutes, setFilteredRoutes] = React.useState([]);
   const [session, loading] = useSession()
-
-  
-
-  // console.log(currentUser);
-  // let filteredRoutes = [];
-  // const [filteredRoutes, setFilteredRoutes] = React.useState([]);
 
   const filterRoutes = (currentUser) => {
     let fRoutes = []
@@ -187,8 +146,6 @@ const Header = props => {
   })
   
   if (loading || !session) {
-    // console.log(loading)
-    // console.log(session)
     return null;
   }
 
@@ -206,11 +163,8 @@ const Header = props => {
           >
             <MenuIcon />
           </IconButton>
-          <SwipeableDrawer
-            elevation
+          <Menu
             id="menu-appbar"
-            className= "menu"
-            classes={{paper: classes.menuItems}}
             anchorEl={anchorEl}
             anchorOrigin={{
               vertical: "top",
@@ -224,17 +178,16 @@ const Header = props => {
             open={open}
             onClose={handleClose}
           >
-            {/* {filterRoutes(currentUser)} */}
             {filteredRoutes.map((route, index) => (
               <MenuItem className = {classes.menuFont} onClick={handleClose} key={index}>
                 <Link href={route.link} passHref>
                   <NavLink>{route.name}</NavLink>
                 </Link>
               </MenuItem>
-            ))}
+            )) : <div/>}
 
-            <MenuItem className={classes.menuFont} onClick={handleClose}>My profile</MenuItem>
-          </SwipeableDrawer>
+            <MenuItem onClick={handleClose}>My account</MenuItem>
+          </Menu>
           <Typography variant="h6" className={classes.title}>
             {selected}
           </Typography>

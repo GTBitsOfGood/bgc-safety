@@ -27,7 +27,7 @@
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@material-ui/styles": "^4.11.3",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
@@ -47,7 +47,6 @@
     "node-fetch": "^2.6.1",
     "postman": "^0.2.0",
     "prop-types": "^15.7.2",
-    "styled-components": "^5.2.3",
     "react": "^16.14.0",
     "react-dom": "^16.14.0"
   },
