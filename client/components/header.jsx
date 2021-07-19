@@ -98,19 +98,7 @@ const useStyles = makeStyles(theme => ({
     textAlign: "center"
   }
 }));
-
-
-
-const Header = props => {
-  console.log("rendering")
-  const { defaultSelected, router } = props;
-  const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [selected, setSelected] = React.useState(defaultSelected);
-  const [filteredRoutes, setFilteredRoutes] = React.useState([]);
-  const [session, loading] = useSession()
-
-  const NavLink = styled.a`
+const NavLink = styled.a`
       text-decoration: none;
       &:active {
         color: black;
@@ -124,6 +112,19 @@ const Header = props => {
         ;
       }
     `
+
+
+
+const Header = props => {
+  console.log("rendering")
+  const { defaultSelected, router } = props;
+  const classes = useStyles();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [selected, setSelected] = React.useState(defaultSelected);
+  const [filteredRoutes, setFilteredRoutes] = React.useState([]);
+  const [session, loading] = useSession()
+
+  
 
   // console.log(currentUser);
   // let filteredRoutes = [];
