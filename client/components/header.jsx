@@ -116,7 +116,6 @@ const NavLink = styled.a`
 
 
 const Header = props => {
-  console.log("rendering")
   const { defaultSelected, router } = props;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -225,7 +224,7 @@ const Header = props => {
             open={open}
             onClose={handleClose}
           >
-            {filterRoutes(currentUser)}
+            {/* {filterRoutes(currentUser)} */}
             {filteredRoutes.map((route, index) => (
               <MenuItem className = {classes.menuFont} onClick={handleClose} key={index}>
                 <Link href={route.link} passHref>

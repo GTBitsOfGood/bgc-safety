@@ -73,12 +73,12 @@ const AccountCreation = () => {
   };
 
   const handleConfirm = async () => {
-    console.log(first)
+    // console.log(first)
     var body = 
     {
       "email" : email,
       "password" : password,
-      "role" : type,
+      "role" : type.replace(/\s+/g, ''),
       "clubName" : location
     }
 
@@ -87,8 +87,6 @@ const AccountCreation = () => {
     body: JSON.stringify(body),
     headers: {'Content-Type': 'application/json'}
   });
-  
-
     setConfirm(true);
     setOpen(false);
   };
@@ -179,7 +177,7 @@ const AccountCreation = () => {
             required
             id="first-name"
             label="First name"
-            defaultValue=" "
+            defaultValue=""
             onChange={handleFirstNameChange}
             style={{ margin: 10 }}
           />
@@ -187,7 +185,7 @@ const AccountCreation = () => {
             required
             id="last-name"
             label="Last name"
-            defaultValue=" "
+            defaultValue=""
             onChange={handleLastNameChange}
             style={{ margin: 10 }}
           />
@@ -196,7 +194,7 @@ const AccountCreation = () => {
           required
           id="location"
           label="Location"
-          defaultValue=" "
+          defaultValue=""
           onChange={handleLocationChange}
           style={{ margin: 10, width: 300 }}
         />
@@ -205,15 +203,16 @@ const AccountCreation = () => {
             required
             id="email-address"
             label="Email address"
-            defaultValue=" "
+            defaultValue=""
             onChange={handleEmailChange}
             style={{ margin: 10 }}
           />
           <TextField
             required
             id="password"
+            type="password"
             label="Password"
-            defaultValue=" "
+            defaultValue=""
             onChange={handlePasswordChange}
             style={{ margin: 10 }}
           />
