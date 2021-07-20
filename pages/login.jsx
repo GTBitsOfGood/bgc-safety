@@ -56,7 +56,7 @@ const Login = () => {
   const [username, setUsername] = React.useState(null);
   const [password, setPassword] = React.useState(null);
   const [session, loading] = useSession();
-
+  console.log(process.env.NEXTAUTH_URL)
   const classes = useStyles();
   function gotoLanding() {
     Router.replace("/history");
